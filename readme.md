@@ -7,3 +7,4 @@
 
 `./gradlew build --continuous`
 `./gradlew bootRun`
+`./gradlew --refresh-dependencies`
