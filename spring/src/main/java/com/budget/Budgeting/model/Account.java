@@ -12,6 +12,7 @@ public class Account {
     private Integer id;
 
     private String name;
+    private String password;
 
     private String email;
 
@@ -37,5 +38,13 @@ public class Account {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
