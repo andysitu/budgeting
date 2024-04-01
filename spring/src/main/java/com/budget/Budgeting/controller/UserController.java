@@ -1,4 +1,4 @@
-package com.budget.Budgeting;
+package com.budget.Budgeting.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
