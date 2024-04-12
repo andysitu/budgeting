@@ -11,7 +11,7 @@ dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 dotnet tool install --global dotnet-ef
 dotnet add package Microsoft.EntityFrameworkCore.Design
 
-dotnet add package Microsoft.AspNet.Identity.EntityFramework
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.4
 
 dotnet ef migrations add InitialCreate
 dotnet ef database update
