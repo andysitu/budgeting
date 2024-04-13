@@ -15,3 +15,10 @@ dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8
 
 dotnet ef migrations add InitialCreate
 dotnet ef database update
+
+Identity with API
+https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-api-authorization?view=aspnetcore-8.0
+
+Remove all migrations and start over
+dotnet ef database update 0
+dotnet ef migrations remove
