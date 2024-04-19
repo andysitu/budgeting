@@ -20,18 +20,28 @@ builder.Services.AddSwaggerGen(c => {
     });
 });
 
-
-
+// Authorization services
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityApiEndpoints<AppUser>()
+builder.Services
+    // Configures Bearer and cookie authentication & services from Identity
+    .AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
-app.UseSwagger();
-app.UseSwaggerUI(c => {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Budget API V1");
-});
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c => {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Budget API V1");
+    });
+}
+
+// Don't know if this will work locally
+// app.UseHttpsRedirection();
+// Authorization Middleware
+app.UseAuthorization();
 
 app.MapIdentityApi<IdentityUser>();
 
@@ -65,5 +75,8 @@ app.MapDelete("/pizza/{id}", async (ApplicationDbContext db, int id) => {
     await db.SaveChangesAsync();
     return Results.Ok();
 });
+
+// MapIdentityAPI adds /login & /confirmEmail - MapGroup adds them to /account
+app.MapGroup("/account").MapIdentityApi<AppUser>();
 
 app.Run();
