@@ -47,7 +47,7 @@ app.MapIdentityApi<IdentityUser>();
 
 app.MapGet("/", () => "Hello World!");
 
-app.MapGet("/pizzas", async (ApplicationDbContext db) => await db.Pizzas.ToListAsync()).RequireAuthorization();
+app.MapGet("/pizzas", async (ApplicationDbContext db) => await db.Pizzas.ToListAsync());
 
 app.MapPost("/pizza", async (ApplicationDbContext db, Pizza pizza) => {
     await db.Pizzas.AddAsync(pizza);
