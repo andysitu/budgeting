@@ -7,7 +7,7 @@ namespace Budgeting.Data
     public class AppUser : IdentityUser {}
 
 
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
             base(options)

@@ -43,7 +43,7 @@ if (app.Environment.IsDevelopment())
 // Authorization Middleware
 app.UseAuthorization();
 
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<AppUser>();
 
 app.MapGet("/", () => "Hello World!");
 
