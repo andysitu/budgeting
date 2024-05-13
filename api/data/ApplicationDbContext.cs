@@ -13,7 +13,6 @@ namespace Budgeting.Data
             base(options)
         { }
 
-        public DbSet<Budgeting.Models.Username> User { get; set; }
         public DbSet<Budgeting.Models.Pizza> Pizzas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
