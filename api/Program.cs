@@ -43,7 +43,8 @@ if (app.Environment.IsDevelopment())
 // Authorization Middleware
 app.UseAuthorization();
 
-app.MapIdentityApi<AppUser>();
+// MapIdentityAPI adds /login & /confirmEmail - MapGroup adds them to /account
+app.MapGroup("/account").MapIdentityApi<AppUser>();
 
 app.MapGet("/", () => "Hello World!");
 
@@ -76,7 +77,6 @@ app.MapDelete("/pizza/{id}", async (ApplicationDbContext db, int id) => {
     return Results.Ok();
 });
 
-// MapIdentityAPI adds /login & /confirmEmail - MapGroup adds them to /account
-app.MapGroup("/account").MapIdentityApi<AppUser>();
+
 
 app.Run();
