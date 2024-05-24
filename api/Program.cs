@@ -5,6 +5,7 @@ using Budgeting.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Extensions.Options;
 using Budgeting.Data;
+using Microsoft.AspNetCore.Identity;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,30 @@ builder.Services
     // Configures Bearer and cookie authentication & services from Identity
     .AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.Configure<IdentityOptions>(options => {
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequiredUniqueChars = 1;
+
+    // Lockout settings.
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+});
+
+builder.Services.ConfigureApplicationCookie(options => 
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+    options.LoginPath = "/login";
+    // options.AccessDeniedPath = "/access_denied";
+    options.SlidingExpiration = true;
+});
 
 var app = builder.Build();
 
