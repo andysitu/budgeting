@@ -21,8 +21,7 @@ builder.Services.AddSwaggerGen(c => {
     });
 });
 
-// Authorization services
-builder.Services.AddAuthorization();
+
 
 builder.Services
     // Configures Bearer and cookie authentication & services from Identity
@@ -52,6 +51,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     // options.AccessDeniedPath = "/access_denied";
     options.SlidingExpiration = true;
 });
+
+// Authorization services
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
