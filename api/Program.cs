@@ -82,7 +82,7 @@ app.MapGroup("/account").MapIdentityApi<AppUser>();
 
 app.MapGet("/", () => "Hello World!");
 
-app.MapGet("/pizzas", async (ApplicationDbContext db) => await db.Pizzas.ToListAsync());
+app.MapGet("/pizzas", async (ApplicationDbContext db) => await db.Pizzas.ToListAsync()).RequireAuthorization();
 
 app.MapPost("/pizza", async (ApplicationDbContext db, Pizza pizza) => {
     await db.Pizzas.AddAsync(pizza);
