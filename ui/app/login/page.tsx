@@ -1,10 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { login } from "@/network/login";
+import { fetchPizzas } from "@/network/pizzas";
+import { useEffect, useState } from "react";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    fetchPizzas();
+  }, []);
 
   return (
     <div>
@@ -14,28 +20,25 @@ function Login() {
         onSubmit={async (e) => {
           e.preventDefault();
 
-          console.log(
-            JSON.stringify({
-              username,
-              email: username,
-              password,
-            })
-          );
+          try {
+            const response = await login(username, password);
 
-          const response = await fetch("/api/account/login", {
-            method: "POST",
-            mode: "cors",
-            body: JSON.stringify({
-              username,
-              email: username,
-              password,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+            console.log(await response.json());
+            console.log("response", response.body);
 
-          console.log("response", response);
+            const keys = response.headers.keys();
+            const values = response.headers.values();
+
+            for (const k in keys) {
+              console.log(k);
+            }
+
+            for (const v in values) {
+              console.log(v);
+            }
+          } catch (error) {
+            console.error(error);
+          }
         }}
       >
         <div style={{ marginBottom: "10px" }}>
@@ -67,6 +70,17 @@ function Login() {
           <button type="submit">Login</button>
         </div>
       </form>
+
+      <div>
+        <button
+          onClick={async () => {
+            const pizzas = await fetchPizzas();
+            console.log(pizzas);
+          }}
+        >
+          Pizza
+        </button>
+      </div>
     </div>
   );
 }
