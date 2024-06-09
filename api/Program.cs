@@ -45,17 +45,24 @@ builder.Services.Configure<IdentityOptions>(options => {
 builder.Services.ConfigureApplicationCookie(options => 
 {
     options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+    // Test out
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 
     options.LoginPath = "/login";
-    // options.AccessDeniedPath = "/access_denied";
+    options.LogoutPath = "/logout";
+    options.AccessDeniedPath = "/access_denied";
+
     options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
 });
 
 // Authorization services
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
 
 if (app.Environment.IsDevelopment())
 {
