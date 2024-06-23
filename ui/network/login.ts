@@ -30,4 +30,21 @@ const logout = async () => {
   return response;
 };
 
-export { login, logout };
+const fetchLoginStatus = async () => {
+  try {
+    const response = await fetch("/api/check_login_status", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+};
+
+export { login, logout, fetchLoginStatus };

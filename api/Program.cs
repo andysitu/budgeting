@@ -93,6 +93,9 @@ app.MapPost("/logout", async (SignInManager<AppUser> signInManager,
 })
 .RequireAuthorization();
 
+app.MapGet("/check_login_status", () => {
+    return Results.Ok();
+}).RequireAuthorization();
 
 app.MapGet("/", () => "Hello World!");
 
