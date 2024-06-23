@@ -9,7 +9,9 @@ function Login() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    fetchPizzas();
+    fetchPizzas().catch((err) => {
+      console.error("error fetchign pizzas", err);
+    });
   }, []);
 
   return (
