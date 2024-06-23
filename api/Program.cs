@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Extensions.Options;
 using Budgeting.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -79,6 +80,19 @@ app.UseAuthorization();
 
 // MapIdentityAPI adds /login & /confirmEmail - MapGroup adds them to /account
 app.MapGroup("/").MapIdentityApi<AppUser>();
+
+app.MapPost("/logout", async (SignInManager<AppUser> signInManager,
+    [FromBody] object empty) =>
+{
+    if (empty != null)
+    {
+        await signInManager.SignOutAsync();
+        return Results.Ok();
+    }
+    return Results.Unauthorized();
+})
+.RequireAuthorization();
+
 
 app.MapGet("/", () => "Hello World!");
 

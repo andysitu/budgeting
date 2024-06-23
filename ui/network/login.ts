@@ -15,7 +15,19 @@ const login = async (username: string, password: string) => {
 
   return response.ok;
 };
+
+const logout = async () => {
+  const response = await fetch("/api/logout", {
+    method: "POST",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({}),
+  });
+
   return response;
 };
 
-export { login };
+export { login, logout };

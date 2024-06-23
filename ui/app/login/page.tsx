@@ -1,6 +1,6 @@
 "use client";
 
-import { login } from "@/network/login";
+import { login, logout } from "@/network/login";
 import { fetchPizzas } from "@/network/pizzas";
 import { useEffect, useState } from "react";
 
@@ -23,21 +23,7 @@ function Login() {
           e.preventDefault();
 
           try {
-            const response = await login(username, password);
-
-            console.log(await response.json());
-            console.log("response", response.body);
-
-            const keys = response.headers.keys();
-            const values = response.headers.values();
-
-            for (const k in keys) {
-              console.log(k);
-            }
-
-            for (const v in values) {
-              console.log(v);
-            }
+            await login(username, password);
           } catch (error) {
             console.error(error);
           }
@@ -77,10 +63,19 @@ function Login() {
         <button
           onClick={async () => {
             const pizzas = await fetchPizzas();
+
             console.log(pizzas);
           }}
         >
           Pizza
+        </button>
+        <button
+          onClick={async () => {
+            const response = await logout();
+            console.log(response);
+          }}
+        >
+          Logout
         </button>
       </div>
     </div>
