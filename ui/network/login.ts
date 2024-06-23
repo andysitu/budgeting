@@ -1,5 +1,5 @@
 const login = async (username: string, password: string) => {
-  const response = await fetch("/api/account/login?useCookies=true", {
+  const response = await fetch("/api/login?useCookies=true", {
     method: "POST",
     mode: "cors",
     body: JSON.stringify({

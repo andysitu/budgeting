@@ -78,7 +78,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 // MapIdentityAPI adds /login & /confirmEmail - MapGroup adds them to /account
-app.MapGroup("/account").MapIdentityApi<AppUser>();
+app.MapGroup("/").MapIdentityApi<AppUser>();
 
 app.MapGet("/", () => "Hello World!");
 
