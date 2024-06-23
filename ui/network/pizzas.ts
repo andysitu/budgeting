@@ -4,7 +4,7 @@ const fetchPizzas = async () => {
     mode: "cors",
   });
 
-  console.log(result);
+  return result.json();
 };
 
 export { fetchPizzas };
