@@ -13,6 +13,8 @@ const login = async (username: string, password: string) => {
     credentials: "include",
   });
 
+  return response.ok;
+};
   return response;
 };
 
