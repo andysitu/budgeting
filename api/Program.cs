@@ -11,25 +11,28 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("ApplicationDbContext")));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
-    c.SwaggerDoc("v1", new OpenApiInfo {
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
         Title = "Budgeting API",
         Version = "v1"
     });
 });
 
-
+builder.Services.AddControllers();
 
 builder.Services
     // Configures Bearer and cookie authentication & services from Identity
     .AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.Configure<IdentityOptions>(options => {
+builder.Services.Configure<IdentityOptions>(options =>
+{
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = true;
@@ -43,7 +46,7 @@ builder.Services.Configure<IdentityOptions>(options => {
     options.Lockout.AllowedForNewUsers = true;
 });
 
-builder.Services.ConfigureApplicationCookie(options => 
+builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
 
@@ -68,7 +71,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => {
+    app.UseSwaggerUI(c =>
+    {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Budget API V1");
     });
 }
@@ -93,7 +97,8 @@ app.MapPost("/logout", async (SignInManager<AppUser> signInManager,
 })
 .RequireAuthorization();
 
-app.MapGet("/check_login_status", () => {
+app.MapGet("/check_login_status", () =>
+{
     return Results.Ok();
 }).RequireAuthorization();
 
@@ -101,7 +106,8 @@ app.MapGet("/", () => "Hello World!");
 
 app.MapGet("/pizzas", async (ApplicationDbContext db) => await db.Pizzas.ToListAsync()).RequireAuthorization();
 
-app.MapPost("/pizza", async (ApplicationDbContext db, Pizza pizza) => {
+app.MapPost("/pizza", async (ApplicationDbContext db, Pizza pizza) =>
+{
     await db.Pizzas.AddAsync(pizza);
     await db.SaveChangesAsync();
     return Results.Created($"/pizza/{pizza.Id}", pizza);
@@ -109,7 +115,8 @@ app.MapPost("/pizza", async (ApplicationDbContext db, Pizza pizza) => {
 
 app.MapGet("/pizza/{id}", async (ApplicationDbContext db, int id) => await db.Pizzas.FindAsync(id));
 
-app.MapPut("/pizza/{id}", async (ApplicationDbContext db, Pizza updatePizza, int id) => {
+app.MapPut("/pizza/{id}", async (ApplicationDbContext db, Pizza updatePizza, int id) =>
+{
     var pizza = await db.Pizzas.FindAsync(id);
     if (pizza is null) return Results.NotFound();
     pizza.Name = updatePizza.Name;
@@ -118,9 +125,11 @@ app.MapPut("/pizza/{id}", async (ApplicationDbContext db, Pizza updatePizza, int
     return Results.NoContent();
 }).RequireAuthorization();
 
-app.MapDelete("/pizza/{id}", async (ApplicationDbContext db, int id) => {
+app.MapDelete("/pizza/{id}", async (ApplicationDbContext db, int id) =>
+{
     var pizza = await db.Pizzas.FindAsync(id);
-    if (pizza is null) {
+    if (pizza is null)
+    {
         return Results.NotFound();
     }
     db.Pizzas.Remove(pizza);
@@ -128,6 +137,6 @@ app.MapDelete("/pizza/{id}", async (ApplicationDbContext db, int id) => {
     return Results.Ok();
 });
 
-
+app.MapControllers();
 
 app.Run();
