@@ -18,9 +18,9 @@ function Wrapper({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Check for login status
     const location = window.location;
-    // if (!(location.pathname === "/login")) {
-    checkLogin();
-    // }
+    if (!(location.pathname === "/login")) {
+      checkLogin();
+    }
   }, [checkLogin]);
   return <div>{children}</div>;
 }
