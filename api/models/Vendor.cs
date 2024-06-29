@@ -10,5 +10,6 @@ namespace Budgeting.Models
         public string Description { get; set; } = "";
         public required ICollection<Purchase> Purchases { get; set; } = new List<Purchase>();
         public required ICollection<Expense> Expenses { get; set; } = new List<Expense>();
+        public required ICollection<Income> Incomes { get; set; } = new List<Income>();
     }
 }
