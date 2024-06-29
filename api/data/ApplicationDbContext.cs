@@ -17,6 +17,7 @@ namespace Budgeting.Data
         public DbSet<Budgeting.Models.Vendor> Vendors { get; set; }
         public DbSet<Budgeting.Models.Purchase> Purchases { get; set; }
         public DbSet<Budgeting.Models.PurchaseItem> PurchaseItems { get; set; }
+        public DbSet<Budgeting.Models.Expense> Expenses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseNpgsql("Host=localhost:5432;Database=budgeting;Username=budgetuser;Password=123abc");
