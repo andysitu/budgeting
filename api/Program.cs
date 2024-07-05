@@ -1,13 +1,9 @@
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Net.NetworkInformation;
 using Budgeting.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Extensions.Options;
 using Budgeting.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
