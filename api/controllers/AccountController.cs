@@ -1,5 +1,6 @@
 using Budgeting.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -16,12 +17,22 @@ public class AccountController : Controller
         this.userManager = userManager;
     }
 
-    private Task<AppUser?> GetCurrentUserAsync() => userManager.GetUserAsync(HttpContext.User);
+    private async Task<AppUser?> GetCurrentUserAsync()
+    {
+        AppUser? user = await userManager.GetUserAsync(HttpContext.User);
+
+        return user;
+    }
 
     [HttpGet("me")]
-    public async Task<string?> GetCurrentUserId()
+    public async Task<ActionResult<AppUser?>> GetCurrentUserId()
     {
         AppUser? user = await GetCurrentUserAsync();
-        return user?.Id;
+
+        var userData = Json(user);
+
+        Console.WriteLine(userData);
+
+        return Ok(user);
     }
 }
