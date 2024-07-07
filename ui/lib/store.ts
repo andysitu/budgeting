@@ -1,8 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
+import userAccountReducer from "./features/userAccount/userAccountSlice";
 
 export const makeStore = () => {
   return configureStore({
-    reducer: {},
+    reducer: {
+      userAccount: userAccountReducer,
+    },
   });
 };
 
