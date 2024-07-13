@@ -41,7 +41,7 @@ const fetchLoginStatus = async () => {
       credentials: "include",
     });
 
-    return response.ok;
+    return response.json();
   } catch (error) {
     return false;
   }

@@ -4,21 +4,21 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const checkLoginStatus = createAsyncThunk(
   "userAccount/checkLoginStatus",
   async () => {
-    const loggedIn = await fetchLoginStatus();
-    return loggedIn;
+    const account = await fetchLoginStatus();
+    return account;
   }
 );
 
 export const userAccountSlice = createSlice({
   name: "userAccount",
   initialState: {
-    user: null,
+    account: null,
     loggedIn: false,
     checkedLoginStatus: false,
   },
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload;
+      state.account = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -26,7 +26,10 @@ export const userAccountSlice = createSlice({
       state.checkedLoginStatus = true;
     });
     builder.addCase(checkLoginStatus.fulfilled, (state, action) => {
-      state.loggedIn = action.payload;
+      const account = action.payload;
+
+      state.loggedIn = Object.keys(account).length > 0;
+      state.account = account;
     });
   },
 });
