@@ -22,9 +22,11 @@ export const userAccountSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(checkLoginStatus.pending, (state) => {
+      state.checkedLoginStatus = true;
+    });
     builder.addCase(checkLoginStatus.fulfilled, (state, action) => {
       state.loggedIn = action.payload;
-      state.checkedLoginStatus = true;
     });
   },
 });
