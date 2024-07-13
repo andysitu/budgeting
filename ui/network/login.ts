@@ -32,7 +32,7 @@ const logout = async () => {
 
 const fetchLoginStatus = async () => {
   try {
-    const response = await fetch("/api/check_login_status", {
+    const response = await fetch("/api/account/me", {
       method: "GET",
       mode: "cors",
       headers: {

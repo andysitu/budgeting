@@ -1,19 +1,23 @@
 "use client";
 
-import { fetchLoginStatus } from "@/network/login";
+import { checkLoginStatus } from "@/lib/features/userAccount/userAccountSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { useRouter } from "next/navigation";
 import React, { ReactNode, useCallback, useEffect } from "react";
 
 function Wrapper({ children }: { children: ReactNode }) {
+  const dispatch = useAppDispatch();
+
+  const userAccount = useAppSelector((state) => state.userAccount);
+  const { checkedLoginStatus } = userAccount;
+
   const router = useRouter();
 
   const checkLogin = useCallback(async () => {
-    const result = await fetchLoginStatus();
-
-    if (!result) {
-      router.push("/login");
+    if (!checkedLoginStatus) {
+      const test = await dispatch(checkLoginStatus());
     }
-  }, [router]);
+  }, [dispatch, checkedLoginStatus]);
 
   useEffect(() => {
     // Check for login status
