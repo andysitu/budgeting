@@ -1,10 +1,15 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace Budgeting.Data
 {
-    public class AppUser : IdentityUser { }
+    public class AppUser : IdentityUser
+    {
+        [JsonIgnore]
+        public override string? PasswordHash { get; set; }
+    }
 
 
     public class ApplicationDbContext : IdentityDbContext<AppUser>

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 [Authorize]
@@ -25,14 +27,17 @@ public class AccountController : Controller
     }
 
     [HttpGet("me")]
-    public async Task<ActionResult<AppUser?>> GetCurrentUserId()
+    public async Task<IActionResult> GetCurrentUserId()
     {
         AppUser? user = await GetCurrentUserAsync();
 
-        var userData = Json(user);
+        if (user == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, "User not logged in");
+        }
 
-        Console.WriteLine(userData);
+        string userData = JsonSerializer.Serialize(user);
 
-        return Ok(user);
+        return Ok(userData);
     }
 }
