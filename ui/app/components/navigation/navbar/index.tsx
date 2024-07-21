@@ -1,4 +1,5 @@
 "use client";
+import UrlLibrary from "@/app/library/UrlLibrary";
 import { handleLogout } from "@/lib/features/userAccount/userAccountSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { useRouter, usePathname } from "next/navigation";
@@ -34,14 +35,14 @@ function Navbar() {
         </div>
       );
     } else {
-      if (pathname === "/login") {
+      if (pathname === UrlLibrary.LOGIN) {
         return null;
       } else {
         return (
           <div>
             <button
               onClick={() => {
-                router.push(`/login?ref=${pathname}`);
+                router.push(`${UrlLibrary.LOGIN}?ref=${pathname}`);
               }}
             >
               Login

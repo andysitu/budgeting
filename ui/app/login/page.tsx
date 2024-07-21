@@ -8,6 +8,7 @@ import { useAppDispatch } from "@/lib/hooks";
 import { fetchPizzas } from "@/network/pizzas";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import UrlLibrary from "../library/UrlLibrary";
 
 function Login() {
   const dispatch = useAppDispatch();
@@ -34,7 +35,7 @@ function Login() {
           try {
             await dispatch(handleLogin({ username, password }));
 
-            router.push(searchParams.get("ref") ?? "/");
+            router.push(searchParams.get("ref") ?? UrlLibrary.HOME);
           } catch (error) {
             console.error(error);
           }
