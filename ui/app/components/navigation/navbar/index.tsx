@@ -20,7 +20,7 @@ function Navbar() {
       const { Email } = account;
 
       return (
-        <div>
+        <div style={{ display: "flex" }}>
           <div>{Email}</div>
           <div>
             <button
@@ -55,7 +55,9 @@ function Navbar() {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div>Test</div>
+        <div>
+          <div className="pointer">Budget</div>
+        </div>
         {renderLoginButton()}
       </div>
     </div>
