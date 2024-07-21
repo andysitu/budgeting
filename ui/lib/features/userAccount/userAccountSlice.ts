@@ -1,4 +1,4 @@
-import { fetchLoginStatus } from "@/network/login";
+import { fetchLoginStatus, login, logout } from "@/network/login";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 type Account = {
@@ -18,6 +18,19 @@ const checkLoginStatus = createAsyncThunk(
   async () => {
     const account = await fetchLoginStatus();
     return account;
+  }
+);
+
+const handleLogout = createAsyncThunk("userAccount/logout", async () => {
+  await logout();
+});
+
+const handleLogin = createAsyncThunk(
+  "userAccount/login",
+  async (data: { username: string; password: string }) => {
+    const { username, password } = data;
+
+    await login(username, password);
   }
 );
 
@@ -45,6 +58,14 @@ export const userAccountSlice = createSlice({
       state.loggedIn = Object.keys(account).length > 0;
       state.account = account;
     });
+
+    builder.addCase(handleLogout.fulfilled, (state, action) => {
+      state.loggedIn = false;
+    });
+
+    builder.addCase(handleLogin.fulfilled, (state, action) => {
+      state.loggedIn = true;
+    });
   },
 });
 
@@ -52,4 +73,4 @@ export const { setUser } = userAccountSlice.actions;
 
 export default userAccountSlice.reducer;
 
-export { checkLoginStatus };
+export { checkLoginStatus, handleLogin, handleLogout };
