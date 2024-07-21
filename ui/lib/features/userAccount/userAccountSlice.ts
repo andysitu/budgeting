@@ -1,6 +1,18 @@
 import { fetchLoginStatus } from "@/network/login";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+type Account = {
+  Email: string;
+  Id: string;
+  UserName: string;
+};
+
+type UserAccountState = {
+  account: Account | null;
+  loggedIn: boolean;
+  checkedLoginStatus: boolean;
+};
+
 const checkLoginStatus = createAsyncThunk(
   "userAccount/checkLoginStatus",
   async () => {
@@ -9,13 +21,15 @@ const checkLoginStatus = createAsyncThunk(
   }
 );
 
+const initialState: UserAccountState = {
+  account: null,
+  loggedIn: false,
+  checkedLoginStatus: false,
+};
+
 export const userAccountSlice = createSlice({
   name: "userAccount",
-  initialState: {
-    account: null,
-    loggedIn: false,
-    checkedLoginStatus: false,
-  },
+  initialState,
   reducers: {
     setUser: (state, action) => {
       state.account = action.payload;
