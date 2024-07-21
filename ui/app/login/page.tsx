@@ -34,7 +34,7 @@ function Login() {
           try {
             await dispatch(handleLogin({ username, password }));
 
-            router.push(searchParams.get("ref") ?? "");
+            router.push(searchParams.get("ref") ?? "/");
           } catch (error) {
             console.error(error);
           }
