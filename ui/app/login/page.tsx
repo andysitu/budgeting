@@ -1,10 +1,19 @@
 "use client";
 
-import { login, logout } from "@/network/login";
+import {
+  handleLogin,
+  handleLogout,
+} from "@/lib/features/userAccount/userAccountSlice";
+import { useAppDispatch } from "@/lib/hooks";
 import { fetchPizzas } from "@/network/pizzas";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 function Login() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,7 +32,9 @@ function Login() {
           e.preventDefault();
 
           try {
-            await login(username, password);
+            await dispatch(handleLogin({ username, password }));
+
+            router.push(searchParams.get("ref") ?? "");
           } catch (error) {
             console.error(error);
           }
@@ -71,7 +82,7 @@ function Login() {
         </button>
         <button
           onClick={async () => {
-            const response = await logout();
+            const response = await dispatch(handleLogout());
             console.log(response);
           }}
         >

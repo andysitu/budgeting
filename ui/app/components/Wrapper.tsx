@@ -2,10 +2,11 @@
 
 import { checkLoginStatus } from "@/lib/features/userAccount/userAccountSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import React, { ReactNode, useCallback, useEffect } from "react";
 
 function Wrapper({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
 
   const userAccount = useAppSelector((state) => state.userAccount);
@@ -22,10 +23,10 @@ function Wrapper({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Check for login status
     const location = window.location;
-    if (!(location.pathname === "/login")) {
+    if (!(pathname === "/login")) {
       checkLogin();
     }
-  }, [checkLogin]);
+  }, [checkLogin, pathname]);
   return <div>{children}</div>;
 }
 
