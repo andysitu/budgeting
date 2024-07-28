@@ -1,0 +1,7 @@
+.tabs {
+  cursor: "pointer";
+}
+
+.tabs:hover {
+  color: "red";
+}
