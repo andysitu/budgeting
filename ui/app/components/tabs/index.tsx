@@ -18,7 +18,7 @@ function Tabs({ elements }: TabsProps) {
   for (const [name, element] of Object.entries(elements)) {
     inputs.push(
       <div>
-        <button>{name}</button>
+        <button className="tablinks">{name}</button>
       </div>
     );
   }
