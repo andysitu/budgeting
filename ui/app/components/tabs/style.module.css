@@ -1,7 +1,23 @@
-.tabs {
+.tablinks {
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  padding: 14px 20px;
   cursor: "pointer";
 }
 
-.tabs:hover {
-  color: "red";
+.tablinks:hover {
+  background-color: #ddd;
+}
+
+.tablinks.active {
+  background-color: #ccc;
+  border-bottom: 0;
+}
+
+.tabpanels {
+  padding-top: 20px;
+}
+
+.tabpanels:not(.active) {
+  display: none;
 }
