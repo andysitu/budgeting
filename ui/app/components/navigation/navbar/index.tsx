@@ -21,8 +21,13 @@ function Navbar() {
       const { Email } = account;
 
       return (
-        <div style={{ display: "flex" }}>
-          <div>{Email}</div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <div style={{ marginRight: "4px" }}>{Email}</div>
           <div>
             <button
               onClick={() => {
