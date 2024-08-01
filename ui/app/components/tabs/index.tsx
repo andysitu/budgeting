@@ -1,6 +1,4 @@
-"usee client";
-
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import styles from "./style.module.css";
 
 type TabsProps = {
@@ -8,22 +6,55 @@ type TabsProps = {
 };
 
 function Tabs({ elements }: TabsProps) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   if (Object.keys(elements).length === 0) {
     return null;
   }
 
-  const inputs = [],
+  const tabs = [],
     displayElements = [];
 
+  let index = 0;
   for (const [name, element] of Object.entries(elements)) {
-    inputs.push(
+    const savedIndex = index;
+
+    // Tabs
+    tabs.push(
       <div>
-        <button className="tablinks">{name}</button>
+        <div
+          className={`${styles.tablinks} ${
+            index === selectedIndex ? styles.active : ""
+          }`}
+          onClick={() => {
+            setSelectedIndex(savedIndex);
+          }}
+        >
+          {name}
+        </div>
       </div>
     );
+
+    // Elements
+    displayElements.push(
+      <div
+        className={`${styles.tabpanels} ${
+          index === selectedIndex ? styles.active : ""
+        }`}
+      >
+        {element}
+      </div>
+    );
+
+    index++;
   }
 
-  return inputs;
+  return (
+    <div>
+      <div style={{ display: "flex" }}>{tabs}</div>
+      <div className={styles["tabpanel-container"]}>{displayElements}</div>
+    </div>
+  );
 }
 
 export default Tabs;

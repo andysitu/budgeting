@@ -6,6 +6,7 @@
 
 .tablinks:hover {
   background-color: #ddd;
+  cursor: pointer;
 }
 
 .tablinks:not(.active) {
