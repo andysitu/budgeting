@@ -22,10 +22,16 @@ function Dialog({ open, onClose, children, id }: DialogProps) {
           border: "1px solid lightgray",
           minWidth: "200px",
           minHeight: "140px",
-          padding: "8px 10px",
+          padding: "4px 0",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "end" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "end",
+            marginBottom: "8px",
+          }}
+        >
           <button
             className={"icon"}
             onClick={() => {
@@ -35,7 +41,9 @@ function Dialog({ open, onClose, children, id }: DialogProps) {
             <FontAwesomeIcon icon={faXmark} size="lg" />
           </button>
         </div>
-        <div>{children}</div>
+        <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
+          {children}
+        </div>
       </dialog>
       <div
         className={`${styles["modal-backdrop"]} ${showClassName}`}
