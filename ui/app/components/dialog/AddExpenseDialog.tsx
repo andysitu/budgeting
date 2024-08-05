@@ -2,18 +2,36 @@ import { useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
 
+type ExpenseData = {
+  name: string;
+  description: string;
+  amount: string | number;
+};
+
 interface AddExpenseDialogProps {
   open: boolean;
   onClose: () => void;
+  onSubmit: (data: ExpenseData) => void;
 }
 
-function AddExpenseDialog({ open, onClose }: AddExpenseDialogProps) {
+function AddExpenseDialog({ open, onClose, onSubmit }: AddExpenseDialogProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      onSubmit={() => {
+        const data = {
+          name,
+          description,
+          amount,
+        };
+        onSubmit(data);
+      }}
+    >
       <TextListItem
         value={name}
         label="Name"

@@ -8,9 +8,10 @@ interface DialogProps {
   onClose: () => void;
   children: ReactNode[] | ReactNode;
   id?: string;
+  onSubmit?: () => void;
 }
 
-function Dialog({ open, onClose, children, id }: DialogProps) {
+function Dialog({ open, onClose, children, id, onSubmit }: DialogProps) {
   const showClassName = open ? styles["modal-show"] : styles["modal-hidden"];
   return (
     <>
@@ -41,9 +42,31 @@ function Dialog({ open, onClose, children, id }: DialogProps) {
             <FontAwesomeIcon icon={faXmark} size="lg" />
           </button>
         </div>
-        <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
-          {children}
-        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+
+            if (onSubmit) {
+              onSubmit();
+            }
+          }}
+        >
+          <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
+            {children}
+
+            {onSubmit && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "10px",
+                }}
+              >
+                <button>Submit</button>
+              </div>
+            )}
+          </div>
+        </form>
       </dialog>
       <div
         className={`${styles["modal-backdrop"]} ${showClassName}`}
