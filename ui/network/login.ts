@@ -1,44 +1,40 @@
+import { getConfiguration } from "./util";
+
 const login = async (username: string, password: string) => {
+  const requestParam = getConfiguration();
+
   const response = await fetch("/api/login?useCookies=true", {
     method: "POST",
-    mode: "cors",
     body: JSON.stringify({
       username,
       email: username,
       password,
     }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
+    ...requestParam,
   });
 
   return response.ok;
 };
 
 const logout = async () => {
+  const requestParam = getConfiguration();
+
   const response = await fetch("/api/logout", {
     method: "POST",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
     body: JSON.stringify({}),
+    ...requestParam,
   });
 
   return response;
 };
 
 const fetchLoginStatus = async () => {
+  const requestParam = getConfiguration();
+
   try {
     const response = await fetch("/api/account/me", {
       method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
+      ...requestParam,
     });
 
     return response.json();

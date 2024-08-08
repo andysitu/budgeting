@@ -1,8 +1,8 @@
+import { getConfiguration } from "./util";
+
 const fetchPizzas = async () => {
-  const result = await fetch("/api/pizzas", {
-    credentials: "include",
-    mode: "cors",
-  });
+  const networkConfig = getConfiguration();
+  const result = await fetch("/api/pizzas", networkConfig);
 
   return result.json();
 };
