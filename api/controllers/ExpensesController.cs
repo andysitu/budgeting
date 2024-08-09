@@ -14,7 +14,7 @@ public class ExpensesController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("expenses")]
+    [HttpGet("")]
     public Task<List<Purchase>> ListPurchases()
     {
         Task<List<Purchase>> purchases = _context.Purchases.ToListAsync();
