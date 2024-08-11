@@ -1,7 +1,7 @@
 import { getConfiguration } from "./util";
 
 const login = async (username: string, password: string) => {
-  const requestParam = getConfiguration();
+  const requestParam = getConfiguration("POST");
 
   const response = await fetch("/api/login?useCookies=true", {
     method: "POST",
@@ -17,7 +17,7 @@ const login = async (username: string, password: string) => {
 };
 
 const logout = async () => {
-  const requestParam = getConfiguration();
+  const requestParam = getConfiguration("POST");
 
   const response = await fetch("/api/logout", {
     method: "POST",
@@ -29,7 +29,7 @@ const logout = async () => {
 };
 
 const fetchLoginStatus = async () => {
-  const requestParam = getConfiguration();
+  const requestParam = getConfiguration("GET");
 
   try {
     const response = await fetch("/api/account/me", {
