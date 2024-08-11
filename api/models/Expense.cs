@@ -7,5 +7,6 @@ namespace Budgeting.Models
     {
         public long VendorId { get; set; }
         public Vendor? Vendor { get; set; }
+        public bool Settled { get; set; } = false;
     }
 }
