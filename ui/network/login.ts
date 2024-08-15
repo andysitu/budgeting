@@ -4,7 +4,6 @@ const login = async (username: string, password: string) => {
   const requestParam = getConfiguration("POST");
 
   const response = await fetch("/api/login?useCookies=true", {
-    method: "POST",
     body: JSON.stringify({
       username,
       email: username,
@@ -20,7 +19,6 @@ const logout = async () => {
   const requestParam = getConfiguration("POST");
 
   const response = await fetch("/api/logout", {
-    method: "POST",
     body: JSON.stringify({}),
     ...requestParam,
   });
@@ -33,7 +31,6 @@ const fetchLoginStatus = async () => {
 
   try {
     const response = await fetch("/api/account/me", {
-      method: "GET",
       ...requestParam,
     });
 
