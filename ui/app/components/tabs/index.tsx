@@ -21,7 +21,7 @@ function Tabs({ elements }: TabsProps) {
 
     // Tabs
     tabs.push(
-      <div>
+      <div key={`tab-header-${name}`}>
         <div
           className={`${styles.tablinks} ${
             index === selectedIndex ? styles.active : ""
@@ -38,6 +38,7 @@ function Tabs({ elements }: TabsProps) {
     // Elements
     displayElements.push(
       <div
+        key={`tab-content-${name}`}
         className={`${styles.tabpanels} ${
           index === selectedIndex ? styles.active : ""
         }`}
