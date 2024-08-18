@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Budgeting.Data;
 using Budgeting.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 [Route("expenses")]
 [ApiController]
@@ -21,4 +22,35 @@ public class ExpensesController : ControllerBase
 
         return purchases;
     }
+
+    [HttpGet("{id}", Name = "GetCommand")]
+    public async Task<ActionResult<Purchase>> GetPurchaseById(long id)
+    {
+        Purchase? purchase = await _context.Purchases.FindAsync(id);
+
+        if (purchase == null)
+        {
+            return NotFound();
+        }
+
+        string purchaseData = JsonSerializer.Serialize(purchase);
+
+        return Ok(purchaseData);
+    }
+
+
+    [HttpPost("")]
+    public async Task<ActionResult<Purchase>> CreatePurchase(Purchase p)
+    {
+        _context.Purchases.Add(p);
+        await _context.SaveChangesAsync();
+
+        Console.WriteLine("Here");
+
+        return CreatedAtAction(nameof(GetPurchaseById), new
+        {
+            id = p.Id
+        }, p);
+    }
+
 }
