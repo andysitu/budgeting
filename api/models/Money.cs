@@ -1,3 +1,4 @@
+using Budgeting.Data;
 using Budgeting.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,5 +13,8 @@ namespace Budgeting.Models
         public DateTime? Date { get; set; }
         public DateOnly? StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
+
+        public string? AppUserId { get; set; }
+        public AppUser? AppUser { get; set; }
     }
 }
