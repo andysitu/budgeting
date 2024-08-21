@@ -14,18 +14,6 @@ export default function Home() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [expenses, setExpenses] = useState([]);
 
-  const getExpenses = async () => {
-    const expenses = await fetchExpenses();
-
-    console.log("expenses", expenses);
-
-    setExpenses(expenses);
-  };
-
-  useEffect(() => {
-    getExpenses();
-  }, []);
-
   return (
     <main>
       <div>
