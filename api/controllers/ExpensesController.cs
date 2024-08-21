@@ -3,12 +3,15 @@ using Budgeting.Data;
 using Budgeting.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 [Route("expenses")]
 [ApiController]
 public class ExpensesController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+
 
     public ExpensesController(ApplicationDbContext context)
     {
@@ -42,10 +45,12 @@ public class ExpensesController : ControllerBase
     [HttpPost("")]
     public async Task<ActionResult<Purchase>> CreatePurchase(Purchase p)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        p.AppUserId = userId;
+
         _context.Purchases.Add(p);
         await _context.SaveChangesAsync();
-
-        Console.WriteLine("Here");
 
         return CreatedAtAction(nameof(GetPurchaseById), new
         {
