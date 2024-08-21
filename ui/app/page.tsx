@@ -4,11 +4,11 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import Tabs from "./components/tabs";
 import { useEffect, useState } from "react";
-import Dialog from "./components/dialog/Dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import AddExpenseDialog from "./components/dialog/AddExpenseDialog";
 import { fetchExpenses } from "@/network/expense";
+import ExpenseTable from "./components/table/ExpenseTable";
 
 export default function Home() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -16,6 +16,8 @@ export default function Home() {
 
   const getExpenses = async () => {
     const expenses = await fetchExpenses();
+
+    console.log("expenses", expenses);
 
     setExpenses(expenses);
   };
@@ -31,6 +33,9 @@ export default function Home() {
           elements={{
             Expense: (
               <div>
+                <div>
+                  <ExpenseTable />
+                </div>
                 <button
                   onClick={() => {
                     setDialogOpen(true);
@@ -49,7 +54,7 @@ export default function Home() {
         onClose={() => {
           setDialogOpen(false);
         }}
-        onSubmit={() => {
+        onCreate={() => {
           //
         }}
       />

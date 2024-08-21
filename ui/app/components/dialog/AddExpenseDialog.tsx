@@ -1,20 +1,21 @@
 import { useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
+import { createExpense } from "@/network/expense";
 
 type ExpenseData = {
   name: string;
   description: string;
-  amount: string | number;
+  amount: number;
 };
 
 interface AddExpenseDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: ExpenseData) => void;
+  onCreate: () => void;
 }
 
-function AddExpenseDialog({ open, onClose, onSubmit }: AddExpenseDialogProps) {
+function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -23,13 +24,16 @@ function AddExpenseDialog({ open, onClose, onSubmit }: AddExpenseDialogProps) {
     <Dialog
       open={open}
       onClose={onClose}
-      onSubmit={() => {
+      onSubmit={async () => {
         const data = {
           name,
           description,
-          amount,
+          amount: Number(amount),
         };
-        onSubmit(data);
+
+        const response = await createExpense(data);
+
+        onCreate(response);
       }}
     >
       <TextListItem
