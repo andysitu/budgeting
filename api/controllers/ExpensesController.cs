@@ -59,4 +59,24 @@ public class ExpensesController : ControllerBase
         }, e);
     }
 
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteExpense(long? id)
+    {
+
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        Console.WriteLine("Hello");
+        var expense = await _context.Expenses.FindAsync(id);
+        Console.WriteLine("Hello1");
+        if (expense != null)
+        {
+            _context.Expenses.Remove(expense);
+        }
+
+        await _context.SaveChangesAsync();
+        return Ok(expense?.Id);
+    }
 }
