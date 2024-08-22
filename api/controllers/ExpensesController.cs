@@ -19,43 +19,44 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpGet("")]
-    public Task<List<Purchase>> ListPurchases()
+    public Task<List<Expense>> ListExpenses()
     {
-        Task<List<Purchase>> purchases = _context.Purchases.ToListAsync();
+        Task<List<Expense>> expenses = _context.Expenses.ToListAsync();
 
-        return purchases;
+        return expenses;
     }
 
     [HttpGet("{id}", Name = "GetCommand")]
-    public async Task<ActionResult<Purchase>> GetPurchaseById(long id)
+    public async Task<ActionResult<Expense>> GetExpenseById(long id)
     {
-        Purchase? purchase = await _context.Purchases.FindAsync(id);
+        Expense? expense = await _context.Expenses.FindAsync(id);
 
-        if (purchase == null)
+        if (expense == null)
         {
             return NotFound();
         }
 
-        string purchaseData = JsonSerializer.Serialize(purchase);
+        string expenseData = JsonSerializer.Serialize(expense);
 
-        return Ok(purchaseData);
+        return Ok(expenseData);
     }
 
 
     [HttpPost("")]
-    public async Task<ActionResult<Purchase>> CreatePurchase(Purchase p)
+    public async Task<ActionResult<Expense>> CreateExpense(Expense e)
     {
+        // ClaimTypes.NameIdentifier gets the identifier (user in this case)
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        p.AppUserId = userId;
+        e.AppUserId = userId;
 
-        _context.Purchases.Add(p);
+        _context.Expenses.Add(e);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetPurchaseById), new
+        return CreatedAtAction(nameof(GetExpenseById), new
         {
-            id = p.Id
-        }, p);
+            id = e.Id
+        }, e);
     }
 
 }
