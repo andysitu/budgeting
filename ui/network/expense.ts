@@ -28,4 +28,12 @@ const createExpense = async (expense: Expense) => {
   return result;
 };
 
-export { fetchExpenses, createExpense };
+const deleteExpense = async (id: string) => {
+  const requestParam = getConfiguration("DELETE");
+
+  const result = await fetch(`/api/expenses/${id}`, requestParam);
+
+  return result;
+};
+
+export { fetchExpenses, createExpense, deleteExpense };

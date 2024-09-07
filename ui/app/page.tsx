@@ -3,16 +3,19 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import Tabs from "./components/tabs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import AddExpenseDialog from "./components/dialog/AddExpenseDialog";
-import { fetchExpenses } from "@/network/expense";
-import ExpenseTable from "./components/table/ExpenseTable";
+import ExpenseTable, {
+  ExpenseTableHandle,
+} from "./components/table/ExpenseTable";
 
 export default function Home() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [expenses, setExpenses] = useState([]);
+
+  const expenseTable = useRef<ExpenseTableHandle>(null);
 
   return (
     <main>
@@ -22,15 +25,17 @@ export default function Home() {
             Expense: (
               <div>
                 <div>
-                  <ExpenseTable />
+                  <button
+                    onClick={() => {
+                      setDialogOpen(true);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    setDialogOpen(true);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
+                <div>
+                  <ExpenseTable ref={expenseTable} />
+                </div>
               </div>
             ),
             Income: <div>Test2</div>,
@@ -43,7 +48,9 @@ export default function Home() {
           setDialogOpen(false);
         }}
         onCreate={() => {
-          //
+          if (expenseTable.current) {
+            expenseTable.current.refreshData();
+          }
         }}
       />
     </main>

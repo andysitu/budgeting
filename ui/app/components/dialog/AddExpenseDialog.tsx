@@ -12,7 +12,7 @@ type ExpenseData = {
 interface AddExpenseDialogProps {
   open: boolean;
   onClose: () => void;
-  onCreate: () => void;
+  onCreate: (createdExpense: ExpenseData) => void;
 }
 
 function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
