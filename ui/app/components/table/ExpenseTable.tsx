@@ -1,12 +1,7 @@
 import { useMount } from "@/lib/common/util";
 import { deleteExpense, fetchExpenses } from "@/network/expense";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faPlus,
-  faTrash,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { forwardRef, useImperativeHandle, useState } from "react";
 
 export type ExpenseTableHandle = {
