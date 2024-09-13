@@ -3,7 +3,7 @@ import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
 import { createExpense } from "@/network/expense";
 
-type ExpenseData = {
+export type ExpenseData = {
   name: string;
   description: string;
   amount: number;
