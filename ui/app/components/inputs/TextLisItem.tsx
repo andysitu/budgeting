@@ -1,5 +1,6 @@
 import { isEmptyObject } from "@/lib/common/util";
 import styles from "./textlistitem.module.css";
+import ListItem from "./ListItem";
 
 interface TextListItemProps {
   label: string;
@@ -26,18 +27,15 @@ function TextListItem({
   }
 
   return (
-    <div style={divStyle}>
-      <div>{label}</div>
-      <div>
-        <input
-          value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
-          }}
-          type={type}
-        />
-      </div>
-    </div>
+    <ListItem label={label} containerStyle={divStyle}>
+      <input
+        value={value}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
+        type={type}
+      />
+    </ListItem>
   );
 }
 
