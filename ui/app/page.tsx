@@ -8,11 +8,21 @@ import AddExpenseDialog from "./components/dialog/AddExpenseDialog";
 import ExpenseTable, {
   ExpenseTableHandle,
 } from "./components/table/ExpenseTable";
+import { useAppSelector } from "@/lib/hooks";
+import { useRouter } from "next/navigation";
+import UrlLibrary from "./library/UrlLibrary";
 
 export default function Home() {
+  const router = useRouter();
+  const { loggedIn } = useAppSelector((state) => state.userAccount);
+
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const expenseTable = useRef<ExpenseTableHandle>(null);
+
+  if (!loggedIn) {
+    router.push(`${UrlLibrary.LOGIN}`);
+  }
 
   return (
     <main>

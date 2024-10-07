@@ -6,6 +6,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Budget.Utilites;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("expenses")]
 [ApiController]
@@ -45,7 +46,7 @@ public class ExpensesController : ControllerBase
         return Ok(expenseData);
     }
 
-
+    [Authorize]
     [HttpPost("")]
     public async Task<ActionResult<Expense>> CreateExpense(Expense e)
     {
@@ -68,6 +69,7 @@ public class ExpensesController : ControllerBase
         }, e);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteExpense(long? id)
     {
