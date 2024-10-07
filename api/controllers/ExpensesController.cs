@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Budget.Utilites;
 
 [Route("expenses")]
 [ApiController]
 public class ExpensesController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-
 
     public ExpensesController(ApplicationDbContext context)
     {
@@ -21,7 +21,9 @@ public class ExpensesController : ControllerBase
     [HttpGet("")]
     public Task<List<Expense>> ListExpenses()
     {
-        Task<List<Expense>> expenses = _context.Expenses.ToListAsync();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        Task<List<Expense>> expenses = _context.Expenses.Where(e => e.AppUserId == userId).ToListAsync();
 
         return expenses;
     }
