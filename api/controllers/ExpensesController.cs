@@ -46,7 +46,12 @@ public class ExpensesController : ControllerBase
     public async Task<ActionResult<Expense>> CreateExpense(Expense e)
     {
         // ClaimTypes.NameIdentifier gets the identifier (user in this case)
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
 
         e.AppUserId = userId;
 
