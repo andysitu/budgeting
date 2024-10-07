@@ -1,9 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import styles from "./page.module.css";
 import Tabs from "./components/tabs";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import AddExpenseDialog from "./components/dialog/AddExpenseDialog";
@@ -13,7 +11,6 @@ import ExpenseTable, {
 
 export default function Home() {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [expenses, setExpenses] = useState([]);
 
   const expenseTable = useRef<ExpenseTableHandle>(null);
 
