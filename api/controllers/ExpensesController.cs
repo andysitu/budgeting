@@ -31,7 +31,9 @@ public class ExpensesController : ControllerBase
     [HttpGet("{id}", Name = "GetCommand")]
     public async Task<ActionResult<Expense>> GetExpenseById(long id)
     {
-        Expense? expense = await _context.Expenses.FindAsync(id);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        Expense? expense = await _context.Expenses.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
 
         if (expense == null)
         {
@@ -75,9 +77,10 @@ public class ExpensesController : ControllerBase
             return NotFound();
         }
 
-        Console.WriteLine("Hello");
-        var expense = await _context.Expenses.FindAsync(id);
-        Console.WriteLine("Hello1");
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        Expense? expense = await _context.Expenses.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
+
         if (expense != null)
         {
             _context.Expenses.Remove(expense);
