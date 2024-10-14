@@ -3,10 +3,9 @@ using Budgeting.Data;
 using Budgeting.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using Budget.Utilites;
 using Microsoft.AspNetCore.Authorization;
+using Budget.Utilites;
 
 [Route("expenses")]
 [ApiController]
@@ -22,7 +21,7 @@ public class ExpensesController : ControllerBase
     [HttpGet("")]
     public Task<List<Expense>> ListExpenses()
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = Utilites.getCurrentUserId(HttpContext);
 
         Task<List<Expense>> expenses = _context.Expenses.Where(e => e.AppUserId == userId).ToListAsync();
 
@@ -32,7 +31,7 @@ public class ExpensesController : ControllerBase
     [HttpGet("{id}", Name = "GetCommand")]
     public async Task<ActionResult<Expense>> GetExpenseById(long id)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = Utilites.getCurrentUserId(HttpContext);
 
         Expense? expense = await _context.Expenses.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
 
@@ -50,8 +49,7 @@ public class ExpensesController : ControllerBase
     [HttpPost("")]
     public async Task<ActionResult<Expense>> CreateExpense(Expense e)
     {
-        // ClaimTypes.NameIdentifier gets the identifier (user in this case)
-        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? userId = Utilites.getCurrentUserId(HttpContext);
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -79,7 +77,7 @@ public class ExpensesController : ControllerBase
             return NotFound();
         }
 
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? userId = Utilites.getCurrentUserId(HttpContext);
 
         Expense? expense = await _context.Expenses.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
 
