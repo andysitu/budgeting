@@ -2,6 +2,7 @@ import { useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
 import { createExpense } from "@/network/expense";
+import ListItem from "../inputs/ListItem";
 
 export type ExpenseData = {
   name: string;
@@ -19,6 +20,8 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
 
   return (
     <Dialog
@@ -57,6 +60,24 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
         type="number"
         containerStyle={{ marginBottom: "12px" }}
       />
+      <ListItem label="Date">
+        <div>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => {
+              setDate(e.target.value);
+            }}
+          />
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => {
+              setTime(e.target.value);
+            }}
+          />
+        </div>
+      </ListItem>
     </Dialog>
   );
 }
