@@ -58,6 +58,10 @@ export const userAccountSlice = createSlice({
       state.loggedIn = Object.keys(account).length > 0;
       state.account = account;
     });
+    builder.addCase(checkLoginStatus.rejected, (state) => {
+      state.loggedIn = false;
+      state.account = null;
+    });
 
     builder.addCase(handleLogout.fulfilled, (state, action) => {
       state.loggedIn = false;
