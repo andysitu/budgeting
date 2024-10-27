@@ -30,7 +30,9 @@ const handleLogin = createAsyncThunk(
   async (data: { username: string; password: string }) => {
     const { username, password } = data;
 
-    await login(username, password);
+    const result = await login(username, password);
+
+    return result;
   }
 );
 
@@ -55,6 +57,8 @@ export const userAccountSlice = createSlice({
     builder.addCase(checkLoginStatus.fulfilled, (state, action) => {
       const account = action.payload;
 
+      console.log("account", account);
+
       state.loggedIn = Object.keys(account).length > 0;
       state.account = account;
     });
@@ -68,7 +72,11 @@ export const userAccountSlice = createSlice({
     });
 
     builder.addCase(handleLogin.fulfilled, (state, action) => {
-      state.loggedIn = true;
+      state.loggedIn = action?.payload === true;
+    });
+
+    builder.addCase(handleLogin.rejected, (state, action) => {
+      state.loggedIn = false;
     });
   },
 });
