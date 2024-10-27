@@ -4,25 +4,22 @@ import {
   handleLogin,
   handleLogout,
 } from "@/lib/features/userAccount/userAccountSlice";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { fetchPizzas } from "@/network/pizzas";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import UrlLibrary from "../library/UrlLibrary";
 
 function Login() {
+  const { loggedIn } = useAppSelector((state) => state.userAccount);
+
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  useEffect(() => {
-    fetchPizzas().catch((err) => {
-      console.error("error fetchign pizzas", err);
-    });
-  }, []);
+  const [hasErrorLogin, setHaserrorLogin] = useState(false);
 
   return (
     <div>
@@ -33,9 +30,15 @@ function Login() {
           e.preventDefault();
 
           try {
-            await dispatch(handleLogin({ username, password }));
+            const result = await dispatch(handleLogin({ username, password }));
 
-            router.push(searchParams.get("ref") ?? UrlLibrary.HOME);
+            const success = result?.payload == true;
+
+            if (success) {
+              router.push(searchParams.get("ref") ?? UrlLibrary.HOME);
+            } else {
+              setHaserrorLogin(true);
+            }
           } catch (error) {
             console.error(error);
           }
@@ -90,6 +93,13 @@ function Login() {
           Logout
         </button>
       </div>
+
+      {hasErrorLogin && (
+        <div style={{ marginTop: "10px", color: "red" }}>
+          There was an error logging in. Please make sure the username and
+          password are correct.
+        </div>
+      )}
     </div>
   );
 }
