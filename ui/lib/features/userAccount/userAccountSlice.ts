@@ -11,6 +11,7 @@ type UserAccountState = {
   account: Account | null;
   loggedIn: boolean;
   checkedLoginStatus: boolean;
+  checkingLoginStatus: boolean;
 };
 
 const checkLoginStatus = createAsyncThunk(
@@ -40,6 +41,7 @@ const initialState: UserAccountState = {
   account: null,
   loggedIn: false,
   checkedLoginStatus: false,
+  checkingLoginStatus: false,
 };
 
 export const userAccountSlice = createSlice({
@@ -52,12 +54,13 @@ export const userAccountSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(checkLoginStatus.pending, (state) => {
-      state.checkedLoginStatus = true;
+      state.checkingLoginStatus = true;
     });
     builder.addCase(checkLoginStatus.fulfilled, (state, action) => {
       const account = action.payload;
 
       console.log("account", account);
+      state.checkedLoginStatus = true;
 
       state.loggedIn = Object.keys(account).length > 0;
       state.account = account;
