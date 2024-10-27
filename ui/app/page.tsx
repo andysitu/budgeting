@@ -56,7 +56,11 @@ export default function Home() {
         }}
         onCreate={() => {
           if (expenseTable.current) {
-            expenseTable.current.refreshData();
+            try {
+              expenseTable.current.refreshData();
+            } catch (error) {
+              console.log("error refreshing data");
+            }
           }
         }}
       />
