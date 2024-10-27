@@ -11,15 +11,15 @@ function Wrapper({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
 
   const userAccount = useAppSelector((state) => state.userAccount);
-  const { checkedLoginStatus } = userAccount;
+  const { checkingLoginStatus } = userAccount;
 
   const router = useRouter();
 
   const checkLogin = useCallback(async () => {
-    if (!checkedLoginStatus) {
-      const test = await dispatch(checkLoginStatus());
+    if (!checkingLoginStatus) {
+      await dispatch(checkLoginStatus());
     }
-  }, [dispatch, checkedLoginStatus]);
+  }, [dispatch, checkingLoginStatus]);
 
   useEffect(() => {
     // Check for login status
