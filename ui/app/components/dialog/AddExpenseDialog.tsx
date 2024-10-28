@@ -24,8 +24,19 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
+  const clearData = () => {
+    setName("");
+    setDescription("");
+    setAmount("");
+    setDate("");
+    setTime("");
+  };
+
   return (
     <Dialog
+      loading={loading}
       open={open}
       onClose={onClose}
       onSubmit={async () => {
@@ -45,9 +56,17 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
           data.date = dateObj;
         }
 
-        const response = await createExpense(data);
+        try {
+          setLoading(true);
+          const response = await createExpense(data);
 
-        onCreate(response);
+          onCreate(response);
+
+          clearData();
+          setLoading(false);
+        } catch (error) {
+          console.error("Error creating expense", error);
+        }
       }}
     >
       <TextListItem
