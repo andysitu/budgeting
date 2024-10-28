@@ -8,6 +8,7 @@ export type ExpenseData = {
   name: string;
   description: string;
   amount: number;
+  date?: Date;
 };
 
 interface AddExpenseDialogProps {
@@ -28,11 +29,21 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
       open={open}
       onClose={onClose}
       onSubmit={async () => {
-        const data = {
+        let dateObj;
+        if (date && time) {
+          dateObj = new Date(`${date}T${time}`);
+        } else if (date) {
+          dateObj = new Date(date);
+        }
+        const data: ExpenseData = {
           name,
           description,
           amount: Number(amount),
         };
+
+        if (dateObj) {
+          data.date = dateObj;
+        }
 
         const response = await createExpense(data);
 
