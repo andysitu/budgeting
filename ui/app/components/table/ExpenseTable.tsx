@@ -42,13 +42,14 @@ const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
     const expenseList = [];
 
     for (let i = 0; i < expenses.length; i++) {
-      const { id, name, description, amount } = expenses[i];
+      const { id, name, description, amount, date } = expenses[i];
 
       expenseList.push(
         <tr key={`expense-row-${id}`}>
           <td>{name}</td>
           <td>{description}</td>
           <td>{amount}</td>
+          <td>{date ? new Date(date).toLocaleString() : ""}</td>
           <td>
             {selectedIdForDelete === id ? (
               <div>
@@ -94,6 +95,7 @@ const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
           <th scope="col">Name</th>
           <th scope="col">Description</th>
           <th scope="col">Amount</th>
+          <th scope="col">Date</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
