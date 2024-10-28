@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import styles from "./dialog.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import Loading from "../icons/loading";
 
 interface DialogProps {
   open: boolean;
@@ -9,9 +10,17 @@ interface DialogProps {
   children: ReactNode[] | ReactNode;
   id?: string;
   onSubmit?: () => void;
+  loading: boolean;
 }
 
-function Dialog({ open, onClose, children, id, onSubmit }: DialogProps) {
+function Dialog({
+  open,
+  onClose,
+  children,
+  id,
+  onSubmit,
+  loading,
+}: DialogProps) {
   const showClassName = open ? styles["modal-show"] : styles["modal-hidden"];
   return (
     <>
@@ -46,6 +55,8 @@ function Dialog({ open, onClose, children, id, onSubmit }: DialogProps) {
           onSubmit={(e) => {
             e.preventDefault();
 
+            if (loading) return;
+
             if (onSubmit) {
               onSubmit();
             }
@@ -62,7 +73,7 @@ function Dialog({ open, onClose, children, id, onSubmit }: DialogProps) {
                   marginBottom: "10px",
                 }}
               >
-                <button>Submit</button>
+                <button>{loading ? <Loading /> : "Submit"}</button>
               </div>
             )}
           </div>
