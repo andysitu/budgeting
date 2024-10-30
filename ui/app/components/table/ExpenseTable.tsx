@@ -3,6 +3,7 @@ import { deleteExpense, fetchExpenses } from "@/network/expense";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { forwardRef, useImperativeHandle, useState } from "react";
+import Table from "./Table";
 
 export type ExpenseTableHandle = {
   refreshData: () => void;
@@ -34,24 +35,24 @@ const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
     await deleteExpense(id);
   };
 
-  const renderExpenses = () => {
-    if (!(expenses?.length > 0)) {
-      return null;
-    }
-
-    const expenseList = [];
-
-    for (let i = 0; i < expenses.length; i++) {
-      const { id, name, description, amount, date } = expenses[i];
-
-      expenseList.push(
-        <tr key={`expense-row-${id}`}>
-          <td>{name}</td>
-          <td>{description}</td>
-          <td>{amount}</td>
-          <td>{date ? new Date(date).toLocaleString() : ""}</td>
-          <td>
-            {selectedIdForDelete === id ? (
+  return (
+    <Table
+      columns={[
+        { field: "name", header: "Name" },
+        { field: "description", header: "Description" },
+        { field: "amount", header: "Amount" },
+        {
+          field: "date",
+          header: "Date",
+          render: ({ date }) => {
+            return date ? new Date(date).toLocaleString() : "";
+          },
+        },
+        {
+          field: "",
+          header: "Action",
+          render: ({ id }) => {
+            return selectedIdForDelete === id ? (
               <div>
                 <button
                   className={"icon"}
@@ -79,28 +80,12 @@ const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
               >
                 <FontAwesomeIcon color="red" icon={faTrash} />
               </button>
-            )}
-          </td>
-        </tr>
-      );
-    }
-
-    return expenseList;
-  };
-
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Description</th>
-          <th scope="col">Amount</th>
-          <th scope="col">Date</th>
-          <th scope="col">Action</th>
-        </tr>
-      </thead>
-      <tbody>{renderExpenses()}</tbody>
-    </table>
+            );
+          },
+        },
+      ]}
+      dataList={expenses}
+    />
   );
 });
 
