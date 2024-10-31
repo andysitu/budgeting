@@ -7,6 +7,7 @@ import { useAppSelector } from "@/lib/hooks";
 import { useRouter } from "next/navigation";
 import UrlLibrary from "./library/UrlLibrary";
 import Expenses from "./Expenses";
+import Incomes from "./Incomes";
 
 export default function Home() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function Home() {
         <Tabs
           elements={{
             Expense: <Expenses />,
-            Income: <div>Test2</div>,
+            Income: <Incomes />,
           }}
         />
       </div>
