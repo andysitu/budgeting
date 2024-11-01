@@ -34,6 +34,8 @@ const IncomeTable = forwardRef(function IncomeTable(props, ref) {
 
   const handleDeleteIncome = async (id: string) => {
     await deleteIncome(id);
+
+    getIncome();
   };
 
   return (

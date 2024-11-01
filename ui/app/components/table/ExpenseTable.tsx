@@ -33,6 +33,8 @@ const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
 
   const handleDeleteExpense = async (id: string) => {
     await deleteExpense(id);
+
+    getExpenses();
   };
 
   return (
