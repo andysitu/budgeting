@@ -4,26 +4,36 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table from "./Table";
-import { fetchIncome } from "@/network/income";
+import { deleteIncome, fetchIncome } from "@/network/income";
 
-function IncomeTable() {
+export type IncomeTableHandle = {
+  refreshData: () => void;
+};
+
+const IncomeTable = forwardRef(function IncomeTable(props, ref) {
   const [income, setIncome] = useState([]);
   const [selectedIdForDelete, setSelectedIdForDelete] = useState("");
 
   const getIncome = async () => {
     const result = await fetchIncome();
 
-    console.log(result);
-
     setIncome(result);
   };
+
+  useImperativeHandle(ref, () => {
+    return {
+      refreshData: async () => {
+        await getIncome();
+      },
+    };
+  });
 
   useMount(() => {
     getIncome();
   });
 
   const handleDeleteIncome = async (id: string) => {
-    //
+    await deleteIncome(id);
   };
 
   return (
@@ -78,6 +88,6 @@ function IncomeTable() {
       dataList={income}
     />
   );
-}
+});
 
 export default IncomeTable;
