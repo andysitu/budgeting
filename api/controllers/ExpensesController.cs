@@ -27,7 +27,7 @@ public class ExpensesController : ControllerBase
         return expenses;
     }
 
-    [HttpGet("{id}", Name = "GetCommand")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Expense>> GetExpenseById(long id)
     {
         var userId = Utilites.getCurrentUserId(HttpContext);
