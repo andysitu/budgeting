@@ -1,15 +1,13 @@
 import { useRef, useState } from "react";
+import IncomeTable, { IncomeTableHandle } from "../table/IncomeTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import AddExpenseDialog from "./components/dialog/AddExpenseDialog";
-import ExpenseTable, {
-  ExpenseTableHandle,
-} from "./components/table/ExpenseTable";
+import AddIncomeDialog from "../dialog/AddIncomeDialog";
 
-function Expenses() {
+function Incomes() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const expenseTable = useRef<ExpenseTableHandle>(null);
+  const incomeTable = useRef<IncomeTableHandle>(null);
 
   return (
     <>
@@ -23,19 +21,17 @@ function Expenses() {
             <FontAwesomeIcon icon={faPlus} />
           </button>
         </div>
-        <div>
-          <ExpenseTable ref={expenseTable} />
-        </div>
+        <IncomeTable ref={incomeTable} />
       </div>
-      <AddExpenseDialog
+      <AddIncomeDialog
         open={dialogOpen}
         onClose={() => {
           setDialogOpen(false);
         }}
         onCreate={() => {
-          if (expenseTable.current) {
+          if (incomeTable.current) {
             try {
-              expenseTable.current.refreshData();
+              incomeTable.current.refreshData();
             } catch (error) {
               console.log("error refreshing data");
             }
@@ -46,4 +42,4 @@ function Expenses() {
   );
 }
 
-export default Expenses;
+export default Incomes;

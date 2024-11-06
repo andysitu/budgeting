@@ -6,8 +6,8 @@ import { ExpenseTableHandle } from "./components/table/ExpenseTable";
 import { useAppSelector } from "@/lib/hooks";
 import { useRouter } from "next/navigation";
 import UrlLibrary from "./library/UrlLibrary";
-import Expenses from "./Expenses";
-import Incomes from "./Incomes";
+import Expenses from "./components/pages/Expenses";
+import Incomes from "./components/pages/Incomes";
 
 export default function Home() {
   const router = useRouter();
