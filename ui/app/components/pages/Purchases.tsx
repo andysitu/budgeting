@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import AddIncomeDialog from "../dialog/AddIncomeDialog";
 import PurchaseTable, { PurchaseTableHandle } from "../table/PurchaseTable";
+import AddPurchaseDialog from "../dialog/AddPurchaseDialog";
 
 function Purchases() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -23,7 +23,7 @@ function Purchases() {
         </div>
         <PurchaseTable ref={purchseTable} />
       </div>
-      {/* <AddIncomeDialog
+      <AddPurchaseDialog
         open={dialogOpen}
         onClose={() => {
           setDialogOpen(false);
@@ -37,7 +37,7 @@ function Purchases() {
             }
           }
         }}
-      /> */}
+      />
     </>
   );
 }
