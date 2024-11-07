@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import UrlLibrary from "./library/UrlLibrary";
 import Expenses from "./components/pages/Expenses";
 import Incomes from "./components/pages/Incomes";
+import Purchases from "./components/pages/Purchases";
 
 export default function Home() {
   const router = useRouter();
@@ -28,6 +29,7 @@ export default function Home() {
           elements={{
             Expense: <Expenses />,
             Income: <Incomes />,
+            Purchase: <Purchases />,
           }}
         />
       </div>

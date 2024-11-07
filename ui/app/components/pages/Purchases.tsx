@@ -1,0 +1,45 @@
+import { useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import AddIncomeDialog from "../dialog/AddIncomeDialog";
+import PurchaseTable, { PurchaseTableHandle } from "../table/PurchaseTable";
+
+function Purchases() {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const purchseTable = useRef<PurchaseTableHandle>(null);
+
+  return (
+    <>
+      <div>
+        <div>
+          <button
+            onClick={() => {
+              setDialogOpen(true);
+            }}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
+        </div>
+        <PurchaseTable ref={purchseTable} />
+      </div>
+      {/* <AddIncomeDialog
+        open={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false);
+        }}
+        onCreate={() => {
+          if (purchseTable.current) {
+            try {
+              purchseTable.current.refreshData();
+            } catch (error) {
+              console.log("error refreshing data");
+            }
+          }
+        }}
+      /> */}
+    </>
+  );
+}
+
+export default Purchases;
