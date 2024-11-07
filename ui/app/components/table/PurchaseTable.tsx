@@ -3,8 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table from "./Table";
-import { deleteIncome } from "@/network/income";
-import { fetchPurchase } from "@/network/purchase";
+import { deletePurchase, fetchPurchase } from "@/network/purchase";
 
 export type PurchaseTableHandle = {
   refreshData: () => void;
@@ -34,8 +33,8 @@ const PurchaseTable = forwardRef(function PurchaseTable(props, ref) {
     getIncome();
   });
 
-  const handleDeleteIncome = async (id: string) => {
-    await deleteIncome(id);
+  const handleDeletePurchase = async (id: string) => {
+    await deletePurchase(id);
 
     getIncome();
   };
@@ -62,7 +61,7 @@ const PurchaseTable = forwardRef(function PurchaseTable(props, ref) {
                 <button
                   className={"icon"}
                   onClick={() => {
-                    handleDeleteIncome(id);
+                    handleDeletePurchase(id);
                   }}
                 >
                   <FontAwesomeIcon color="green" icon={faCheck} />
