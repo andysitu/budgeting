@@ -1,0 +1,86 @@
+import { useMount } from "@/lib/common/util";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { forwardRef, useImperativeHandle, useState } from "react";
+import Table from "./Table";
+import { deleteVendor, fetchVendors } from "@/network/vendor";
+
+export type VendorTableHandle = {
+  refreshData: () => void;
+};
+
+const VendorTable = forwardRef(function VendorTable(props, ref) {
+  const [vendors, setVendors] = useState([]);
+  const [selectedIdForDelete, setSelectedIdForDelete] = useState("");
+
+  const getVendors = async () => {
+    const result = await fetchVendors();
+
+    setVendors(result);
+  };
+
+  useImperativeHandle(ref, () => {
+    return {
+      refreshData: async () => {
+        await getVendors();
+      },
+    };
+  });
+
+  useMount(() => {
+    getVendors();
+  });
+
+  const handleDeleteVendor = async (id: string) => {
+    await deleteVendor(id);
+
+    getVendors();
+  };
+
+  return (
+    <Table
+      columns={[
+        { field: "name", header: "Name" },
+        { field: "description", header: "Description" },
+        {
+          field: "",
+          header: "Action",
+          render: ({ id }) => {
+            return selectedIdForDelete === id ? (
+              <div>
+                <button
+                  className={"icon"}
+                  onClick={() => {
+                    handleDeleteVendor(id);
+                  }}
+                >
+                  <FontAwesomeIcon color="green" icon={faCheck} />
+                </button>
+                <button
+                  className={"icon"}
+                  onClick={() => {
+                    setSelectedIdForDelete("");
+                  }}
+                >
+                  <FontAwesomeIcon color="red" icon={faXmark} />
+                </button>
+              </div>
+            ) : (
+              <button
+                className={"icon"}
+                onClick={() => {
+                  setSelectedIdForDelete(id);
+                }}
+              >
+                <FontAwesomeIcon color="red" icon={faTrash} />
+              </button>
+            );
+          },
+        },
+      ]}
+      dataList={vendors}
+    />
+  );
+});
+
+export default VendorTable;

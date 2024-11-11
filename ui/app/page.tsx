@@ -9,6 +9,7 @@ import UrlLibrary from "./library/UrlLibrary";
 import Expenses from "./components/pages/Expenses";
 import Incomes from "./components/pages/Incomes";
 import Purchases from "./components/pages/Purchases";
+import Vendors from "./components/pages/Vendors";
 
 export default function Home() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function Home() {
             Expense: <Expenses />,
             Income: <Incomes />,
             Purchase: <Purchases />,
+            Vendors: <Vendors />,
           }}
         />
       </div>
