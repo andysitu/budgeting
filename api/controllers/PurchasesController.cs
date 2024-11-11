@@ -37,9 +37,9 @@ public class PurchasesController : ControllerBase
             return NotFound();
         }
 
-        string incomeData = JsonSerializer.Serialize(purchase);
+        string purchaseData = JsonSerializer.Serialize(purchase);
 
-        return Ok(incomeData);
+        return Ok(purchaseData);
     }
 
     [Authorize]
