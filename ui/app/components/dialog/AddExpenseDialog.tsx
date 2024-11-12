@@ -63,9 +63,10 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
           onCreate(response);
 
           clearData();
-          setLoading(false);
         } catch (error) {
           console.error("Error creating expense", error);
+        } finally {
+          setLoading(false);
         }
       }}
     >

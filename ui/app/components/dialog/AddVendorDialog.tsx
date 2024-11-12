@@ -45,9 +45,10 @@ function AddVendorDialog({ open, onClose, onCreate }: AddVendorDialogProps) {
           onCreate(response);
 
           clearData();
-          setLoading(false);
         } catch (error) {
           console.error("Error creating income", error);
+        } finally {
+          setLoading(false);
         }
       }}
     >

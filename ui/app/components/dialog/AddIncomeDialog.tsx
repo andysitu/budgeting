@@ -64,9 +64,10 @@ function AddIncomeDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
           onCreate(response);
 
           clearData();
-          setLoading(false);
         } catch (error) {
           console.error("Error creating income", error);
+        } finally {
+          setLoading(false);
         }
       }}
     >

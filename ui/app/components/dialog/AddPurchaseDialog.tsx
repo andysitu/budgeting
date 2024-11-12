@@ -60,9 +60,10 @@ function AddPurchaseDialog({
           onCreate(response);
 
           clearData();
-          setLoading(false);
         } catch (error) {
           console.error("Error creating income", error);
+        } finally {
+          setLoading(false);
         }
       }}
     >
