@@ -12,8 +12,8 @@ namespace Budgeting.Models
 
         public string? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
-        public required ICollection<Purchase> Purchases { get; set; } = [];
-        public required ICollection<Expense> Expenses { get; set; } = [];
-        public required ICollection<Income> Incomes { get; set; } = [];
+        public ICollection<Purchase> Purchases { get; set; } = [];
+        public ICollection<Expense> Expenses { get; set; } = [];
+        public ICollection<Income> Incomes { get; set; } = [];
     }
 }
