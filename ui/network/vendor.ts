@@ -12,7 +12,7 @@ const fetchVendors = async () => {
 const deleteVendor = async (id: string) => {
   const requestParam = getConfiguration("DELETE");
 
-  const result = await fetch(`/api/purchase/${id}`, requestParam);
+  const result = await fetch(`/api/vendor/${id}`, requestParam);
 
   return result;
 };
