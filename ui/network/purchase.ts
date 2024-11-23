@@ -19,7 +19,7 @@ export type PurchaseData = {
 const fetchPurchase = async () => {
   const requestParam = getConfiguration("GET");
 
-  const result = await fetch("/api/purchase", requestParam);
+  const result = await fetch("/api/purchases", requestParam);
 
   return result.json();
 };
@@ -27,7 +27,7 @@ const fetchPurchase = async () => {
 const deletePurchase = async (id: string) => {
   const requestParam = getConfiguration("DELETE");
 
-  const result = await fetch(`/api/purchase/${id}`, requestParam);
+  const result = await fetch(`/api/purchases/${id}`, requestParam);
 
   return result;
 };
@@ -35,7 +35,7 @@ const deletePurchase = async (id: string) => {
 const createPurchase = async (purchase: Purchse): Promise<PurchaseData> => {
   const requestParam = getConfiguration("POST");
 
-  const result = await fetch("/api/purchase", {
+  const result = await fetch("/api/purchases", {
     body: JSON.stringify(purchase),
     ...requestParam,
   });

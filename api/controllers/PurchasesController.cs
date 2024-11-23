@@ -6,7 +6,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Budget.Utilites;
 
-[Route("purchase")]
+[Route("purchases")]
 [ApiController]
 public class PurchasesController : ControllerBase
 {

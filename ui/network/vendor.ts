@@ -4,7 +4,7 @@ import { getConfiguration } from "./util";
 const fetchVendors = async () => {
   const requestParam = getConfiguration("GET");
 
-  const result = await fetch("/api/vendor", requestParam);
+  const result = await fetch("/api/vendors", requestParam);
 
   return result.json();
 };
@@ -12,7 +12,7 @@ const fetchVendors = async () => {
 const deleteVendor = async (id: string) => {
   const requestParam = getConfiguration("DELETE");
 
-  const result = await fetch(`/api/vendor/${id}`, requestParam);
+  const result = await fetch(`/api/vendors/${id}`, requestParam);
 
   return result;
 };
@@ -20,7 +20,7 @@ const deleteVendor = async (id: string) => {
 const createVendor = async (vendorData: VendorData) => {
   const requestParam = getConfiguration("POST");
 
-  const result = await fetch("/api/vendor", {
+  const result = await fetch("/api/vendors", {
     body: JSON.stringify(vendorData),
     ...requestParam,
   });

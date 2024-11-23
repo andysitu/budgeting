@@ -6,7 +6,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Budget.Utilites;
 
-[Route("vendor")]
+[Route("vendors")]
 [ApiController]
 public class VendorController : ControllerBase
 {
