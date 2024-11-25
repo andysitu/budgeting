@@ -1,4 +1,5 @@
-import { ReactElement } from "react";
+import { generateUUID } from "@/lib/common/util";
+import { ReactElement, useRef } from "react";
 
 type Columns = {
   field: string;
@@ -12,12 +13,20 @@ type TableProps = {
 };
 
 function Table({ columns = [], dataList = [] }: TableProps) {
+  // Use uuid as key for now
+  const idRef = useRef(generateUUID());
+
   const renderHeader = () => {
     const headerList = [];
 
-    for (const column of columns) {
+    for (let i = 0; i < columns.length; i++) {
+      const column = columns[i];
       const header = column?.header ?? "";
-      headerList.push(<th scope="col">{header}</th>);
+      headerList.push(
+        <th scope="col" key={`${idRef.current}_col_${i}`}>
+          {header}
+        </th>
+      );
     }
 
     return (
@@ -30,20 +39,26 @@ function Table({ columns = [], dataList = [] }: TableProps) {
   const renderBody = () => {
     const rows = [];
 
-    for (const data of dataList) {
+    for (let i = 0; i < dataList.length; i++) {
+      const data = dataList[i];
+
       const cells = [];
 
-      for (const column of columns) {
+      for (let j = 0; j < columns.length; j++) {
+        const column = columns[j];
+
         const { field, render } = column;
 
+        const key = `${idRef.current}_cell_${i}_${j}`;
+
         if (render) {
-          cells.push(<td>{render(data)}</td>);
+          cells.push(<td key={key}>{render(data)}</td>);
         } else {
-          cells.push(<td>{data?.[field] ?? ""}</td>);
+          cells.push(<td key={key}>{data?.[field] ?? ""}</td>);
         }
       }
 
-      rows.push(<tr>{cells}</tr>);
+      rows.push(<tr key={`${idRef.current}_row_${i}`}>{cells}</tr>);
     }
 
     return <tbody>{rows}</tbody>;

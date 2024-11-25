@@ -11,4 +11,8 @@ const useMount = (fn: () => void) => {
   useEffect(fn, []);
 };
 
-export { isEmptyObject, useMount };
+const generateUUID = () => {
+  return crypto.randomUUID();
+};
+
+export { isEmptyObject, useMount, generateUUID };
