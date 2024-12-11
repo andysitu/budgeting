@@ -3,6 +3,7 @@ import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
 import { createExpense } from "@/network/expense";
 import ListItem from "../inputs/ListItem";
+import VendorSelect from "../select/VendorSelect";
 
 export type ExpenseData = {
   name: string;
@@ -23,6 +24,7 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [vendor, setVendor] = useState<string | number>("");
 
   const [loading, setLoading] = useState(false);
 
@@ -108,6 +110,9 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
             }}
           />
         </div>
+      </ListItem>
+      <ListItem label="Vendor">
+        <VendorSelect value={vendor} onSelect={(vendor) => setVendor(vendor)} />
       </ListItem>
     </Dialog>
   );

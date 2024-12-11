@@ -1,6 +1,6 @@
 import { generateUUID, useMount } from "@/lib/common/util";
 import { fetchVendors } from "@/network/vendor";
-import { ReactElement, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 type VendorSelectProps = {
   value: string | number;
@@ -15,9 +15,14 @@ function VendorSelect({ value = "", onSelect }: VendorSelectProps) {
   const getVendors = async () => {
     const vendors = await fetchVendors();
 
-    console.log("vendors", vendors);
-
     setVendors(vendors ?? []);
+
+    // select first vendor. Might need to change to allow none selection
+    if (vendors?.length > 0) {
+      const firstVendor = vendors[0];
+
+      onSelect(firstVendor.id);
+    }
   };
 
   useMount(() => {
