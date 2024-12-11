@@ -15,4 +15,20 @@ const generateUUID = () => {
   return crypto.randomUUID();
 };
 
-export { isEmptyObject, useMount, generateUUID };
+async function sendFetch(...args: Parameters<typeof fetch>): Promise<any> {
+  const response = await fetch(...args);
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    if (data?.title) {
+      throw new Error(data.title);
+    } else {
+      throw new Error("Error sending fetch request");
+    }
+  }
+
+  return data;
+}
+
+export { isEmptyObject, useMount, generateUUID, sendFetch };

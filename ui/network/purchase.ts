@@ -1,3 +1,4 @@
+import { sendFetch } from "@/lib/common/util";
 import { getConfiguration } from "./util";
 
 type Purchse = {
@@ -19,7 +20,7 @@ export type PurchaseData = {
 const fetchPurchase = async () => {
   const requestParam = getConfiguration("GET");
 
-  const result = await fetch("/api/purchases", requestParam);
+  const result = await sendFetch("/api/purchases", requestParam);
 
   return result.json();
 };
@@ -27,7 +28,7 @@ const fetchPurchase = async () => {
 const deletePurchase = async (id: string) => {
   const requestParam = getConfiguration("DELETE");
 
-  const result = await fetch(`/api/purchases/${id}`, requestParam);
+  const result = await sendFetch(`/api/purchases/${id}`, requestParam);
 
   return result;
 };
@@ -35,7 +36,7 @@ const deletePurchase = async (id: string) => {
 const createPurchase = async (purchase: Purchse): Promise<PurchaseData> => {
   const requestParam = getConfiguration("POST");
 
-  const result = await fetch("/api/purchases", {
+  const result = await sendFetch("/api/purchases", {
     body: JSON.stringify(purchase),
     ...requestParam,
   });
