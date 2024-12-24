@@ -1,10 +1,9 @@
-import { sendFetch } from "@/lib/common/util";
 import { getConfiguration } from "./util";
 
 const login = async (username: string, password: string) => {
   const requestParam = getConfiguration("POST");
 
-  const response = await sendFetch("/api/login?useCookies=true", {
+  const response = await fetch("/api/login?useCookies=true", {
     body: JSON.stringify({
       username,
       email: username,
@@ -19,7 +18,7 @@ const login = async (username: string, password: string) => {
 const logout = async () => {
   const requestParam = getConfiguration("POST");
 
-  const response = await sendFetch("/api/logout", {
+  const response = await fetch("/api/logout", {
     body: JSON.stringify({}),
     ...requestParam,
   });
@@ -31,7 +30,7 @@ const fetchLoginStatus = async () => {
   const requestParam = getConfiguration("GET");
 
   try {
-    const response = await sendFetch("/api/account/me", {
+    const response = await fetch("/api/account/me", {
       ...requestParam,
     });
 

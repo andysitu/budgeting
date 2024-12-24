@@ -1,6 +1,5 @@
 import { IncomeData } from "@/app/components/dialog/AddIncomeDialog";
 import { getConfiguration } from "./util";
-import { sendFetch } from "@/lib/common/util";
 
 type Income = {
   name: string;
@@ -11,10 +10,10 @@ type Income = {
   endDate?: Date;
 };
 
-const fetchIncome = async (parameters?: Record<string, any>) => {
+const fetchIncome = async () => {
   const requestParam = getConfiguration("GET");
 
-  const result = await sendFetch("/api/income", requestParam);
+  const result = await fetch("/api/income", requestParam);
 
   return result.json();
 };
@@ -22,7 +21,7 @@ const fetchIncome = async (parameters?: Record<string, any>) => {
 const deleteIncome = async (id: string) => {
   const requestParam = getConfiguration("DELETE");
 
-  const result = await sendFetch(`/api/income/${id}`, requestParam);
+  const result = await fetch(`/api/income/${id}`, requestParam);
 
   return result;
 };
@@ -30,12 +29,11 @@ const deleteIncome = async (id: string) => {
 const createIncome = async (income: Income): Promise<IncomeData> => {
   const requestParam = getConfiguration("POST");
 
-  const result = await sendFetch("/api/income", {
+  const result = await fetch("/api/income", {
     body: JSON.stringify(income),
     ...requestParam,
   });
 
   return result.json();
 };
-
 export { fetchIncome, deleteIncome, createIncome };

@@ -1,11 +1,10 @@
 import { VendorData } from "@/app/components/dialog/AddVendorDialog";
 import { getConfiguration } from "./util";
-import { sendFetch } from "@/lib/common/util";
 
 const fetchVendors = async () => {
   const requestParam = getConfiguration("GET");
 
-  const result = await sendFetch("/api/vendors", requestParam);
+  const result = await fetch("/api/vendors", requestParam);
 
   return result.json();
 };
@@ -13,7 +12,7 @@ const fetchVendors = async () => {
 const deleteVendor = async (id: string) => {
   const requestParam = getConfiguration("DELETE");
 
-  const result = await sendFetch(`/api/vendors/${id}`, requestParam);
+  const result = await fetch(`/api/vendors/${id}`, requestParam);
 
   return result;
 };
@@ -21,7 +20,7 @@ const deleteVendor = async (id: string) => {
 const createVendor = async (vendorData: VendorData) => {
   const requestParam = getConfiguration("POST");
 
-  const result = await sendFetch("/api/vendors", {
+  const result = await fetch("/api/vendors", {
     body: JSON.stringify(vendorData),
     ...requestParam,
   });
