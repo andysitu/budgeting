@@ -1,6 +1,4 @@
 using Budgeting.Data;
-using Budgeting.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Budgeting.Models
 {
