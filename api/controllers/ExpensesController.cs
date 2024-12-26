@@ -57,6 +57,20 @@ public class ExpensesController : ControllerBase
 
         e.AppUserId = userId;
 
+        if (e.VendorId.HasValue)
+        {
+            var vendor = await _context.Vendors.FindAsync(e.VendorId.Value);
+            if (vendor == null)
+            {
+                return BadRequest("Vendor does not exist");
+            }
+            else if (vendor.AppUserId != userId)
+            {
+                return BadRequest("Vendor does not belong to the user");
+            }
+            e.Vendor = vendor;
+        }
+
         _context.Expenses.Add(e);
         await _context.SaveChangesAsync();
 
@@ -70,7 +84,6 @@ public class ExpensesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteExpense(long? id)
     {
-
         if (id == null)
         {
             return NotFound();
