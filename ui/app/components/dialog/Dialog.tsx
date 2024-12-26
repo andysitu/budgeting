@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import styles from "./dialog.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import Loading from "../icons/loading";
+import Loading from "../icons/Loading";
 
 interface DialogProps {
   open: boolean;
