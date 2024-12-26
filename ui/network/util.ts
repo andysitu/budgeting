@@ -1,6 +1,6 @@
-const getConfiguration = (
-  method: "POST" | "GET" | "PATCH" | "PUT" | "DELETE" = "GET"
-) => {
+type FetchRequest = "POST" | "GET" | "PATCH" | "PUT" | "DELETE";
+
+const getConfiguration = (method: FetchRequest = "GET") => {
   const requestParam: RequestInit = {
     credentials: "include",
     mode: "cors",
@@ -13,4 +13,21 @@ const getConfiguration = (
   return requestParam;
 };
 
-export { getConfiguration };
+const sendFetch = async (sendType: FetchRequest, additionalParams: Object) => {
+  let requestParam = getConfiguration(sendType);
+
+  Object.assign(requestParam, additionalParams);
+
+  const result = await fetch("/api/expenses", requestParam);
+
+  const jsonResponse = await result.json();
+
+  if (result.ok) {
+    return jsonResponse;
+  } else {
+    console.log("jsonResponse", jsonResponse);
+    throw new Error(jsonResponse?.title ?? "Error in network request");
+  }
+};
+
+export { getConfiguration, sendFetch };

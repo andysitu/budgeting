@@ -1,5 +1,5 @@
 import { ExpenseData } from "@/app/components/dialog/AddExpenseDialog";
-import { getConfiguration } from "./util";
+import { getConfiguration, sendFetch } from "./util";
 
 type Expense = {
   name: string;
@@ -19,14 +19,7 @@ const fetchExpenses = async () => {
 };
 
 const createExpense = async (expense: Expense): Promise<ExpenseData> => {
-  const requestParam = getConfiguration("POST");
-
-  const result = await fetch("/api/expenses", {
-    body: JSON.stringify(expense),
-    ...requestParam,
-  });
-
-  return result.json();
+  return sendFetch("POST", expense);
 };
 
 const deleteExpense = async (id: string) => {
