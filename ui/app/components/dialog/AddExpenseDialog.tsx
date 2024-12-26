@@ -10,6 +10,7 @@ export type ExpenseData = {
   description: string;
   amount: number;
   date?: Date;
+  vendorId?: number | string;
 };
 
 interface AddExpenseDialogProps {
@@ -48,11 +49,16 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
         } else if (date) {
           dateObj = new Date(date);
         }
+
         const data: ExpenseData = {
           name,
           description,
           amount: Number(amount),
         };
+
+        if (vendor) {
+          data.vendorId = vendor;
+        }
 
         if (dateObj) {
           data.date = dateObj;
