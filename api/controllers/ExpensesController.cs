@@ -46,7 +46,7 @@ public class ExpensesController : ControllerBase
 
     [Authorize]
     [HttpPost("")]
-    public async Task<ActionResult<Expense>> CreateExpense(Expense e)
+    public async Task<ActionResult<Expense>> CreateExpense(Expense expense)
     {
         string? userId = Utilites.getCurrentUserId(HttpContext);
 
@@ -55,11 +55,11 @@ public class ExpensesController : ControllerBase
             return Unauthorized();
         }
 
-        e.AppUserId = userId;
+        expense.AppUserId = userId;
 
-        if (e.VendorId.HasValue)
+        if (expense.VendorId.HasValue)
         {
-            var vendor = await _context.Vendors.FindAsync(e.VendorId.Value);
+            var vendor = await _context.Vendors.FindAsync(expense.VendorId.Value);
             if (vendor == null)
             {
                 return BadRequest("Vendor does not exist");
@@ -68,16 +68,16 @@ public class ExpensesController : ControllerBase
             {
                 return BadRequest("Vendor does not belong to the user");
             }
-            e.Vendor = vendor;
+            expense.Vendor = vendor;
         }
 
-        _context.Expenses.Add(e);
+        _context.Expenses.Add(expense);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetExpenseById), new
         {
-            id = e.Id
-        }, e);
+            id = expense.Id
+        }, expense);
     }
 
     [Authorize]
