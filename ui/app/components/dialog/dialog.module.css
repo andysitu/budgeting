@@ -2,12 +2,12 @@
   display: none;
 }
 
-.modal-show {
-  display: block;
-}
-
 .modal {
   z-index: 1001;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .modal-backdrop {
