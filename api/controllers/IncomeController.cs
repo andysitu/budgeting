@@ -56,6 +56,20 @@ public class IncomeController : ControllerBase
 
         income.AppUserId = userId;
 
+        if (income.VendorId.HasValue)
+        {
+            var vendor = await _context.Vendors.FindAsync(income.VendorId.Value);
+            if (vendor == null)
+            {
+                return BadRequest("Vendor does not exist");
+            }
+            else if (vendor.AppUserId != userId)
+            {
+                return BadRequest("Vendor does not belong to the user");
+            }
+            income.Vendor = vendor;
+        }
+
         _context.Income.Add(income);
         await _context.SaveChangesAsync();
 
