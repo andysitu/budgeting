@@ -13,7 +13,7 @@ const getConfiguration = (method: FetchRequest = "GET") => {
   return requestParam;
 };
 
-const sendFetch = async (sendType: FetchRequest, additionalParams: Object) => {
+const sendFetch = async (sendType: FetchRequest, additionalParams?: Object) => {
   let requestParam = getConfiguration(sendType);
 
   Object.assign(requestParam, additionalParams);

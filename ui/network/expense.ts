@@ -19,7 +19,7 @@ const fetchExpenses = async () => {
 };
 
 const createExpense = async (expense: Expense): Promise<ExpenseData> => {
-  return sendFetch("POST", expense);
+  return sendFetch("POST", { body: JSON.stringify(expense) });
 };
 
 const deleteExpense = async (id: string) => {
