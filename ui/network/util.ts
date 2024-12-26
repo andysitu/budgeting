@@ -25,7 +25,6 @@ const sendFetch = async (sendType: FetchRequest, additionalParams: Object) => {
   if (result.ok) {
     return jsonResponse;
   } else {
-    console.log("jsonResponse", jsonResponse);
     throw new Error(jsonResponse?.title ?? "Error in network request");
   }
 };
