@@ -6,11 +6,55 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Budget.Utilites;
 
+public class ExpenseDto
+{
+    public long Id { get; set; } // From Expense
+    public string Name { get; set; } // From Money
+    public string? Description { get; set; } // From Money
+    public decimal Amount { get; set; } // From Money
+    public DateTime? Date { get; set; } // From Money
+    public DateOnly? StartDate { get; set; } // From Money
+    public DateOnly? EndDate { get; set; } // From Money
+    public long? VendorId { get; set; } // From Expense
+    public VendorDto? Vendor { get; set; } // From Expense
+    public bool Settled { get; set; } // From Expense
+}
+
+public class VendorDto
+{
+    public long Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+}
+
+
 [Route("expenses")]
 [ApiController]
 public class ExpensesController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+
+    private static ExpenseDto MapExpenseToDto(Expense expense)
+    {
+        return new ExpenseDto
+        {
+            Id = expense.Id,
+            Name = expense.Name,
+            Description = expense.Description,
+            Amount = expense.Amount,
+            Date = expense.Date,
+            StartDate = expense.StartDate,
+            EndDate = expense.EndDate,
+            Settled = expense.Settled,
+            VendorId = expense.VendorId,
+            Vendor = expense.Vendor == null ? null : new VendorDto
+            {
+                Id = expense.Vendor.Id,
+                Name = expense.Vendor.Name,
+                Description = expense.Vendor.Description
+            }
+        };
+    }
 
     public ExpensesController(ApplicationDbContext context)
     {
@@ -18,13 +62,25 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpGet("")]
-    public Task<List<Expense>> ListExpenses()
+    public async Task<List<ExpenseDto>> ListExpenses()
     {
         var userId = Utilites.getCurrentUserId(HttpContext);
 
-        Task<List<Expense>> expenses = _context.Expenses.Where(e => e.AppUserId == userId).ToListAsync();
+        var expenses = await _context.Expenses
+                .Include(e => e.Vendor)
+                .Where(e => e.AppUserId == userId)
+                .ToListAsync();
 
-        return expenses;
+        // In your controller:
+        var expenseDtos = new List<ExpenseDto>();
+        foreach (var expense in expenses)
+        {
+            var expenseDto = MapExpenseToDto(expense);
+            expenseDtos.Add(expenseDto);
+        }
+
+        return expenseDtos;
+
     }
 
     [HttpGet("{id}")]
