@@ -51,6 +51,13 @@ const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
           },
         },
         {
+          field: "vendor",
+          header: "Vendor",
+          render: ({ vendor }) => {
+            return vendor?.name ?? "";
+          },
+        },
+        {
           field: "",
           header: "Action",
           render: ({ id }) => {
