@@ -6,32 +6,31 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Budget.Utilites;
 
-public class ExpenseDto
-{
-    public long Id { get; set; } // From Expense
-    public string Name { get; set; } // From Money
-    public string? Description { get; set; } // From Money
-    public decimal Amount { get; set; } // From Money
-    public DateTime? Date { get; set; } // From Money
-    public DateOnly? StartDate { get; set; } // From Money
-    public DateOnly? EndDate { get; set; } // From Money
-    public long? VendorId { get; set; } // From Expense
-    public VendorDto? Vendor { get; set; } // From Expense
-    public bool Settled { get; set; } // From Expense
-}
-
-public class VendorDto
-{
-    public long Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-}
-
-
 [Route("expenses")]
 [ApiController]
 public class ExpensesController : ControllerBase
 {
+    public class ExpenseDto
+    {
+        public long Id { get; set; } // From Expense
+        public string Name { get; set; } // From Money
+        public string? Description { get; set; } // From Money
+        public decimal Amount { get; set; } // From Money
+        public DateTime? Date { get; set; } // From Money
+        public DateOnly? StartDate { get; set; } // From Money
+        public DateOnly? EndDate { get; set; } // From Money
+        public long? VendorId { get; set; } // From Expense
+        public VendorDto? Vendor { get; set; } // From Expense
+        public bool Settled { get; set; } // From Expense
+    }
+
+    public class VendorDto
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
     private readonly ApplicationDbContext _context;
 
     private static ExpenseDto MapExpenseToDto(Expense expense)
