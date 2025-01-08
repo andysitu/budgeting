@@ -18,8 +18,6 @@ const sendFetch = async (sendType: FetchRequest, additionalParams?: Object) => {
 
   Object.assign(requestParam, additionalParams);
 
-  console.log(requestParam);
-
   const result = await fetch("/api/expenses", requestParam);
 
   const jsonResponse = await result.json();

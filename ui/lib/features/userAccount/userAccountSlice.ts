@@ -59,7 +59,6 @@ export const userAccountSlice = createSlice({
     builder.addCase(checkLoginStatus.fulfilled, (state, action) => {
       const account = action.payload;
 
-      console.log("account", account);
       state.checkedLoginStatus = true;
 
       state.loggedIn = Object.keys(account).length > 0;
