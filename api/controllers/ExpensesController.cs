@@ -126,7 +126,7 @@ public class ExpensesController : ControllerBase
             {
                 return BadRequest("Vendor does not belong to the user");
             }
-            expense.Vendor = vendor;
+            expense.VendorId = expense.VendorId.Value;
         }
 
         _context.Expenses.Add(expense);
