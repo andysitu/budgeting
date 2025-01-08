@@ -1,15 +1,16 @@
 import { useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
-import { createExpense } from "@/network/expense";
 import ListItem from "../inputs/ListItem";
 import { createIncome } from "@/network/income";
+import VendorSelect from "../select/VendorSelect";
 
 export type IncomeData = {
   name: string;
   description: string;
   amount: number;
   date?: Date;
+  vendorId?: number | string;
 };
 
 interface AddIncomeDialogProps {
@@ -24,6 +25,7 @@ function AddIncomeDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [vendor, setVendor] = useState<string | number>("");
 
   const [loading, setLoading] = useState(false);
 
@@ -52,6 +54,10 @@ function AddIncomeDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
           description,
           amount: Number(amount),
         };
+
+        if (vendor) {
+          data.vendorId = vendor;
+        }
 
         if (dateObj) {
           data.date = dateObj;
@@ -109,6 +115,9 @@ function AddIncomeDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
             }}
           />
         </div>
+      </ListItem>
+      <ListItem label="Vendor">
+        <VendorSelect value={vendor} onSelect={(vendor) => setVendor(vendor)} />
       </ListItem>
     </Dialog>
   );

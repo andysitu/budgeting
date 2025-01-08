@@ -10,24 +10,77 @@ using Budget.Utilites;
 [ApiController]
 public class IncomeController : ControllerBase
 {
+    public class IncomeDto
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string? Description { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime? Date { get; set; }
+        public DateOnly? StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
+        public long? VendorId { get; set; }
+        public VendorDto? Vendor { get; set; }
+    }
+
+    public class VendorDto
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
     private readonly ApplicationDbContext _context;
+
+    private static IncomeDto MapIncomeToDto(Income income)
+    {
+        return new IncomeDto
+        {
+            Id = income.Id,
+            Name = income.Name,
+            Description = income.Description,
+            Amount = income.Amount,
+            Date = income.Date,
+            StartDate = income.StartDate,
+            EndDate = income.EndDate,
+            VendorId = income.VendorId,
+            Vendor = income.Vendor == null ? null : new VendorDto
+            {
+                Id = income.Vendor.Id,
+                Name = income.Vendor.Name,
+                Description = income.Vendor.Description
+            }
+        };
+    }
+
     public IncomeController(ApplicationDbContext context)
     {
         _context = context;
     }
 
     [HttpGet("")]
-    public Task<List<Income>> ListIncomes()
+    public async Task<List<IncomeDto>> ListIncomes()
     {
         var userId = Utilites.getCurrentUserId(HttpContext);
 
-        Task<List<Income>> incomes = _context.Income.Where(e => e.AppUserId == userId).ToListAsync();
+        var incomes = await _context.Income
+            .Include(e => e.Vendor)
+            .Where(e => e.AppUserId == userId)
+            .ToListAsync();
 
-        return incomes;
+        // In your controller:
+        var incomesDto = new List<IncomeDto>();
+        foreach (var income in incomes)
+        {
+            var incomeDto = MapIncomeToDto(income);
+            incomesDto.Add(incomeDto);
+        }
+
+        return incomesDto;
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Income>> GetIncomeById(long id)
+    public async Task<ActionResult<IncomeDto>> GetIncomeById(long id)
     {
         var userId = Utilites.getCurrentUserId(HttpContext);
 
@@ -38,14 +91,14 @@ public class IncomeController : ControllerBase
             return NotFound();
         }
 
-        string incomeData = JsonSerializer.Serialize(income);
+        var IncomeDto = MapIncomeToDto(income);
 
-        return Ok(incomeData);
+        return IncomeDto;
     }
 
     [Authorize]
     [HttpPost("")]
-    public async Task<ActionResult<Income>> CreateIncome(Income income)
+    public async Task<ActionResult<IncomeDto>> CreateIncome(Income income)
     {
         string? userId = Utilites.getCurrentUserId(HttpContext);
 
@@ -55,20 +108,6 @@ public class IncomeController : ControllerBase
         }
 
         income.AppUserId = userId;
-
-        if (income.VendorId.HasValue)
-        {
-            var vendor = await _context.Vendors.FindAsync(income.VendorId.Value);
-            if (vendor == null)
-            {
-                return BadRequest("Vendor does not exist");
-            }
-            else if (vendor.AppUserId != userId)
-            {
-                return BadRequest("Vendor does not belong to the user");
-            }
-            income.Vendor = vendor;
-        }
 
         _context.Income.Add(income);
         await _context.SaveChangesAsync();

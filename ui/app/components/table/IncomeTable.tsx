@@ -51,6 +51,13 @@ const IncomeTable = forwardRef(function IncomeTable(props, ref) {
           },
         },
         {
+          field: "vendor",
+          header: "Vendor",
+          render: ({ vendor }) => {
+            return vendor?.name ?? "";
+          },
+        },
+        {
           field: "",
           header: "Action",
           render: ({ id }) => {
