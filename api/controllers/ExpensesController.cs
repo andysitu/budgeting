@@ -115,20 +115,6 @@ public class ExpensesController : ControllerBase
 
         expense.AppUserId = userId;
 
-        if (expense.VendorId.HasValue)
-        {
-            var vendor = await _context.Vendors.FindAsync(expense.VendorId.Value);
-            if (vendor == null)
-            {
-                return BadRequest("Vendor does not exist");
-            }
-            else if (vendor.AppUserId != userId)
-            {
-                return BadRequest("Vendor does not belong to the user");
-            }
-            expense.VendorId = expense.VendorId.Value;
-        }
-
         _context.Expenses.Add(expense);
         await _context.SaveChangesAsync();
 
