@@ -83,20 +83,23 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Expense>> GetExpenseById(long id)
+    public async Task<ActionResult<ExpenseDto>> GetExpenseById(long id)
     {
         var userId = Utilites.getCurrentUserId(HttpContext);
 
-        Expense? expense = await _context.Expenses.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
+        Expense? expense = await _context.Expenses
+            .Where(e => e.Id == id && e.AppUserId == userId)
+            .Include(e => e.Vendor)
+            .FirstAsync();
 
         if (expense == null)
         {
             return NotFound();
         }
 
-        string expenseData = JsonSerializer.Serialize(expense);
+        var expenseDto = MapExpenseToDto(expense);
 
-        return Ok(expenseData);
+        return Ok(expenseDto);
     }
 
     [Authorize]
