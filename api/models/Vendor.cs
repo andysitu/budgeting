@@ -1,10 +1,8 @@
 using Budgeting.Data;
-using Budgeting.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Budgeting.Models
 {
-    public class Vendor
+    public class Vendor : BaseEntity
     {
         public long Id { get; set; }
         public required string Name { get; set; }

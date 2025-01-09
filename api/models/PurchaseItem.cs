@@ -1,6 +1,6 @@
 namespace Budgeting.Models
 {
-    public class PurchaseItem
+    public class PurchaseItem : BaseEntity
     {
         public long Id { get; set; }
         public decimal Amount { get; set; }

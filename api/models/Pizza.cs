@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Budgeting.Models
 {
-    public class Pizza
+    public class Pizza : BaseEntity
     {
         public int Id { get; set; }
         public string? Name { get; set; }

@@ -2,7 +2,7 @@ using Budgeting.Data;
 
 namespace Budgeting.Models
 {
-    public abstract class Money
+    public abstract class Money : BaseEntity
     {
         public long Id { get; set; }
         public string Name { get; set; } = "";
