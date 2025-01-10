@@ -33,8 +33,6 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
     setName("");
     setDescription("");
     setAmount("");
-    setDate("");
-    setTime("");
   };
 
   return (

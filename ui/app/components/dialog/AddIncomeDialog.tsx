@@ -33,8 +33,6 @@ function AddIncomeDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
     setName("");
     setDescription("");
     setAmount("");
-    setDate("");
-    setTime("");
   };
 
   return (

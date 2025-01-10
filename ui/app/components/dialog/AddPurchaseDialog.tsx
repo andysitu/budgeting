@@ -27,8 +27,6 @@ function AddPurchaseDialog({
     setName("");
     setDescription("");
     setAmount("");
-    setDate("");
-    setTime("");
   };
 
   return (
