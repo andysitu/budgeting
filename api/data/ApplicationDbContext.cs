@@ -30,6 +30,16 @@ namespace Budgeting.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseNpgsql("Host=localhost:5432;Database=budgeting;Username=budgetuser;Password=123abc");
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // For identity tables
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Expense>()
+                .Property(e => e.ExpenseType)
+                .HasConversion<string>();
+        }
+
         public override int SaveChanges()
         {
             UpdateTimestamps();
