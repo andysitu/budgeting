@@ -4,7 +4,6 @@ namespace Budgeting.Models
 {
     public class Vendor : BaseEntity
     {
-        public long Id { get; set; }
         public required string Name { get; set; }
         public string Description { get; set; } = "";
 
