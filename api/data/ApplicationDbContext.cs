@@ -26,6 +26,8 @@ namespace Budgeting.Data
         public DbSet<Budgeting.Models.Expense> Expenses { get; set; }
         // Income instead of Incomes probably because I added the schema without adding it to this file
         public DbSet<Budgeting.Models.Income> Income { get; set; }
+        public DbSet<Budgeting.Models.Account> Accounts { get; set; }
+        public DbSet<Budgeting.Models.Transaction> Transactions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseNpgsql("Host=localhost:5432;Database=budgeting;Username=budgetuser;Password=123abc");
@@ -38,6 +40,16 @@ namespace Budgeting.Data
             modelBuilder.Entity<Expense>()
                 .Property(e => e.ExpenseType)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.ToAccount)
+                .WithMany(a => a.ToTransactions)
+                .HasForeignKey(t => t.ToAccountId);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.FromAccount)
+                .WithMany(a => a.FromTransactions)
+                .HasForeignKey(t => t.FromAccountId);
         }
 
         public override int SaveChanges()

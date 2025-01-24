@@ -1,4 +1,4 @@
-namespace Budgeting.Models
+﻿namespace Budgeting.Models
 {
     public class Income : Money
     {
