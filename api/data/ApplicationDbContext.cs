@@ -37,10 +37,6 @@ namespace Budgeting.Data
             // For identity tables
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Expense>()
-                .Property(e => e.ExpenseType)
-                .HasConversion<string>();
-
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.ToAccount)
                 .WithMany(a => a.ToTransactions)
