@@ -1,6 +1,4 @@
 using Budgeting.Data;
-using Budgeting.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Budgeting.Models
 {
@@ -9,6 +7,9 @@ namespace Budgeting.Models
         public long Id { get; set; } // Or Guid if you prefer
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        public string AppUserId { get; set; } = null!;
+        public virtual AppUser AppUser { get; set; } = null!;
     }
 
 }

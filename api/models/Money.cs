@@ -10,8 +10,5 @@ namespace Budgeting.Models
         public DateTime? Date { get; set; }
         public DateOnly? StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
-
-        public string? AppUserId { get; set; }
-        public virtual AppUser? AppUser { get; set; }
     }
 }

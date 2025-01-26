@@ -16,8 +16,5 @@ namespace Budgeting.Models
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
         public decimal Amount { get; set; }
-
-        public string AppUserId { get; set; } = null!;
-        public virtual AppUser AppUser { get; set; } = null!;
     }
 }
