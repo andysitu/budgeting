@@ -1,5 +1,3 @@
-using Budgeting.Data;
-
 namespace Budgeting.Models
 {
     public abstract class Money : BaseEntity

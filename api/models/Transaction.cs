@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Budgeting.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Budgeting.Models
