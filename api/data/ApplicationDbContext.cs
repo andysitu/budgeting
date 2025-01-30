@@ -21,8 +21,6 @@ namespace Budgeting.Data
 
         public DbSet<Budgeting.Models.Pizza> Pizzas { get; set; }
         public DbSet<Budgeting.Models.Vendor> Vendors { get; set; }
-        public DbSet<Budgeting.Models.Purchase> Purchases { get; set; }
-        public DbSet<Budgeting.Models.PurchaseItem> PurchaseItems { get; set; }
         public DbSet<Budgeting.Models.ExpenseType> ExpenseTypes { get; set; }
         public DbSet<Budgeting.Models.Expense> Expenses { get; set; }
         // Income instead of Incomes probably because I added the schema without adding it to this file

@@ -12,6 +12,5 @@ namespace Budgeting.Models
 
         [ForeignKey(nameof(ExpenseTypeId))]
         public virtual ExpenseType ExpenseType { get; set; } = null!;
-
     }
 }
