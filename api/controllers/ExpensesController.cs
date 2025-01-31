@@ -10,6 +10,11 @@ using Budget.Utilites;
 [ApiController]
 public class ExpensesController : ControllerBase
 {
+    public class ExpenseTypeDto
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
     public class ExpenseDto
     {
         public long Id { get; set; } // From Expense
@@ -22,6 +27,7 @@ public class ExpensesController : ControllerBase
         public long? VendorId { get; set; } // From Expense
         public VendorDto? Vendor { get; set; } // From Expense
         public bool Settled { get; set; } // From Expense
+        public ExpenseTypeDto? ExpenseType { get; set; }
     }
 
     public class VendorDto
@@ -35,7 +41,7 @@ public class ExpensesController : ControllerBase
 
     private static ExpenseDto MapExpenseToDto(Expense expense)
     {
-        return new ExpenseDto
+        var expenseDto = new ExpenseDto
         {
             Id = expense.Id,
             Name = expense.Name,
@@ -53,6 +59,16 @@ public class ExpensesController : ControllerBase
                 Description = expense.Vendor.Description
             }
         };
+
+        if (expense.ExpenseType != null)
+        {
+            expenseDto.ExpenseType = new ExpenseTypeDto
+            {
+                Name = expense.ExpenseType.Name,
+                Description = expense.ExpenseType.Description
+            }
+        }
+        return expenseDto;
     }
 
     public ExpensesController(ApplicationDbContext context)
