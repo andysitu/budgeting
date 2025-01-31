@@ -66,7 +66,7 @@ public class ExpensesController : ControllerBase
             {
                 Name = expense.ExpenseType.Name,
                 Description = expense.ExpenseType.Description
-            }
+            };
         }
         return expenseDto;
     }
