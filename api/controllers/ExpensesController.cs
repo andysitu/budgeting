@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Budget.Utilites;
+using System.Diagnostics;
 
 [Route("expenses")]
 [ApiController]
@@ -77,9 +78,13 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpGet("")]
-    public async Task<List<ExpenseDto>> ListExpenses()
+    public async Task<List<ExpenseDto>> ListExpenses(string? type = "")
     {
+        Console.WriteLine(type);
+        Debug.WriteLine(type);
         var userId = Utilites.getCurrentUserId(HttpContext);
+
+        var query = _context.Expenses;
 
         var expenses = await _context.Expenses
                 .Include(e => e.Vendor)
