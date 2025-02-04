@@ -21,7 +21,7 @@ const fetchPurchase = async () => {
 
   const result = await fetch("/api/purchases", requestParam);
 
-  return result.json();
+  return result?.json() ?? [];
 };
 
 const deletePurchase = async (id: string) => {
