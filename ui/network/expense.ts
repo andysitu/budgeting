@@ -1,5 +1,6 @@
 import { ExpenseData } from "@/app/components/dialog/AddExpenseDialog";
 import { getConfiguration, sendFetch } from "./util";
+import { isEmptyObject } from "@/lib/common/util";
 
 type Expense = {
   name: string;
@@ -10,10 +11,17 @@ type Expense = {
   endDate?: Date;
 };
 
-const fetchExpenses = async () => {
+const fetchExpenses = async (params: Record<string, any> = {}) => {
   const requestParam = getConfiguration("GET");
 
-  const result = await fetch("/api/expenses", requestParam);
+  const url = new URL("/api/expenses", window.location.origin);
+
+  if (!isEmptyObject(params)) {
+    for (const key in params) {
+      url.searchParams.append(key, params[key]);
+    }
+  }
+  const result = await fetch(url, requestParam);
 
   return result.json();
 };
