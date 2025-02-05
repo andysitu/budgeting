@@ -84,12 +84,22 @@ public class ExpensesController : ControllerBase
         Debug.WriteLine(type);
         var userId = Utilites.getCurrentUserId(HttpContext);
 
-        var query = _context.Expenses;
+        IQueryable<Expense> query = _context.Expenses
+            .Include(e => e.Vendor)
+            .Include(e => e.ExpenseType)
+            .Where(e => e.AppUserId == userId);
 
-        var expenses = await _context.Expenses
-                .Include(e => e.Vendor)
-                .Where(e => e.AppUserId == userId)
-                .ToListAsync();
+        if (!string.IsNullOrEmpty(type))
+        {
+            var filterTypes = type.Split(
+                ',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            query = query.Where(
+                e => filterTypes.Select(f => f.ToLower()).Contains(e.ExpenseType.Name.ToLower())
+            );
+        }
+
+        var expenses = await query.ToListAsync();
 
         // In your controller:
         var expenseDtos = new List<ExpenseDto>();
