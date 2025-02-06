@@ -19,7 +19,7 @@ export type PurchaseData = {
 const fetchPurchase = async () => {
   const requestParam = getConfiguration("GET");
 
-  const result = await fetch("/api/purchases", requestParam);
+  const result = await fetch("/api/expenses?type=purchase", requestParam);
 
   return result.json();
 };
