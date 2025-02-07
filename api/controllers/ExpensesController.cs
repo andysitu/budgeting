@@ -80,8 +80,6 @@ public class ExpensesController : ControllerBase
     [HttpGet("")]
     public async Task<List<ExpenseDto>> ListExpenses(string? type = "")
     {
-        Console.WriteLine(type);
-        Debug.WriteLine(type);
         var userId = Utilites.getCurrentUserId(HttpContext);
 
         IQueryable<Expense> query = _context.Expenses
