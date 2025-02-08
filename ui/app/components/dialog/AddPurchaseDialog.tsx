@@ -8,7 +8,7 @@ import { ExpenseData } from "./AddExpenseDialog";
 interface AddPurchaseDialogProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (createdIncome: PurchaseData) => void;
+  onCreate: (createdIncome: ExpenseData) => void;
 }
 
 function AddPurchaseDialog({

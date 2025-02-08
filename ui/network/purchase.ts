@@ -1,21 +1,5 @@
 import { getConfiguration } from "./util";
 
-type Purchse = {
-  name: string;
-  description?: string;
-  amount: number;
-  date?: Date;
-  startDate?: Date;
-  endDate?: Date;
-};
-
-export type PurchaseData = {
-  name: string;
-  description: string;
-  amount: number;
-  date?: Date;
-};
-
 const fetchPurchase = async () => {
   const requestParam = getConfiguration("GET");
 
