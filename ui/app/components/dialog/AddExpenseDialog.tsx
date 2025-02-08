@@ -11,6 +11,7 @@ export type ExpenseData = {
   amount: number;
   date?: Date;
   vendorId?: number | string;
+  expenseType?: string;
 };
 
 interface AddExpenseDialogProps {

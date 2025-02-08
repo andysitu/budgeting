@@ -2,7 +2,8 @@ import { useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
 import ListItem from "../inputs/ListItem";
-import { createPurchase, PurchaseData } from "@/network/purchase";
+import { createExpense } from "@/network/expense";
+import { ExpenseData } from "./AddExpenseDialog";
 
 interface AddPurchaseDialogProps {
   open: boolean;
@@ -41,10 +42,11 @@ function AddPurchaseDialog({
         } else if (date) {
           dateObj = new Date(date);
         }
-        const data: PurchaseData = {
+        const data: ExpenseData = {
           name,
           description,
           amount: Number(amount),
+          expenseType: "purchase",
         };
 
         if (dateObj) {
@@ -53,7 +55,7 @@ function AddPurchaseDialog({
 
         try {
           setLoading(true);
-          const response = await createPurchase(data);
+          const response = await createExpense(data);
 
           onCreate(response);
 

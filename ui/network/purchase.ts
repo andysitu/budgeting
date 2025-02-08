@@ -32,15 +32,4 @@ const deletePurchase = async (id: string) => {
   return result;
 };
 
-const createPurchase = async (purchase: Purchse): Promise<PurchaseData> => {
-  const requestParam = getConfiguration("POST");
-
-  const result = await fetch("/api/purchases", {
-    body: JSON.stringify(purchase),
-    ...requestParam,
-  });
-
-  return result.json();
-};
-
-export { fetchPurchase, deletePurchase, createPurchase };
+export { fetchPurchase, deletePurchase };
