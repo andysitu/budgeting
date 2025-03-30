@@ -6,6 +6,14 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Budget.Utilites;
 
+public class VendorDto
+{
+    public long? Id { get; set; }
+    public string Name { get; set; } = "";
+    public string Description { get; set; } = "";
+}
+
+
 [Route("vendors")]
 [ApiController]
 public class VendorController : ControllerBase
@@ -42,9 +50,8 @@ public class VendorController : ControllerBase
         return Ok(vendorData);
     }
 
-    [Authorize]
     [HttpPost("")]
-    public async Task<ActionResult<Vendor>> CreateVendor(Vendor vendor)
+    public async Task<ActionResult<Vendor>> CreateVendor(VendorDto vendorInput)
     {
         string? userId = Utilites.getCurrentUserId(HttpContext);
 
@@ -53,7 +60,13 @@ public class VendorController : ControllerBase
             return Unauthorized();
         }
 
-        vendor.AppUserId = userId;
+        Vendor vendor = new()
+        {
+            Name = vendorInput.Name,
+            Description = vendorInput.Description,
+
+            AppUserId = userId
+        };
 
         _context.Vendors.Add(vendor);
         await _context.SaveChangesAsync();
