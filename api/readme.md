@@ -10,8 +10,7 @@ https://localhost:{PORT}/swagger
 `dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL`
 `dotnet tool install --global dotnet-ef`
 `dotnet add package Microsoft.EntityFrameworkCore.Design`
-
-`dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.4`
+`dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore`
 
 `dotnet ef migrations add InitialCreate`
 `dotnet ef database update`
