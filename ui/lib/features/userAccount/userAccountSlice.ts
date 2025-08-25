@@ -28,7 +28,7 @@ const handleLogout = createAsyncThunk("userAccount/logout", async () => {
 
 const handleLogin = createAsyncThunk(
   "userAccount/login",
-  async (data: { username: string; password: string }) => {
+  async (data: { username: string; password: string; }) => {
     const { username, password } = data;
 
     const result = await login(username, password);
@@ -58,13 +58,12 @@ export const userAccountSlice = createSlice({
     });
     builder.addCase(checkLoginStatus.fulfilled, (state, action) => {
       const account = action.payload;
-
       state.checkedLoginStatus = true;
-
       state.loggedIn = Object.keys(account).length > 0;
       state.account = account;
     });
     builder.addCase(checkLoginStatus.rejected, (state) => {
+      state.checkedLoginStatus = true;
       state.loggedIn = false;
       state.account = null;
     });
