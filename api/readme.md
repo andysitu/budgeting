@@ -1,7 +1,7 @@
 `dotnet --list-sdks`
 
-`dotnet new web -o api -f net8.0`
-`dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 8.0`
+`dotnet new web -o api -f net9.0`
+`dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 9.0`
 
 dotnet run
 https://localhost:{PORT}/swagger
@@ -29,7 +29,13 @@ Remove all migrations and start over
 `create user ... with password '...'`
 `grant all privileges on database ... to ...;`
 `grant usage on schema public to ...`
-`alter database budgeting to ...`
+`grant all privileges on schema public to ...`
+
+This seemed to solve the permission issue with public
+`\c budgeting postgres`
+`GRANT ALL ON SCHEMA public to budgeting;`
+
+
 
 `\connect DBNAME`
 
