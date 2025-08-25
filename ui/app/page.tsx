@@ -15,10 +15,6 @@ export default function Home() {
     (state) => state.userAccount
   );
 
-  if (checkedLoginStatus && !loggedIn) {
-    router.push(`${UrlLibrary.LOGIN}`);
-  }
-
   return (
     <main>
       <div>
