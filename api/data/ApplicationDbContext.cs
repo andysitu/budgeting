@@ -29,7 +29,19 @@ namespace Budgeting.Data
         public DbSet<Budgeting.Models.Transaction> Transactions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseNpgsql("Host=localhost:5432;Database=budgeting;Username=budgetuser;Password=123abc");
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false)
+                    .AddJsonFile($"appsettings.Development.json", optional: true)
+                    .Build();
+
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseNpgsql(connectionString);
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
