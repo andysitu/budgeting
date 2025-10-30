@@ -26,16 +26,16 @@ public class ExpensesController : ControllerBase
         public DateOnly? StartDate { get; set; } // From Money
         public DateOnly? EndDate { get; set; } // From Money
         public long? VendorId { get; set; } // From Expense
-        public VendorDto? Vendor { get; set; } // From Expense
+        public ExpenseVendorDto? Vendor { get; set; } // From Expense
         public bool Settled { get; set; } // From Expense
         public ExpenseTypeDto? ExpenseType { get; set; }
     }
 
-    public class VendorDto
+    public class ExpenseVendorDto
     {
         public long Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = "";
+        public string Description { get; set; } = "";
     }
 
     private readonly ApplicationDbContext _context;
@@ -53,7 +53,7 @@ public class ExpensesController : ControllerBase
             EndDate = expense.EndDate,
             Settled = expense.Settled,
             VendorId = expense.VendorId,
-            Vendor = expense.Vendor == null ? null : new VendorDto
+            Vendor = expense.Vendor == null ? null : new ExpenseVendorDto
             {
                 Id = expense.Vendor.Id,
                 Name = expense.Vendor.Name,

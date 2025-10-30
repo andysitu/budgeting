@@ -20,14 +20,14 @@ public class IncomeController : ControllerBase
         public DateOnly? StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
         public long? VendorId { get; set; }
-        public VendorDto? Vendor { get; set; }
+        public IncomeVendorDto? Vendor { get; set; }
     }
 
-    public class VendorDto
+    public class IncomeVendorDto
     {
         public long Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = "";
+        public string Description { get; set; } = "";
     }
 
     private readonly ApplicationDbContext _context;
@@ -44,7 +44,7 @@ public class IncomeController : ControllerBase
             StartDate = income.StartDate,
             EndDate = income.EndDate,
             VendorId = income.VendorId,
-            Vendor = income.Vendor == null ? null : new VendorDto
+            Vendor = income.Vendor == null ? null : new IncomeVendorDto
             {
                 Id = income.Vendor.Id,
                 Name = income.Vendor.Name,
