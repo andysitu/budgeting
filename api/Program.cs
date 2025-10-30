@@ -105,8 +105,6 @@ app.MapGet("/check_login_status", () =>
     return Results.Ok();
 }).RequireAuthorization();
 
-app.MapGet("/", () => "Hello World!");
-
 app.MapGet("/pizzas", async (ApplicationDbContext db) => await db.Pizzas.ToListAsync()).RequireAuthorization();
 
 app.MapPost("/pizza", async (ApplicationDbContext db, Pizza pizza) =>
