@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace Budgeting.Models
+namespace Budgeting.Models.Accounts
 {
     public class Transaction : BaseEntity
     {

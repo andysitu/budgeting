@@ -1,6 +1,6 @@
 using Budgeting.Data;
 
-namespace Budgeting.Models
+namespace Budgeting.Models.Accounts
 {
     public class Account : BaseEntity
     {
