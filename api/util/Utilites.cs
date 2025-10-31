@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace Budget.Utilites
 {
