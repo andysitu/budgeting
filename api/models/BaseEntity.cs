@@ -11,5 +11,4 @@ namespace Budgeting.Models
         public string AppUserId { get; set; } = null!;
         public virtual AppUser AppUser { get; set; } = null!;
     }
-
 }

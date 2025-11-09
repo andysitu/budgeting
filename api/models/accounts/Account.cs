@@ -1,12 +1,12 @@
 using Budgeting.Data;
 
-namespace Budgeting.Models.Accounts
+namespace Budgeting.Models.Accounts;
+
+public class Account : BaseEntity
 {
-    public class Account : BaseEntity
-    {
-        public virtual ICollection<Transaction> ToTransactions { get; set; }
-            = new List<Transaction>();
-        public virtual ICollection<Transaction> FromTransactions { get; set; }
-            = new List<Transaction>();
-    }
+    public required string Name { get; set; }
+    public string Description { get; set; } = "";
+
+    public virtual ICollection<Holding> Holdings { get; set; }
+        = new List<Holding>();
 }
