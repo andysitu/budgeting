@@ -48,16 +48,6 @@ namespace Budgeting.Data
         {
             // For identity tables
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.ToAccount)
-                .WithMany(a => a.ToTransactions)
-                .HasForeignKey(t => t.ToAccountId);
-
-            modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.FromAccount)
-                .WithMany(a => a.FromTransactions)
-                .HasForeignKey(t => t.FromAccountId);
         }
 
         public override int SaveChanges()
