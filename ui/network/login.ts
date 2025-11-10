@@ -30,7 +30,7 @@ const fetchLoginStatus = async () => {
   const requestParam = getConfiguration("GET");
 
   try {
-    const response = await fetch("/api/account/me", {
+    const response = await fetch("/api/user/me", {
       ...requestParam,
     });
 

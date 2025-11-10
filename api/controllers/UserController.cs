@@ -6,12 +6,12 @@ using System.Text.Json;
 
 [Authorize]
 [ApiController]
-[Route("account")]
-public class AccountController : Controller
+[Route("user")]
+public class UserController : Controller
 {
     private readonly UserManager<AppUser> _userManager;
 
-    public AccountController(UserManager<AppUser> userManager)
+    public UserController(UserManager<AppUser> userManager)
     {
         this._userManager = userManager;
     }
