@@ -4,7 +4,7 @@ using Budgeting.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
-using Budget.Utilites;
+using Budget.Util;
 
 [Route("income")]
 [ApiController]
@@ -61,7 +61,7 @@ public class IncomeController : ControllerBase
     [HttpGet("")]
     public async Task<List<IncomeDto>> ListIncomes()
     {
-        var userId = Utilites.getCurrentUserId(HttpContext);
+        var userId = Util.getCurrentUserId(HttpContext);
 
         var incomes = await _context.Income
             .Include(e => e.Vendor)
@@ -82,7 +82,7 @@ public class IncomeController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<IncomeDto>> GetIncomeById(long id)
     {
-        var userId = Utilites.getCurrentUserId(HttpContext);
+        var userId = Util.getCurrentUserId(HttpContext);
 
         Income? income = await _context.Income.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
 
@@ -100,7 +100,7 @@ public class IncomeController : ControllerBase
     [HttpPost("")]
     public async Task<ActionResult<IncomeDto>> CreateIncome(Income income)
     {
-        string? userId = Utilites.getCurrentUserId(HttpContext);
+        string? userId = Util.getCurrentUserId(HttpContext);
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -128,7 +128,7 @@ public class IncomeController : ControllerBase
             return NotFound();
         }
 
-        string? userId = Utilites.getCurrentUserId(HttpContext);
+        string? userId = Util.getCurrentUserId(HttpContext);
 
         Income? income = await _context.Income.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
 

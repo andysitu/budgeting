@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 
-namespace Budget.Utilites
+namespace Budget.Util
 {
-    public static class Utilites
+    public static class Util
     {
         public static string? getCurrentUserId(HttpContext httpContext)
         {

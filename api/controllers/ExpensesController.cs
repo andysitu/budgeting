@@ -4,7 +4,7 @@ using Budgeting.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
-using Budget.Utilites;
+using Budget.Util;
 using System.Diagnostics;
 
 [Route("expenses")]
@@ -80,7 +80,7 @@ public class ExpensesController : ControllerBase
     [HttpGet("")]
     public async Task<List<ExpenseDto>> ListExpenses(string? type = "")
     {
-        var userId = Utilites.getCurrentUserId(HttpContext);
+        var userId = Util.getCurrentUserId(HttpContext);
 
         IQueryable<Expense> query = _context.Expenses
             .Include(e => e.Vendor)
@@ -114,7 +114,7 @@ public class ExpensesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ExpenseDto>> GetExpenseById(long id)
     {
-        var userId = Utilites.getCurrentUserId(HttpContext);
+        var userId = Util.getCurrentUserId(HttpContext);
 
         Expense? expense = await _context.Expenses
             .Where(e => e.Id == id && e.AppUserId == userId)
@@ -135,7 +135,7 @@ public class ExpensesController : ControllerBase
     [HttpPost("")]
     public async Task<ActionResult<Expense>> CreateExpense(Expense expense)
     {
-        string? userId = Utilites.getCurrentUserId(HttpContext);
+        string? userId = Util.getCurrentUserId(HttpContext);
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -162,7 +162,7 @@ public class ExpensesController : ControllerBase
             return NotFound();
         }
 
-        string? userId = Utilites.getCurrentUserId(HttpContext);
+        string? userId = Util.getCurrentUserId(HttpContext);
 
         Expense? expense = await _context.Expenses.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
 

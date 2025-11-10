@@ -4,7 +4,7 @@ using Budgeting.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
-using Budget.Utilites;
+using Budget.Util;
 
 public class VendorDto
 {
@@ -36,7 +36,7 @@ public class VendorController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Vendor>> GetVendorById(long id)
     {
-        var userId = Utilites.getCurrentUserId(HttpContext);
+        var userId = Util.getCurrentUserId(HttpContext);
 
         Vendor? vendor = await _context.Vendors.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
 
@@ -53,7 +53,7 @@ public class VendorController : ControllerBase
     [HttpPost("")]
     public async Task<ActionResult<Vendor>> CreateVendor(VendorDto vendorInput)
     {
-        string? userId = Utilites.getCurrentUserId(HttpContext);
+        string? userId = Util.getCurrentUserId(HttpContext);
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -87,7 +87,7 @@ public class VendorController : ControllerBase
             return NotFound();
         }
 
-        string? userId = Utilites.getCurrentUserId(HttpContext);
+        string? userId = Util.getCurrentUserId(HttpContext);
 
         Vendor? vendor = await _context.Vendors.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
 
