@@ -27,7 +27,14 @@ const fetchExpenses = async (params: Record<string, any> = {}) => {
 };
 
 const createExpense = async (expense: Expense): Promise<ExpenseData> => {
-  return sendFetch("POST", { body: JSON.stringify(expense) });
+  const requestParam = getConfiguration("POST");
+
+  const result = await fetch("/api/income", {
+    body: JSON.stringify(expense),
+    ...requestParam,
+  });
+
+  return result.json();
 };
 
 const deleteExpense = async (id: string) => {
