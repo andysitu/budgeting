@@ -35,45 +35,47 @@ function AddIncomeDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
     setAmount("");
   };
 
+  const handleSubmit = async () => {
+    let dateObj;
+    if (date && time) {
+      dateObj = new Date(`${date}T${time}`);
+    } else if (date) {
+      dateObj = new Date(date);
+    }
+    const data: IncomeData = {
+      name,
+      description,
+      amount: Number(amount),
+    };
+
+    if (vendor) {
+      data.vendorId = vendor;
+    }
+
+    if (dateObj) {
+      data.date = dateObj;
+    }
+
+    try {
+      setLoading(true);
+      const response = await createIncome(data);
+
+      onCreate(response);
+
+      clearData();
+    } catch (error) {
+      console.error("Error creating income", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Dialog
       loading={loading}
       open={open}
       onClose={onClose}
-      onSubmit={async () => {
-        let dateObj;
-        if (date && time) {
-          dateObj = new Date(`${date}T${time}`);
-        } else if (date) {
-          dateObj = new Date(date);
-        }
-        const data: IncomeData = {
-          name,
-          description,
-          amount: Number(amount),
-        };
-
-        if (vendor) {
-          data.vendorId = vendor;
-        }
-
-        if (dateObj) {
-          data.date = dateObj;
-        }
-
-        try {
-          setLoading(true);
-          const response = await createIncome(data);
-
-          onCreate(response);
-
-          clearData();
-        } catch (error) {
-          console.error("Error creating income", error);
-        } finally {
-          setLoading(false);
-        }
-      }}
+      onSubmit={async () => handleSubmit}
     >
       <TextListItem
         value={name}
