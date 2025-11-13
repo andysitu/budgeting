@@ -1,6 +1,5 @@
 import { ExpenseData } from "@/app/components/dialog/AddExpenseDialog";
-import { getConfiguration, sendFetch } from "./util";
-import { isEmptyObject } from "@/lib/common/util";
+import { sendRequest } from "./util";
 
 type Expense = {
   name: string;
@@ -12,36 +11,22 @@ type Expense = {
 };
 
 const fetchExpenses = async (params: Record<string, any> = {}) => {
-  const requestParam = getConfiguration("GET");
-
   const url = new URL("/api/expenses", window.location.origin);
+  const result = await sendRequest(url, "GET", params);
 
-  if (!isEmptyObject(params)) {
-    for (const key in params) {
-      url.searchParams.append(key, params[key]);
-    }
-  }
-  const result = await fetch(url, requestParam);
-
-  return result.json();
+  return result;
 };
 
 const createExpense = async (expense: Expense): Promise<ExpenseData> => {
-  const requestParam = getConfiguration("POST");
-
-  const result = await fetch("/api/income", {
+  const result = await sendRequest("/api/income", "POST", {
     body: JSON.stringify(expense),
-    ...requestParam,
   });
 
-  return result.json();
+  return result;
 };
 
 const deleteExpense = async (id: string) => {
-  const requestParam = getConfiguration("DELETE");
-
-  const result = await fetch(`/api/expenses/${id}`, requestParam);
-
+  const result = await sendRequest(`/api/expenses/${id}`, "DELETE");
   return result;
 };
 

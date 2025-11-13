@@ -1,40 +1,27 @@
-import { getConfiguration } from "./util";
+import { sendRequest } from "./util";
 
 const login = async (username: string, password: string) => {
-  const requestParam = getConfiguration("POST");
-
-  const response = await fetch("/api/login?useCookies=true", {
+  const response = await sendRequest("/api/login?useCookies=true", "POST", {
     body: JSON.stringify({
       username,
       email: username,
       password,
     }),
-    ...requestParam,
   });
-
   return response.ok;
 };
 
 const logout = async () => {
-  const requestParam = getConfiguration("POST");
-
-  const response = await fetch("/api/logout", {
+  const response = await sendRequest("/api/logout", "POST", {
     body: JSON.stringify({}),
-    ...requestParam,
   });
-
   return response;
 };
 
 const fetchLoginStatus = async () => {
-  const requestParam = getConfiguration("GET");
-
   try {
-    const response = await fetch("/api/user/me", {
-      ...requestParam,
-    });
-
-    return response.json();
+    const response = await sendRequest("/api/user/me", "GET", {});
+    return response;
   } catch (error) {
     return false;
   }

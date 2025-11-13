@@ -1,18 +1,12 @@
-import { getConfiguration } from "./util";
+import { sendRequest } from "./util";
 
 const fetchPurchase = async () => {
-  const requestParam = getConfiguration("GET");
-
-  const result = await fetch("/api/expenses?type=purchase", requestParam);
-
-  return result.json();
+  const result = await sendRequest("/api/expenses?type=purchase", "GET");
+  return result;
 };
 
 const deletePurchase = async (id: string) => {
-  const requestParam = getConfiguration("DELETE");
-
-  const result = await fetch(`/api/purchases/${id}`, requestParam);
-
+  const result = await sendRequest(`/api/purchases/${id}`, "DELETE");
   return result;
 };
 

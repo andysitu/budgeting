@@ -1,10 +1,9 @@
-import { getConfiguration } from "./util";
+import { sendRequest } from "./util";
 
 const fetchPizzas = async () => {
-  const networkConfig = getConfiguration("GET");
-  const result = await fetch("/api/pizzas", networkConfig);
+  const result = await sendRequest("/api/pizzas", "GET");
 
-  return result.json();
+  return result;
 };
 
 export { fetchPizzas };

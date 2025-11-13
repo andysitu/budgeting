@@ -1,3 +1,5 @@
+import { isEmptyObject } from "@/lib/common/util";
+
 type FetchRequest = "POST" | "GET" | "PATCH" | "PUT" | "DELETE";
 
 const getConfiguration = (method: FetchRequest = "GET") => {
@@ -13,12 +15,17 @@ const getConfiguration = (method: FetchRequest = "GET") => {
   return requestParam;
 };
 
-const sendFetch = async (sendType: FetchRequest, additionalParams?: Object) => {
+const sendRequest = async (
+  url: string | URL,
+  sendType: FetchRequest,
+  additionalParams?: Object
+) => {
   let requestParam = getConfiguration(sendType);
 
-  Object.assign(requestParam, additionalParams);
+  if (!isEmptyObject(additionalParams))
+    Object.assign(requestParam, additionalParams);
 
-  const result = await fetch("/api/expenses", requestParam);
+  const result = await fetch(url, requestParam);
 
   const jsonResponse = await result.json();
 
@@ -29,4 +36,4 @@ const sendFetch = async (sendType: FetchRequest, additionalParams?: Object) => {
   }
 };
 
-export { getConfiguration, sendFetch };
+export { getConfiguration, sendRequest };

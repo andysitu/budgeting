@@ -1,24 +1,31 @@
-import { isEmptyObject } from "@/lib/common/util";
-import { getConfiguration } from "./util";
+import { sendRequest } from "./util";
 
 export type Account = {
-    name: string,
-    description: string,
+  id: number;
+  name: string;
+  description: string;
 };
 
-const fetchAccounts = async (params: Record<string, any> = {}): Promise<Account[]> => {
-    const requestParam = getConfiguration("GET");
-
-    const url = new URL("/api/accounts", window.location.origin);
-
-    if (!isEmptyObject(params)) {
-        for (const key in params) {
-            url.searchParams.append(key, params[key]);
-        }
-    }
-    const result = await fetch(url, requestParam);
-
-    return result.json();
+export type AccountData = {
+  name: string;
+  description: string;
 };
 
-export { fetchAccounts };
+const fetchAccounts = async (
+  params: Record<string, any> = {}
+): Promise<Account[]> => {
+  const url = new URL("/api/accounts", window.location.origin);
+  const result = await sendRequest(url, "GET", params);
+
+  return result;
+};
+
+const createAccount = async (account: AccountData) => {
+  const result = await sendRequest("/api/accounts", "POST", {
+    body: JSON.stringify(account),
+  });
+
+  return result;
+};
+
+export { fetchAccounts, createAccount };

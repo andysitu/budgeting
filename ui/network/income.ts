@@ -1,5 +1,5 @@
 import { IncomeData } from "@/app/components/dialog/AddIncomeDialog";
-import { getConfiguration } from "./util";
+import { sendRequest } from "./util";
 
 type Income = {
   name: string;
@@ -11,29 +11,20 @@ type Income = {
 };
 
 const fetchIncome = async () => {
-  const requestParam = getConfiguration("GET");
-
-  const result = await fetch("/api/income", requestParam);
-
-  return result.json();
-};
-
-const deleteIncome = async (id: string) => {
-  const requestParam = getConfiguration("DELETE");
-
-  const result = await fetch(`/api/income/${id}`, requestParam);
+  const result = await sendRequest("/api/income", "GET");
 
   return result;
 };
 
+const deleteIncome = async (id: string) => {
+  const result = await sendRequest(`/api/income/${id}`, "DELETE");
+  return result;
+};
+
 const createIncome = async (income: Income): Promise<IncomeData> => {
-  const requestParam = getConfiguration("POST");
-
-  const result = await fetch("/api/income", {
+  const result = await sendRequest("/api/income", "POST", {
     body: JSON.stringify(income),
-    ...requestParam,
   });
-
-  return result.json();
+  return result;
 };
 export { fetchIncome, deleteIncome, createIncome };
