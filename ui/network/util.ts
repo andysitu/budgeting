@@ -27,12 +27,18 @@ const sendRequest = async (
 
   const result = await fetch(url, requestParam);
 
-  const jsonResponse = await result.json();
-
+  const contentType = result.headers.get("content-type");
   if (result.ok) {
+    if (!contentType || !contentType.includes("application/json")) {
+      return null;
+    }
+    const jsonResponse = await result.json();
     return jsonResponse;
   } else {
-    throw new Error(jsonResponse?.title ?? "Error in network request");
+    const resultText = await result.text();
+    throw new Error(
+      `Error: ${result.status}. Response: ${resultText.substring(0, 100)}...`
+    );
   }
 };
 
