@@ -29,11 +29,14 @@ const sendRequest = async (
 
   const contentType = result.headers.get("content-type");
   if (result.ok) {
-    if (!contentType || !contentType.includes("application/json")) {
+    if (!contentType) {
       return null;
     }
-    const jsonResponse = await result.json();
-    return jsonResponse;
+    if (contentType.includes("application/json")) {
+      return result.json();
+    } else {
+      return result.text();
+    }
   } else {
     const resultText = await result.text();
     throw new Error(
