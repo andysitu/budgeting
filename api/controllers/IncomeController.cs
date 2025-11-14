@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Budgeting.Data;
 using Budgeting.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Budget.Util;
 
@@ -101,7 +100,6 @@ public class IncomeController : ControllerBase
     public async Task<ActionResult<IncomeDto>> CreateIncome(Income income)
     {
         string? userId = Util.getCurrentUserId(HttpContext);
-
         if (string.IsNullOrEmpty(userId))
         {
             return Unauthorized();

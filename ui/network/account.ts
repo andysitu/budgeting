@@ -24,7 +24,6 @@ const createAccount = async (account: AccountData) => {
   const result = await sendRequest("/api/accounts", "POST", {
     body: JSON.stringify(account),
   });
-
   return result;
 };
 
