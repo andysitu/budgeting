@@ -68,12 +68,7 @@ public class IncomeController : ControllerBase
             .ToListAsync();
 
         // In your controller:
-        var incomesDto = new List<IncomeDto>();
-        foreach (var income in incomes)
-        {
-            var incomeDto = MapIncomeToDto(income);
-            incomesDto.Add(incomeDto);
-        }
+        var incomesDto = incomes.Select(i => MapIncomeToDto(i)).ToList();
 
         return incomesDto;
     }

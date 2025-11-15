@@ -100,15 +100,8 @@ public class ExpensesController : ControllerBase
         var expenses = await query.ToListAsync();
 
         // In your controller:
-        var expenseDtos = new List<ExpenseDto>();
-        foreach (var expense in expenses)
-        {
-            var expenseDto = MapExpenseToDto(expense);
-            expenseDtos.Add(expenseDto);
-        }
-
+        var expenseDtos = expenses.Select(e => MapExpenseToDto(e)).ToList();
         return expenseDtos;
-
     }
 
     [HttpGet("{id}")]
