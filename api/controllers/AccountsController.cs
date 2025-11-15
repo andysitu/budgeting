@@ -36,10 +36,20 @@ public class AccountsController : Controller
 
 
     [HttpGet("")]
-    public async Task<List<Account>> GetAccounts()
+    public async Task<List<AccountDto>> ListAccounts()
     {
         var userId = Util.getCurrentUserId(HttpContext);
-        return new();
+        var accounts = await _context.Accounts
+            .Where(a => a.AppUserId == userId)
+            .ToListAsync();
+
+        var accountsDto = accounts.Select(a => new AccountDto
+        {
+            Id = a.Id,
+            Name = a.Name,
+            Description = a.Description,
+        }).ToList();
+        return accountsDto;
     }
 
     [HttpGet("{id}")]
