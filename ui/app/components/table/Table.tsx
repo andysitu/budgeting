@@ -1,7 +1,7 @@
 import { generateUUID } from "@/lib/common/util";
 import { ReactElement, useRef } from "react";
 
-type Columns = {
+export type Columns = {
   field: string;
   header: string;
   render?: (dataRow: Record<string, any>) => string | ReactElement;
