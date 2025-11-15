@@ -97,6 +97,8 @@ public class ExpensesController : ControllerBase
             );
         }
 
+        var total = await query.CountAsync();
+
         var expenses = await query.ToListAsync();
 
         // In your controller:

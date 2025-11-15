@@ -62,10 +62,16 @@ public class IncomeController : ControllerBase
     {
         var userId = Util.getCurrentUserId(HttpContext);
 
-        var incomes = await _context.Income
+        var query = _context.Income
             .Include(e => e.Vendor)
             .Where(e => e.AppUserId == userId)
+            .AsQueryable();
+
+        var incomes = await query
             .ToListAsync();
+
+        var total = await query
+            .CountAsync();
 
         // In your controller:
         var incomesDto = incomes.Select(i => MapIncomeToDto(i)).ToList();
@@ -78,7 +84,9 @@ public class IncomeController : ControllerBase
     {
         var userId = Util.getCurrentUserId(HttpContext);
 
-        Income? income = await _context.Income.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
+        Income? income = await _context.Income
+            .Where(e => e.Id == id && e.AppUserId == userId)
+            .FirstAsync();
 
         if (income == null)
         {

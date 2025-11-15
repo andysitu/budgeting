@@ -39,9 +39,13 @@ public class AccountsController : Controller
     public async Task<List<AccountDto>> ListAccounts()
     {
         var userId = Util.getCurrentUserId(HttpContext);
-        var accounts = await _context.Accounts
+        var query = _context.Accounts
             .Where(a => a.AppUserId == userId)
-            .ToListAsync();
+            .AsQueryable();
+
+        var total = await query.CountAsync();
+
+        var accounts = await query.ToListAsync();
 
         var accountsDto = accounts.Select(a => new AccountDto
         {
