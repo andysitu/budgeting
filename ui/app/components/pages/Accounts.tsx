@@ -1,25 +1,13 @@
-import { Account, fetchAccounts } from "@/network/account";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import AddAccountDialog from "../dialog/AddAccountDialog";
+import AccountsTable, { AccountTableHandle } from "../table/AccountsTable";
 
 function Accounts() {
-  const [accounts, setAccounts] = useState<Account[]>([]);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
-  const getAccounts = async () => {
-    try {
-      const result = await fetchAccounts();
-      setAccounts(result);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    getAccounts();
-  }, []);
+  const accountTableRef = useRef<AccountTableHandle>(null);
 
   return (
     <div>
@@ -31,6 +19,7 @@ function Accounts() {
         >
           <FontAwesomeIcon icon={faPlus} />
         </button>
+        <AccountsTable ref={accountTableRef} />
       </div>
       <AddAccountDialog
         open={addDialogOpen}
@@ -38,7 +27,9 @@ function Accounts() {
           setAddDialogOpen(false);
         }}
         onCreate={() => {
-          getAccounts();
+          if (accountTableRef?.current?.refreshData) {
+            accountTableRef.current.refreshData();
+          }
         }}
       />
     </div>
