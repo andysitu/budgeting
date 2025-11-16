@@ -5,11 +5,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+public class HoldingDto
+{
+    public long Id { get; set; }
+    public decimal Shares { get; set; } = 0;
+    public decimal Price { get; set; } = 1;
+}
 public class AccountDto
 {
     public long Id { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
+    public List<Holding> Holdings { get; set; } = [];
 }
 
 [Authorize]
@@ -33,14 +40,13 @@ public class AccountsController : Controller
         };
     }
 
-
-
     [HttpGet("")]
     public async Task<List<AccountDto>> ListAccounts()
     {
         var userId = Util.getCurrentUserId(HttpContext);
         var query = _context.Accounts
             .Where(a => a.AppUserId == userId)
+            .Include(a => a.Holdings)
             .AsQueryable();
 
         var total = await query.CountAsync();
@@ -52,6 +58,7 @@ public class AccountsController : Controller
             Id = a.Id,
             Name = a.Name,
             Description = a.Description,
+            Holdings = a.Holdings.ToList(),
         }).ToList();
         return accountsDto;
     }
