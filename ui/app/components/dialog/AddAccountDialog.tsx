@@ -51,14 +51,15 @@ function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
       <TextListItem
         value={name}
         label="Name"
-        onChange={(value) => setName(value)}
+        onChange={(value: string) => setName(value)}
         type="text"
         containerStyle={{ marginBottom: "12px" }}
+        autoFocus
       />
       <TextListItem
         value={description}
         label="Description"
-        onChange={(value) => setDescription(value)}
+        onChange={(value: string) => setDescription(value)}
         type="text"
         containerStyle={{ marginBottom: "12px" }}
       />

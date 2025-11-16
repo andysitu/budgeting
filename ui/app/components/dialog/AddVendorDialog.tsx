@@ -55,14 +55,14 @@ function AddVendorDialog({ open, onClose, onCreate }: AddVendorDialogProps) {
       <TextListItem
         value={name}
         label="Name"
-        onChange={(value) => setName(value)}
+        onChange={(value: string) => setName(value)}
         type="text"
         containerStyle={{ marginBottom: "12px" }}
       />
       <TextListItem
         value={description}
         label="Description"
-        onChange={(value) => setDescription(value)}
+        onChange={(value: string) => setDescription(value)}
         type="text"
         containerStyle={{ marginBottom: "12px" }}
       />
