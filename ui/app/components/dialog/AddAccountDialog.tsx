@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Dialog from "./Dialog";
 import TextListItem from "../inputs/TextLisItem";
 import { AccountData, createAccount } from "@/network/account";
@@ -14,6 +14,14 @@ function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
   const [description, setDescription] = useState("");
 
   const [loading, setLoading] = useState(false);
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open && nameInputRef?.current?.focus) {
+      nameInputRef.current.focus();
+    }
+  }, [open]);
 
   const resetDialog = () => {
     setName("");
@@ -54,7 +62,7 @@ function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
         onChange={(value: string) => setName(value)}
         type="text"
         containerStyle={{ marginBottom: "12px" }}
-        autoFocus
+        ref={nameInputRef}
       />
       <TextListItem
         value={description}
