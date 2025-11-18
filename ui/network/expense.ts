@@ -11,8 +11,7 @@ type Expense = {
 };
 
 const fetchExpenses = async (params: Record<string, any> = {}) => {
-  const url = new URL("/api/expenses", window.location.origin);
-  const result = await sendRequest(url, "GET", params);
+  const result = await sendRequest("/api/expenses", "GET", params);
 
   return result;
 };

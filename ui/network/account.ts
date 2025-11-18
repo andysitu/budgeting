@@ -14,8 +14,7 @@ export type AccountData = {
 const fetchAccounts = async (
   params: Record<string, any> = {}
 ): Promise<Account[]> => {
-  const url = new URL("/api/accounts", window.location.origin);
-  const result = await sendRequest(url, "GET", params);
+  const result = await sendRequest("/api/accounts", "GET", params);
 
   return result;
 };
