@@ -4,6 +4,7 @@ import Table, { Columns } from "./Table";
 import { useMount } from "@/lib/common/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import AddHoldingDialog from "../dialog/AddHoldingDialog";
 
 export type AccountTableHandle = {
   refreshData: () => void;
@@ -11,9 +12,13 @@ export type AccountTableHandle = {
 
 const AccountsTable = forwardRef(function AccountsTable(props, ref) {
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [accountForAddHolding, setAccountForAddHolding] = useState<
+    undefined | Account | null
+  >(null);
 
   const getAccounts = async () => {
     const result = await fetchAccounts();
+    console.log(result);
     setAccounts(result);
   };
 
@@ -35,10 +40,17 @@ const AccountsTable = forwardRef(function AccountsTable(props, ref) {
       {
         field: "",
         header: "",
-        render: (data) => {
+        render: (acct) => {
           return (
             <div>
-              <button className="icon">
+              <button
+                className="icon"
+                onClick={() => {
+                  const id = acct.id;
+                  const account = accounts.find((a) => a.id == Number(id));
+                  setAccountForAddHolding(account);
+                }}
+              >
                 <FontAwesomeIcon color="green" icon={faPlus} />
               </button>
             </div>
@@ -52,7 +64,21 @@ const AccountsTable = forwardRef(function AccountsTable(props, ref) {
     getAccounts();
   });
 
-  return <Table columns={getColumns()} dataList={accounts}></Table>;
+  return (
+    <>
+      <Table columns={getColumns()} dataList={accounts}></Table>
+      <AddHoldingDialog
+        open={accountForAddHolding != null}
+        account={accountForAddHolding}
+        onClose={() => {
+          setAccountForAddHolding(null);
+        }}
+        onCreate={() => {
+          console.log("create add holding");
+        }}
+      />
+    </>
+  );
 });
 
 export default AccountsTable;

@@ -1,17 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import Dialog from "./Dialog";
 import TextListItem from "../inputs/TextLisItem";
-import { AccountData, createAccount } from "@/network/account";
+import {
+  Account,
+  AccountData,
+  HoldingData,
+  addHoldingsToAccount,
+} from "@/network/account";
 
-interface AddIncomeDialogProps {
+interface AddHoldingDialogProps {
+  account: Account | undefined | null;
   open: boolean;
   onClose: () => void;
   onCreate: () => void;
 }
 
-function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
+function AddHoldingDialog({
+  account,
+  open,
+  onClose,
+  onCreate,
+}: AddHoldingDialogProps) {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [shares, setShares] = useState(1);
+  const [price, setPrice] = useState(1);
 
   const [loading, setLoading] = useState(false);
 
@@ -25,18 +37,23 @@ function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
 
   const resetDialog = () => {
     setName("");
-    setDescription("");
+    setShares(1);
+    setPrice(1);
   };
 
   const handleSubmit = async () => {
-    const data: AccountData = {
+    const data: HoldingData = {
       name,
-      description,
+      shares,
+      price,
     };
 
     try {
+      const accountId = account?.id;
+      if (accountId == null) return;
       setLoading(true);
-      const response = await createAccount(data);
+
+      const response = await addHoldingsToAccount(accountId, [data]);
       resetDialog();
       onCreate();
     } catch (error) {
@@ -64,14 +81,21 @@ function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
         ref={nameInputRef}
       />
       <TextListItem
-        value={description}
-        label="Description"
-        onChange={(value: string) => setDescription(value)}
-        type="text"
+        value={shares}
+        label="Shares"
+        onChange={(value: string) => setShares(Number(value))}
+        type="number"
+        containerStyle={{ marginBottom: "12px" }}
+      />
+      <TextListItem
+        value={price}
+        label="Price"
+        onChange={(value: string) => setPrice(Number(value))}
+        type="number"
         containerStyle={{ marginBottom: "12px" }}
       />
     </Dialog>
   );
 }
 
-export default AddAccountDialog;
+export default AddHoldingDialog;

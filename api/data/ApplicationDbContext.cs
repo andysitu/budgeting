@@ -27,6 +27,7 @@ namespace Budgeting.Data
         // Income instead of Incomes probably because I added the schema without adding it to this file
         public DbSet<Budgeting.Models.Income> Income { get; set; }
         public DbSet<Budgeting.Models.Accounts.Account> Accounts { get; set; }
+        public DbSet<Budgeting.Models.Accounts.Holding> Holdings { get; set; }
         public DbSet<Budgeting.Models.Accounts.Transaction> Transactions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

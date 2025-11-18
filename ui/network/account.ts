@@ -1,14 +1,28 @@
 import { sendRequest } from "./util";
 
+export type Holding = {
+  id: number;
+  name: string;
+  shares: number;
+  price: number;
+};
+
 export type Account = {
   id: number;
   name: string;
   description: string;
+  holdings: Holding;
 };
 
 export type AccountData = {
   name: string;
   description: string;
+};
+
+export type HoldingData = {
+  name: string;
+  shares: number;
+  price: number;
 };
 
 const fetchAccounts = async (
@@ -26,4 +40,20 @@ const createAccount = async (account: AccountData) => {
   return result;
 };
 
-export { fetchAccounts, createAccount };
+const addHoldingsToAccount = async (
+  accountId: number,
+  holdings: HoldingData[]
+) => {
+  console.log(accountId, holdings);
+  const result = await sendRequest(
+    `api/accounts/${accountId}/holdings`,
+    "POST",
+    {
+      body: JSON.stringify({
+        holdings,
+      }),
+    }
+  );
+};
+
+export { fetchAccounts, createAccount, addHoldingsToAccount };

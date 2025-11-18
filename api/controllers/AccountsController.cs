@@ -5,9 +5,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+public class HoldingDataDto
+{
+    public string Name { get; set; } = "";
+    public decimal Shares { get; set; } = 0;
+    public decimal Price { get; set; } = 1;
+}
 public class HoldingDto
 {
     public long Id { get; set; }
+    public string Name { get; set; } = "";
     public decimal Shares { get; set; } = 0;
     public decimal Price { get; set; } = 1;
 }
@@ -101,5 +108,51 @@ public class AccountsController : Controller
         {
             id = account.Id
         }, account);
+    }
+
+    public class HoldingListWrapperDto
+    {
+        public required List<HoldingDataDto> Holdings { get; set; }
+    }
+
+    [Authorize]
+    [HttpPost("{id}/holdings")]
+    public async Task<ActionResult> CreateHoldings(
+            long id, [FromBody] HoldingListWrapperDto wrapper)
+    {
+        var userId = Util.getCurrentUserId(HttpContext);
+        if (userId == null)
+        {
+            return NotFound();
+        }
+
+        Account? account = await _context.Accounts.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
+
+        if (account == null)
+        {
+            return NotFound();
+        }
+
+        List<HoldingDataDto> holdings = wrapper.Holdings;
+        List<Holding> holdingsToAdd = new();
+
+        if (holdings == null || holdings.Count == 0)
+            return BadRequest("Empty Holdings provided");
+        foreach (HoldingDataDto holding in holdings)
+        {
+            holdingsToAdd.Add(new Holding
+            {
+                Name = holding.Name,
+                Shares = holding.Shares,
+                Price = holding.Price,
+                AccountId = id,
+                AppUserId = userId,
+            });
+        }
+
+        _context.Holdings.AddRange(holdingsToAdd);
+        await _context.SaveChangesAsync();
+
+        return Ok();
     }
 }
