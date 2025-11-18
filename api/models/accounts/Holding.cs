@@ -11,5 +11,5 @@ public class Holding : BaseEntity
     public decimal Price { get; set; } = 1;
 
     public required long AccountId { get; set; }
-    public virtual required Account Account { get; set; }
+    public virtual Account? Account { get; set; }
 }
