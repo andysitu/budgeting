@@ -1,18 +1,21 @@
 import { generateUUID } from "@/lib/common/util";
 import { ReactElement, useRef } from "react";
 
-export type Columns = {
+export type Columns<T extends Record<string, any>> = {
   field: string;
   header: string;
-  render?: (dataRow: Record<string, any>) => string | ReactElement;
+  render?: (dataRow: T) => string | ReactElement;
 };
 
-type TableProps = {
-  columns: Columns[];
-  dataList: Record<string, any>[];
+type TableProps<T extends Record<string, any>> = {
+  columns: Columns<T>[];
+  dataList: T[];
 };
 
-function Table({ columns = [], dataList = [] }: TableProps) {
+function Table<T extends Record<string, any>>({
+  columns = [],
+  dataList = [],
+}: TableProps<T>) {
   // Use uuid as key for now
   const idRef = useRef(generateUUID());
 
