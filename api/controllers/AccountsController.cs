@@ -23,7 +23,7 @@ public class AccountDto
     public long Id { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
-    public List<Holding> Holdings { get; set; } = [];
+    public List<HoldingDto> Holdings { get; set; } = [];
 }
 
 [Authorize]
@@ -65,7 +65,13 @@ public class AccountsController : Controller
             Id = a.Id,
             Name = a.Name,
             Description = a.Description,
-            Holdings = a.Holdings.ToList(),
+            Holdings = a.Holdings.Select(h => new HoldingDto
+            {
+                Id = h.Id,
+                Name = h.Name,
+                Shares = h.Shares,
+                Price = h.Price
+            }).ToList(),
         }).ToList();
         return accountsDto;
     }
