@@ -10,11 +10,13 @@ export type Columns<T extends Record<string, any>> = {
 type TableProps<T extends Record<string, any>> = {
   columns: Columns<T>[];
   dataList: T[];
+  renderInnerTable?: (data: T) => string | ReactElement;
 };
 
 function Table<T extends Record<string, any>>({
   columns = [],
   dataList = [],
+  renderInnerTable,
 }: TableProps<T>) {
   // Use uuid as key for now
   const idRef = useRef(generateUUID());
@@ -62,6 +64,14 @@ function Table<T extends Record<string, any>>({
       }
 
       rows.push(<tr key={`${idRef.current}_row_${i}`}>{cells}</tr>);
+
+      if (renderInnerTable) {
+        rows.push(
+          <tr key={`${idRef.current}_inner_table${i}`}>
+            <td colSpan={columns.length}>{renderInnerTable(data)}</td>
+          </tr>
+        );
+      }
     }
 
     return <tbody>{rows}</tbody>;
