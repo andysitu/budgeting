@@ -1,12 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Dialog from "./Dialog";
 import TextListItem from "../inputs/TextLisItem";
-import {
-  Account,
-  AccountData,
-  HoldingData,
-  addHoldingsToAccount,
-} from "@/network/account";
+import { Account, HoldingData, addHoldingsToAccount } from "@/network/account";
 
 interface AddHoldingDialogProps {
   account: Account | undefined | null;

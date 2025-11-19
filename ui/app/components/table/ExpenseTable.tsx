@@ -1,5 +1,5 @@
 import { useMount } from "@/lib/common/util";
-import { deleteExpense, fetchExpenses } from "@/network/expense";
+import { deleteExpense, Expense, fetchExpenses } from "@/network/expense";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { forwardRef, useImperativeHandle, useState } from "react";
@@ -10,8 +10,10 @@ export type ExpenseTableHandle = {
 };
 
 const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
-  const [expenses, setExpenses] = useState([]);
-  const [selectedIdForDelete, setSelectedIdForDelete] = useState("");
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [selectedIdForDelete, setSelectedIdForDelete] = useState<
+    number | null | undefined
+  >(null);
 
   const getExpenses = async () => {
     const expenses = await fetchExpenses();
@@ -31,13 +33,13 @@ const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
     getExpenses();
   });
 
-  const handleDeleteExpense = async (id: string) => {
+  const handleDeleteExpense = async (id: number) => {
     await deleteExpense(id);
 
     getExpenses();
   };
 
-  const getColumns = (): Columns[] => {
+  const getColumns = (): Columns<Expense>[] => {
     return [
       { field: "name", header: "Name" },
       { field: "description", header: "Description" },
@@ -65,7 +67,7 @@ const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
               <button
                 className={"icon"}
                 onClick={() => {
-                  handleDeleteExpense(id);
+                  if (id != null) handleDeleteExpense(id);
                 }}
               >
                 <FontAwesomeIcon color="green" icon={faCheck} />
@@ -73,7 +75,7 @@ const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
               <button
                 className={"icon"}
                 onClick={() => {
-                  setSelectedIdForDelete("");
+                  setSelectedIdForDelete(null);
                 }}
               >
                 <FontAwesomeIcon color="red" icon={faXmark} />

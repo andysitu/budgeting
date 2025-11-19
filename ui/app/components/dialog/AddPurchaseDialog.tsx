@@ -2,13 +2,13 @@ import { useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
 import ListItem from "../inputs/ListItem";
-import { createExpense } from "@/network/expense";
+import { createExpense, Expense } from "@/network/expense";
 import { ExpenseData } from "./AddExpenseDialog";
 
 interface AddPurchaseDialogProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (createdIncome: ExpenseData) => void;
+  onCreate: (createdIncome: Expense) => void;
 }
 
 function AddPurchaseDialog({

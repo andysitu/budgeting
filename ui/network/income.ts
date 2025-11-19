@@ -1,13 +1,16 @@
 import { IncomeData } from "@/app/components/dialog/AddIncomeDialog";
 import { sendRequest } from "./util";
+import { VendorData } from "@/app/components/dialog/AddVendorDialog";
 
-type Income = {
+export type Income = {
+  id: number;
   name: string;
   description?: string;
   amount: number;
   date?: Date;
   startDate?: Date;
   endDate?: Date;
+  vendor?: VendorData;
 };
 
 const fetchIncome = async () => {
@@ -16,7 +19,7 @@ const fetchIncome = async () => {
   return result;
 };
 
-const deleteIncome = async (id: string) => {
+const deleteIncome = async (id: number) => {
   const result = await sendRequest(`/api/income/${id}`, "DELETE");
   return result;
 };

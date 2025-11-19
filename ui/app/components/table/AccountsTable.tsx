@@ -30,7 +30,7 @@ const AccountsTable = forwardRef(function AccountsTable(props, ref) {
     };
   });
 
-  const getColumns = (): Columns[] => {
+  const getColumns = (): Columns<Account>[] => {
     return [
       {
         field: "name",
@@ -66,7 +66,11 @@ const AccountsTable = forwardRef(function AccountsTable(props, ref) {
 
   return (
     <>
-      <Table columns={getColumns()} dataList={accounts}></Table>
+      <Table
+        columns={getColumns()}
+        dataList={accounts}
+        renderInnerTable={(account) => <div></div>}
+      />
       <AddHoldingDialog
         open={accountForAddHolding != null}
         account={accountForAddHolding}

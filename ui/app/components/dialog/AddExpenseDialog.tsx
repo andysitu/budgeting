@@ -1,7 +1,7 @@
 import { useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
-import { createExpense } from "@/network/expense";
+import { createExpense, Expense } from "@/network/expense";
 import ListItem from "../inputs/ListItem";
 import VendorSelect from "../select/VendorSelect";
 
@@ -17,7 +17,7 @@ export type ExpenseData = {
 interface AddExpenseDialogProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (createdExpense: ExpenseData) => void;
+  onCreate: (createdExpense: Expense) => void;
 }
 
 function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
@@ -26,7 +26,7 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [vendor, setVendor] = useState<string | number>("");
+  const [vendor, setVendor] = useState<number | null>(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -117,7 +117,10 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
         </div>
       </ListItem>
       <ListItem label="Vendor">
-        <VendorSelect value={vendor} onSelect={(vendor) => setVendor(vendor)} />
+        <VendorSelect
+          value={String(vendor)}
+          onSelect={(vendor) => setVendor(Number(vendor))}
+        />
       </ListItem>
     </Dialog>
   );

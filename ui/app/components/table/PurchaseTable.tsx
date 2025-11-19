@@ -4,21 +4,24 @@ import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table, { Columns } from "./Table";
 import { deletePurchase, fetchPurchase } from "@/network/purchase";
+import { Expense } from "@/network/expense";
 
 export type PurchaseTableHandle = {
   refreshData: () => void;
 };
 
 const PurchaseTable = forwardRef(function PurchaseTable(props, ref) {
-  const [income, setIncome] = useState([]);
-  const [selectedIdForDelete, setSelectedIdForDelete] = useState("");
+  const [purchases, setPurchases] = useState<Expense[]>([]);
+  const [selectedIdForDelete, setSelectedIdForDelete] = useState<
+    number | null | undefined
+  >(null);
 
   const [limit, setLimit] = useState(5);
 
   const getIncome = async () => {
     const result = await fetchPurchase();
 
-    setIncome(result);
+    setPurchases(result);
   };
 
   useImperativeHandle(ref, () => {
@@ -33,13 +36,13 @@ const PurchaseTable = forwardRef(function PurchaseTable(props, ref) {
     getIncome();
   });
 
-  const handleDeletePurchase = async (id: string) => {
+  const handleDeletePurchase = async (id: number) => {
     await deletePurchase(id);
 
     getIncome();
   };
 
-  const getColumns = (): Columns[] => {
+  const getColumns = (): Columns<Expense>[] => {
     return [
       { field: "name", header: "Name" },
       { field: "description", header: "Description" },
@@ -60,7 +63,7 @@ const PurchaseTable = forwardRef(function PurchaseTable(props, ref) {
               <button
                 className={"icon"}
                 onClick={() => {
-                  handleDeletePurchase(id);
+                  if (id != null) handleDeletePurchase(id);
                 }}
               >
                 <FontAwesomeIcon color="green" icon={faCheck} />
@@ -68,7 +71,7 @@ const PurchaseTable = forwardRef(function PurchaseTable(props, ref) {
               <button
                 className={"icon"}
                 onClick={() => {
-                  setSelectedIdForDelete("");
+                  setSelectedIdForDelete(null);
                 }}
               >
                 <FontAwesomeIcon color="red" icon={faXmark} />
@@ -89,7 +92,7 @@ const PurchaseTable = forwardRef(function PurchaseTable(props, ref) {
     ];
   };
 
-  return <Table columns={getColumns()} dataList={income} />;
+  return <Table columns={getColumns()} dataList={purchases} />;
 });
 
 export default PurchaseTable;
