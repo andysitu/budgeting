@@ -11,7 +11,7 @@ export type Account = {
   id: number;
   name: string;
   description: string;
-  holdings: Holding;
+  holdings: Holding[];
 };
 
 export type AccountData = {
@@ -44,7 +44,6 @@ const addHoldingsToAccount = async (
   accountId: number,
   holdings: HoldingData[]
 ) => {
-  console.log(accountId, holdings);
   const result = await sendRequest(
     `api/accounts/${accountId}/holdings`,
     "POST",
