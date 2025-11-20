@@ -83,7 +83,11 @@ const AccountsTable = forwardRef(function AccountsTable(props, ref) {
   const renderInnerHoldingsTable = (account: Account) => {
     console.log(account);
     const holdings = account.holdings;
-    return <Table columns={getHoldingColumns()} dataList={holdings} />;
+    return (
+      <div style={{ border: "1px solid lightgray" }}>
+        <Table columns={getHoldingColumns()} dataList={holdings} />
+      </div>
+    );
   };
 
   return (
