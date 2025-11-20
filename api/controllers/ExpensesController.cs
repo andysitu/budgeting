@@ -13,13 +13,13 @@ public class ExpensesController : ControllerBase
 {
     public class ExpenseTypeDto
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = "";
+        public string Description { get; set; } = "";
     }
     public class ExpenseDto
     {
         public long Id { get; set; } // From Expense
-        public string Name { get; set; } // From Money
+        public string Name { get; set; } = ""; // From Money
         public string? Description { get; set; } // From Money
         public decimal Amount { get; set; } // From Money
         public DateTime? Date { get; set; } // From Money
