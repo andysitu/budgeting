@@ -1,4 +1,4 @@
-import { Account, fetchAccounts } from "@/network/account";
+import { Account, fetchAccounts, Holding } from "@/network/account";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table, { Columns } from "./Table";
 import { useMount } from "@/lib/common/util";
@@ -64,12 +64,34 @@ const AccountsTable = forwardRef(function AccountsTable(props, ref) {
     getAccounts();
   });
 
+  const getHoldingColumns = (): Columns<Holding>[] => {
+    return [
+      {
+        field: "name",
+        header: "Name",
+      },
+      { field: "price", header: "Price" },
+      { field: "shares", header: "Shares" },
+      {
+        field: "",
+        header: "Total",
+        render: (holding) => String(holding.price * holding.shares),
+      },
+    ];
+  };
+
+  const renderInnerHoldingsTable = (account: Account) => {
+    console.log(account);
+    const holdings = account.holdings;
+    return <Table columns={getHoldingColumns()} dataList={holdings} />;
+  };
+
   return (
     <>
       <Table
         columns={getColumns()}
         dataList={accounts}
-        renderInnerTable={(account) => <div></div>}
+        renderInnerTable={renderInnerHoldingsTable}
       />
       <AddHoldingDialog
         open={accountForAddHolding != null}
