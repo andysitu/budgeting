@@ -60,6 +60,7 @@ function AddHoldingDialog({
 
   return (
     <Dialog
+      title={"Add Holding"}
       loading={loading}
       open={open}
       onClose={onClose}

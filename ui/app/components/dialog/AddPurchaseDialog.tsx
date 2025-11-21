@@ -32,6 +32,7 @@ function AddPurchaseDialog({
 
   return (
     <Dialog
+      title={"Add Purchase"}
       loading={loading}
       open={open}
       onClose={onClose}

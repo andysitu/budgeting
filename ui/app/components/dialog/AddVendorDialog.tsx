@@ -27,6 +27,7 @@ function AddVendorDialog({ open, onClose, onCreate }: AddVendorDialogProps) {
 
   return (
     <Dialog
+      title={"Add Vendor"}
       loading={loading}
       open={open}
       onClose={onClose}

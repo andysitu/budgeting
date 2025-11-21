@@ -38,6 +38,7 @@ function AddExpenseDialog({ open, onClose, onCreate }: AddExpenseDialogProps) {
 
   return (
     <Dialog
+      title={"Add Expense"}
       loading={loading}
       open={open}
       onClose={onClose}

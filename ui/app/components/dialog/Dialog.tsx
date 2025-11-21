@@ -9,6 +9,7 @@ interface DialogProps {
   onClose: () => void;
   children: ReactNode[] | ReactNode;
   id?: string;
+  title?: string;
   onSubmit?: () => void;
   loading: boolean;
 }
@@ -19,6 +20,7 @@ function Dialog({
   children,
   id,
   onSubmit,
+  title,
   loading,
 }: DialogProps) {
   const showClassName = open ? styles["modal-show"] : styles["modal-hidden"];
@@ -39,9 +41,12 @@ function Dialog({
           style={{
             display: "flex",
             justifyContent: "end",
+            alignItems: "center",
             marginBottom: "8px",
           }}
         >
+          {title && <div>{title}</div>}
+          <div style={{ flexGrow: 1 }} />
           <button
             className={"icon"}
             onClick={() => {
