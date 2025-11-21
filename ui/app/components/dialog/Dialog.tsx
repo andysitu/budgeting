@@ -43,6 +43,9 @@ function Dialog({
             justifyContent: "end",
             alignItems: "center",
             marginBottom: "8px",
+            paddingTop: "4px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
           }}
         >
           {title && <div>{title}</div>}
