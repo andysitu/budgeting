@@ -24,7 +24,7 @@ const deleteIncome = async (id: number) => {
   return result;
 };
 
-const createIncome = async (income: Income): Promise<IncomeData> => {
+const createIncome = async (income: IncomeData): Promise<IncomeData> => {
   const result = await sendRequest("/api/income", "POST", {
     body: JSON.stringify(income),
   });
