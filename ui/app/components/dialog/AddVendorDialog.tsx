@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
 import { createVendor } from "@/network/vendor";
@@ -19,6 +19,8 @@ function AddVendorDialog({ open, onClose, onCreate }: AddVendorDialogProps) {
   const [description, setDescription] = useState("");
 
   const [loading, setLoading] = useState(false);
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const clearData = () => {
     setName("");
@@ -52,6 +54,7 @@ function AddVendorDialog({ open, onClose, onCreate }: AddVendorDialogProps) {
           setLoading(false);
         }
       }}
+      focusInput={nameInputRef?.current}
     >
       <TextListItem
         value={name}
@@ -59,6 +62,7 @@ function AddVendorDialog({ open, onClose, onCreate }: AddVendorDialogProps) {
         onChange={(value: string) => setName(value)}
         type="text"
         containerStyle={{ marginBottom: "12px" }}
+        ref={nameInputRef}
       />
       <TextListItem
         value={description}

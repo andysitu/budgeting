@@ -17,12 +17,6 @@ function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
 
   const nameInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (open && nameInputRef?.current?.focus) {
-      nameInputRef.current.focus();
-    }
-  }, [open]);
-
   const resetDialog = () => {
     setName("");
     setDescription("");
@@ -55,6 +49,7 @@ function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
       onSubmit={() => {
         handleSubmit();
       }}
+      focusInput={nameInputRef?.current}
     >
       <TextListItem
         value={name}

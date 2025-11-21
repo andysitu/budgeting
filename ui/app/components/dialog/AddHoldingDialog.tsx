@@ -24,12 +24,6 @@ function AddHoldingDialog({
 
   const nameInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (open && nameInputRef?.current?.focus) {
-      nameInputRef.current.focus();
-    }
-  }, [open]);
-
   const resetDialog = () => {
     setName("");
     setShares(1);
@@ -67,6 +61,7 @@ function AddHoldingDialog({
       onSubmit={() => {
         handleSubmit();
       }}
+      focusInput={nameInputRef?.current}
     >
       <TextListItem
         value={name}

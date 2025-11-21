@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
 import ListItem from "../inputs/ListItem";
@@ -23,6 +23,8 @@ function AddPurchaseDialog({
   const [time, setTime] = useState("");
 
   const [loading, setLoading] = useState(false);
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const clearData = () => {
     setName("");
@@ -67,6 +69,7 @@ function AddPurchaseDialog({
           setLoading(false);
         }
       }}
+      focusInput={nameInputRef?.current}
     >
       <TextListItem
         value={name}
@@ -74,6 +77,7 @@ function AddPurchaseDialog({
         onChange={(value: string) => setName(value)}
         type="text"
         containerStyle={{ marginBottom: "12px" }}
+        ref={nameInputRef}
       />
       <TextListItem
         value={description}

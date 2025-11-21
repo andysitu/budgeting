@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
 import ListItem from "../inputs/ListItem";
@@ -28,6 +28,8 @@ function AddIncomeDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
   const [vendor, setVendor] = useState<string | number>("");
 
   const [loading, setLoading] = useState(false);
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const clearData = () => {
     setName("");
@@ -77,6 +79,7 @@ function AddIncomeDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
       open={open}
       onClose={onClose}
       onSubmit={async () => handleSubmit}
+      focusInput={nameInputRef?.current}
     >
       <TextListItem
         value={name}
@@ -84,6 +87,7 @@ function AddIncomeDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
         onChange={(value: string) => setName(value)}
         type="text"
         containerStyle={{ marginBottom: "12px" }}
+        ref={nameInputRef}
       />
       <TextListItem
         value={description}
