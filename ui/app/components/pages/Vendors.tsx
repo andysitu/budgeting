@@ -14,6 +14,7 @@ function Vendors() {
       <div>
         <div>
           <button
+            className="icon"
             onClick={() => {
               setDialogOpen(true);
             }}

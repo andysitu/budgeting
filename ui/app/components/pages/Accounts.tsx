@@ -13,6 +13,7 @@ function Accounts() {
     <div>
       <div>
         <button
+          className="icon"
           onClick={() => {
             setAddDialogOpen(true);
           }}

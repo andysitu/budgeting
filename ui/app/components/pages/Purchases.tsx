@@ -14,6 +14,7 @@ function Purchases() {
       <div>
         <div>
           <button
+            className="icon"
             onClick={() => {
               setDialogOpen(true);
             }}
