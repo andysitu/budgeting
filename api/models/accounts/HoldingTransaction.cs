@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Budgeting.Models.Accounts;
 
-public class HoldingTransaction: BaseEntity
+public class HoldingTransaction : BaseEntity
 {
     public decimal Shares { get; set; } = 0;
     public decimal Price { get; set; } = 1;
@@ -11,4 +11,7 @@ public class HoldingTransaction: BaseEntity
 
     [ForeignKey(nameof(HoldingId))]
     public virtual Holding Holding { get; set; } = null!;
+
+    public Transaction? SourceTransaction { get; set; }
+    public Transaction? DestinationTransaction { get; set; }
 }

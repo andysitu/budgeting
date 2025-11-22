@@ -28,7 +28,10 @@ namespace Budgeting.Data
         public DbSet<Budgeting.Models.Income> Income { get; set; }
         public DbSet<Budgeting.Models.Accounts.Account> Accounts { get; set; }
         public DbSet<Budgeting.Models.Accounts.Holding> Holdings { get; set; }
+
         public DbSet<Budgeting.Models.Accounts.Transaction> Transactions { get; set; }
+        public DbSet<Budgeting.Models.Accounts.HoldingTransaction> HoldingTransactions { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -47,6 +50,18 @@ namespace Budgeting.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Transaction>()
+                .HasOne(e => e.FromHoldingTransaction)
+                .WithOne(e => e.DestinationTransaction)
+                .HasForeignKey<Transaction>(e => e.FromHoldingTransactionId)
+                .IsRequired();
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(e => e.ToHoldingTransaction)
+                .WithOne(e => e.SourceTransaction)
+                .HasForeignKey<Transaction>(e => e.ToHoldingTransactionId)
+                .IsRequired();
+
             // For identity tables
             base.OnModelCreating(modelBuilder);
         }
