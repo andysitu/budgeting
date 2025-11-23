@@ -34,7 +34,7 @@ function Vendors() {
             try {
               vendorTable.current.refreshData();
             } catch (error) {
-              console.log("error refreshing data");
+              console.error("error refreshing data");
             }
           }
         }}

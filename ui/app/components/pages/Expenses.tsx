@@ -36,7 +36,7 @@ function Expenses() {
             try {
               expenseTable.current.refreshData();
             } catch (error) {
-              console.log("error refreshing data");
+              console.error("error refreshing data");
             }
           }
         }}
