@@ -21,7 +21,6 @@ function Wrapper({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check for login status
-    const location = window.location;
     if (!(pathname === UrlLibrary.LOGIN)) {
       checkLogin();
     }
