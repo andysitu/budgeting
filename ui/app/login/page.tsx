@@ -7,7 +7,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { fetchPizzas } from "@/network/pizzas";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import UrlLibrary from "../library/UrlLibrary";
 
 function Login() {
