@@ -19,3 +19,20 @@
   top: 0;
   left: 0;
 }
+
+.snackbar {
+  visibility: hidden;
+  text-align: center;
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  bottom: 30px;
+  min-width: 240px;
+  margin-left: -120px;
+}
+
+.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}

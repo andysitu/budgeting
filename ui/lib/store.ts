@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userAccountReducer from "./features/userAccount/userAccountSlice";
+import snackbarReducer from "./features/snackbar/snackbarSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       userAccount: userAccountReducer,
+      snackbar: snackbarReducer,
     },
   });
 };
