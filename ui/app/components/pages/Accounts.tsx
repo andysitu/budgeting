@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
 import { Account, fetchAccounts } from "@/network/account";
 import { useMount } from "@/lib/common/util";
+import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
 
 function Accounts() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -18,7 +19,28 @@ function Accounts() {
   const dispatch = useDispatch();
 
   const toggleTransferHoldings = () => {
-    // check if there are 2 accounts / holdings first
+    // check if there are enough accounts / holdings first
+
+    if (!(accounts.length > 0)) {
+      return dispatch(
+        addMessage("There are no accounts created. Please create an account.")
+      );
+    }
+
+    let totalHoldings = 0;
+    for (const account of accounts) {
+      const holdings = account.holdings;
+      const numHoldings = holdings?.length ?? 0;
+      totalHoldings += numHoldings;
+      if (totalHoldings >= 2) break;
+    }
+    if (!(totalHoldings >= 2)) {
+      return dispatch(
+        addMessage(
+          "There must be at least 2 holdings total in all the accounts."
+        )
+      );
+    }
   };
 
   const getAccounts = async () => {
