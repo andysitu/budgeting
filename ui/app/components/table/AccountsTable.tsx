@@ -6,28 +6,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import AddHoldingDialog from "../dialog/AddHoldingDialog";
 
-export type AccountTableHandle = {
-  refreshData: () => void;
-};
+export type AccountTableHandle = {};
 
-const AccountsTable = forwardRef(function AccountsTable(props, ref) {
-  const [accounts, setAccounts] = useState<Account[]>([]);
+interface AccountTableProps {
+  accounts: Account[];
+}
+
+const AccountsTable = forwardRef(function AccountsTable(
+  { accounts }: AccountTableProps,
+  ref
+) {
   const [accountForAddHolding, setAccountForAddHolding] = useState<
     undefined | Account | null
   >(null);
 
-  const getAccounts = async () => {
-    const result = await fetchAccounts();
-    console.log(result);
-    setAccounts(result);
-  };
-
   useImperativeHandle(ref, () => {
-    return {
-      refreshData: async () => {
-        await getAccounts();
-      },
-    };
+    return {};
   });
 
   const getColumns = (): Columns<Account>[] => {
@@ -59,10 +53,6 @@ const AccountsTable = forwardRef(function AccountsTable(props, ref) {
       },
     ];
   };
-
-  useMount(() => {
-    getAccounts();
-  });
 
   const getHoldingColumns = (): Columns<Holding>[] => {
     return [
