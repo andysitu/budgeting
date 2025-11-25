@@ -10,10 +10,11 @@ export type AccountTableHandle = {};
 
 interface AccountTableProps {
   accounts: Account[];
+  onUpdate: () => void;
 }
 
 const AccountsTable = forwardRef(function AccountsTable(
-  { accounts }: AccountTableProps,
+  { accounts, onUpdate }: AccountTableProps,
   ref
 ) {
   const [accountForAddHolding, setAccountForAddHolding] = useState<
@@ -94,7 +95,7 @@ const AccountsTable = forwardRef(function AccountsTable(
           setAccountForAddHolding(null);
         }}
         onCreate={() => {
-          console.log("create add holding");
+          onUpdate();
         }}
       />
     </>

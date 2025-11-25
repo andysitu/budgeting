@@ -76,7 +76,13 @@ function Accounts() {
         >
           <FontAwesomeIcon icon={faRightLeft} />
         </button>
-        <AccountsTable ref={accountTableRef} accounts={accounts} />
+        <AccountsTable
+          ref={accountTableRef}
+          accounts={accounts}
+          onUpdate={() => {
+            getAccounts();
+          }}
+        />
       </div>
       <AddAccountDialog
         open={addDialogOpen}
