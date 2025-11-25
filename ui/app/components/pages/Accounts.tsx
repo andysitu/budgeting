@@ -66,7 +66,7 @@ function Accounts() {
             setAddDialogOpen(true);
           }}
         >
-          <FontAwesomeIcon icon={faPlus} />
+          <FontAwesomeIcon color="green" icon={faPlus} />
         </button>
         <button
           className="icon"

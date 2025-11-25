@@ -19,7 +19,7 @@ function Incomes() {
               setDialogOpen(true);
             }}
           >
-            <FontAwesomeIcon icon={faPlus} />
+            <FontAwesomeIcon color="green" icon={faPlus} />
           </button>
         </div>
         <IncomeTable ref={incomeTable} />

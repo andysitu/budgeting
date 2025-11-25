@@ -19,7 +19,7 @@ function Purchases() {
               setDialogOpen(true);
             }}
           >
-            <FontAwesomeIcon icon={faPlus} />
+            <FontAwesomeIcon color="green" icon={faPlus} />
           </button>
         </div>
         <PurchaseTable ref={purchseTable} />
