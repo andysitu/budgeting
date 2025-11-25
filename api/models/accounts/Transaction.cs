@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Budgeting.Models.Accounts
@@ -9,6 +10,8 @@ namespace Budgeting.Models.Accounts
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
         public decimal Amount { get; set; }
+        [Comment("If the transaction affected the holding price/shares.")]
+        public bool ModifiedHolding { get; set; } = true;
 
         public long ToHoldingTransactionId { get; set; }
         public long FromHoldingTransactionId { get; set; }
