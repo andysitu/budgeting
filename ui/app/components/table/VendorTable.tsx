@@ -1,9 +1,10 @@
 import { useMount } from "@/lib/common/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table from "./Table";
 import { deleteVendor, fetchVendors } from "@/network/vendor";
+import ConfirmOrCancel from "../icons/ConfirmOrCancel";
 
 export type VendorTableHandle = {
   refreshData: () => void;
@@ -47,24 +48,14 @@ const VendorTable = forwardRef(function VendorTable(props, ref) {
           header: "Action",
           render: ({ id }) => {
             return selectedIdForDelete === id ? (
-              <div>
-                <button
-                  className={"icon"}
-                  onClick={() => {
-                    handleDeleteVendor(id);
-                  }}
-                >
-                  <FontAwesomeIcon color="green" icon={faCheck} />
-                </button>
-                <button
-                  className={"icon"}
-                  onClick={() => {
-                    setSelectedIdForDelete("");
-                  }}
-                >
-                  <FontAwesomeIcon color="red" icon={faXmark} />
-                </button>
-              </div>
+              <ConfirmOrCancel
+                onConfirm={() => {
+                  if (id != null) handleDeleteVendor(id);
+                }}
+                onCancel={() => {
+                  setSelectedIdForDelete("");
+                }}
+              />
             ) : (
               <button
                 className={"icon"}

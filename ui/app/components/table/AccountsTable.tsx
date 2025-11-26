@@ -1,10 +1,10 @@
-import { Account, fetchAccounts, Holding } from "@/network/account";
+import { Account, Holding } from "@/network/account";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table, { Columns } from "./Table";
-import { useMount } from "@/lib/common/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import AddHoldingDialog from "../dialog/AddHoldingDialog";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export type AccountTableHandle = {};
 
@@ -19,6 +19,9 @@ const AccountsTable = forwardRef(function AccountsTable(
 ) {
   const [accountForAddHolding, setAccountForAddHolding] = useState<
     undefined | Account | null
+  >(null);
+  const [selectHoldingForDelete, setSelectHoldingForDelete] = useState<
+    null | number
   >(null);
 
   useImperativeHandle(ref, () => {
@@ -67,6 +70,28 @@ const AccountsTable = forwardRef(function AccountsTable(
         field: "",
         header: "Total",
         render: (holding) => String(holding.price * holding.shares),
+      },
+      {
+        field: "",
+        header: "",
+        render: (holding) => {
+          const id = holding.id;
+          if (selectHoldingForDelete == id) {
+            return <div></div>;
+          }
+          return (
+            <div>
+              <button
+                className="icon"
+                onClick={() => {
+                  setSelectHoldingForDelete(id);
+                }}
+              >
+                <FontAwesomeIcon color="red" icon={faTrashCan} />
+              </button>
+            </div>
+          );
+        },
       },
     ];
   };

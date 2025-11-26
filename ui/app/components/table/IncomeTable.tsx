@@ -1,9 +1,10 @@
 import { useMount } from "@/lib/common/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table, { Columns } from "./Table";
 import { deleteIncome, fetchIncome, Income } from "@/network/income";
+import ConfirmOrCancel from "../icons/ConfirmOrCancel";
 
 export type IncomeTableHandle = {
   refreshData: () => void;
@@ -63,24 +64,14 @@ const IncomeTable = forwardRef(function IncomeTable(props, ref) {
         header: "Action",
         render: ({ id }) => {
           return selectedIdForDelete === id ? (
-            <div>
-              <button
-                className={"icon"}
-                onClick={() => {
-                  handleDeleteIncome(id);
-                }}
-              >
-                <FontAwesomeIcon color="green" icon={faCheck} />
-              </button>
-              <button
-                className={"icon"}
-                onClick={() => {
-                  setSelectedIdForDelete("");
-                }}
-              >
-                <FontAwesomeIcon color="red" icon={faXmark} />
-              </button>
-            </div>
+            <ConfirmOrCancel
+              onConfirm={() => {
+                if (id != null) handleDeleteIncome(id);
+              }}
+              onCancel={() => {
+                setSelectedIdForDelete(null);
+              }}
+            />
           ) : (
             <button
               className={"icon"}

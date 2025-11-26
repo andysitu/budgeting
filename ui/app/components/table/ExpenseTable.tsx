@@ -1,9 +1,10 @@
 import { useMount } from "@/lib/common/util";
 import { deleteExpense, Expense, fetchExpenses } from "@/network/expense";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table, { Columns } from "./Table";
+import ConfirmOrCancel from "../icons/ConfirmOrCancel";
 
 export type ExpenseTableHandle = {
   refreshData: () => void;
@@ -63,24 +64,14 @@ const ExpenseTable = forwardRef(function ExpenseTable(props, ref) {
         header: "Action",
         render: ({ id }) => {
           return selectedIdForDelete === id ? (
-            <div>
-              <button
-                className={"icon"}
-                onClick={() => {
-                  if (id != null) handleDeleteExpense(id);
-                }}
-              >
-                <FontAwesomeIcon color="green" icon={faCheck} />
-              </button>
-              <button
-                className={"icon"}
-                onClick={() => {
-                  setSelectedIdForDelete(null);
-                }}
-              >
-                <FontAwesomeIcon color="red" icon={faXmark} />
-              </button>
-            </div>
+            <ConfirmOrCancel
+              onConfirm={() => {
+                if (id != null) handleDeleteExpense(id);
+              }}
+              onCancel={() => {
+                setSelectedIdForDelete(null);
+              }}
+            />
           ) : (
             <button
               className={"icon"}
