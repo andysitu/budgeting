@@ -161,4 +161,30 @@ public class AccountsController : Controller
 
         return Ok();
     }
+
+    [Authorize]
+    [HttpDelete("{id}/holdings/{holdingId}")]
+    public async Task<ActionResult> DeleteHolding(long id, long holdingId)
+    {
+        var userId = Util.getCurrentUserId(HttpContext);
+        if (userId == null)
+        {
+            return NotFound();
+        }
+
+        Holding? holding = await _context.Holdings.Where(
+            e => e.Id == holdingId && e.AppUserId == userId).FirstAsync();
+
+        if (holding == null)
+        {
+            return NotFound();
+        }
+        if (holding.AccountId != id)
+        {
+            return Forbid();
+        }
+        _context.Holdings.Remove(holding);
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
 }
