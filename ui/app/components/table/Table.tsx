@@ -4,6 +4,7 @@ import { ReactElement, useRef } from "react";
 export type Columns<T extends Record<string, any>> = {
   field: string;
   header: string;
+  cellStyle?: Record<string, any>;
   render?: (dataRow: T) => string | ReactElement;
 };
 
@@ -11,6 +12,10 @@ type TableProps<T extends Record<string, any>> = {
   columns: Columns<T>[];
   dataList: T[];
   renderInnerTable?: (data: T) => string | ReactElement;
+};
+
+const defaultCellStyle: Record<string, any> = {
+  textAlign: "start",
 };
 
 function Table<T extends Record<string, any>>({
@@ -27,8 +32,13 @@ function Table<T extends Record<string, any>>({
     for (let i = 0; i < columns.length; i++) {
       const column = columns[i];
       const header = column?.header ?? "";
+      const cellStyle = column?.cellStyle ?? {};
       headerList.push(
-        <th scope="col" key={`${idRef.current}_col_${i}`}>
+        <th
+          scope="col"
+          key={`${idRef.current}_col_${i}`}
+          style={{ ...defaultCellStyle, ...cellStyle }}
+        >
           {header}
         </th>
       );
@@ -51,15 +61,24 @@ function Table<T extends Record<string, any>>({
 
       for (let j = 0; j < columns.length; j++) {
         const column = columns[j];
+        const cellStyle = column?.cellStyle ?? {};
 
         const { field, render } = column;
 
         const key = `${idRef.current}_cell_${i}_${j}`;
 
         if (render) {
-          cells.push(<td key={key}>{render(data)}</td>);
+          cells.push(
+            <td key={key} style={{ ...defaultCellStyle, ...cellStyle }}>
+              {render(data)}
+            </td>
+          );
         } else {
-          cells.push(<td key={key}>{data?.[field] ?? ""}</td>);
+          cells.push(
+            <td key={key} style={{ ...defaultCellStyle, ...cellStyle }}>
+              {data?.[field] ?? ""}
+            </td>
+          );
         }
       }
 
