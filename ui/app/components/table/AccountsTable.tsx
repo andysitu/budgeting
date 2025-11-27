@@ -33,6 +33,7 @@ const AccountsTable = forwardRef(function AccountsTable(
       {
         field: "name",
         header: "Name",
+        cellStyle: { width: 100 },
       },
       { field: "description", header: "Description" },
       {
@@ -63,6 +64,7 @@ const AccountsTable = forwardRef(function AccountsTable(
       {
         field: "name",
         header: "Name",
+        cellStyle: { width: 100 },
       },
       { field: "price", header: "Price" },
       { field: "shares", header: "Shares" },
