@@ -14,8 +14,12 @@ input {
 
 button.icon {
   border-radius: 50%;
-  padding: 8px 10px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   border: 0;
+  justify-content: center;
+  align-items: center;
 }
 
 button:hover {
