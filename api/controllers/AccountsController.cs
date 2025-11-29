@@ -14,6 +14,7 @@ public class HoldingDataDto
 public class HoldingDto
 {
     public long Id { get; set; }
+    public long AccountId { get; set; }
     public string Name { get; set; } = "";
     public decimal Shares { get; set; } = 0;
     public decimal Price { get; set; } = 1;

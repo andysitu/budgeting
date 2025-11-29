@@ -55,4 +55,14 @@ const addHoldingsToAccount = async (
   );
 };
 
-export { fetchAccounts, createAccount, addHoldingsToAccount };
+const deleteHolding = async (accountId: number, holdingId: number) => {
+  if (!holdingId || !accountId) {
+    throw new Error("Holding or account id not provided to delete holding");
+  }
+  const result = await sendRequest(
+    `api/accounts/${accountId}/holdings/${holdingId}`,
+    "DELETE"
+  );
+};
+
+export { fetchAccounts, createAccount, addHoldingsToAccount, deleteHolding };
