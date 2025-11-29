@@ -1,22 +1,36 @@
-import { Account, Holding } from "@/network/account";
+import {
+  Account,
+  deleteHolding,
+  fetchAccounts,
+  Holding,
+} from "@/network/account";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table, { Columns } from "./Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import AddHoldingDialog from "../dialog/AddHoldingDialog";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import ConfirmOrCancel from "../icons/ConfirmOrCancel";
+import { useDispatch } from "react-redux";
+import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
+import { useMount } from "@/lib/common/util";
+import AddAccountDialog from "../dialog/AddAccountDialog";
 
 export type AccountTableHandle = {};
 
 interface AccountTableProps {
-  accounts: Account[];
-  onUpdate: () => void;
+  onUpdate?: () => void;
 }
 
 const AccountsTable = forwardRef(function AccountsTable(
-  { accounts, onUpdate }: AccountTableProps,
+  { onUpdate }: AccountTableProps,
   ref
 ) {
+  const dispatch = useDispatch();
+
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+
   const [accountForAddHolding, setAccountForAddHolding] = useState<
     undefined | Account | null
   >(null);
@@ -24,9 +38,44 @@ const AccountsTable = forwardRef(function AccountsTable(
     null | number
   >(null);
 
+  const getAccounts = async () => {
+    const result = await fetchAccounts();
+    console.log(result);
+    setAccounts(result);
+  };
+
+  useMount(() => {
+    getAccounts();
+  });
+
   useImperativeHandle(ref, () => {
     return {};
   });
+
+  const toggleTransferHoldings = () => {
+    // check if there are enough accounts / holdings first
+
+    if (!(accounts.length > 0)) {
+      return dispatch(
+        addMessage("There are no accounts created. Please create an account.")
+      );
+    }
+
+    let totalHoldings = 0;
+    for (const account of accounts) {
+      const holdings = account.holdings;
+      const numHoldings = holdings?.length ?? 0;
+      totalHoldings += numHoldings;
+      if (totalHoldings >= 2) break;
+    }
+    if (!(totalHoldings >= 2)) {
+      return dispatch(
+        addMessage(
+          "There must be at least 2 holdings total in all the accounts."
+        )
+      );
+    }
+  };
 
   const getColumns = (): Columns<Account>[] => {
     return [
@@ -59,6 +108,27 @@ const AccountsTable = forwardRef(function AccountsTable(
     ];
   };
 
+  const findAccountIdByHolding = (holdingId: number): number | undefined => {
+    let accountId = null;
+    for (const account of accounts) {
+      const holdings = account.holdings;
+      for (const h of holdings) {
+        if (h.id == holdingId) {
+          return account.id;
+        }
+      }
+    }
+  };
+
+  const confirmDeleteHolding = async (holdingId: number) => {
+    // find account of the holding
+    const accountId = findAccountIdByHolding(holdingId);
+    if (accountId != null) {
+      await deleteHolding(accountId, holdingId);
+      onUpdate();
+    }
+  };
+
   const getHoldingColumns = (): Columns<Holding>[] => {
     return [
       {
@@ -79,7 +149,18 @@ const AccountsTable = forwardRef(function AccountsTable(
         render: (holding) => {
           const id = holding.id;
           if (selectHoldingForDelete == id) {
-            return <div></div>;
+            return (
+              <div>
+                <ConfirmOrCancel
+                  onConfirm={() => {
+                    confirmDeleteHolding(id);
+                  }}
+                  onCancel={() => {
+                    setSelectHoldingForDelete(null);
+                  }}
+                />
+              </div>
+            );
           }
           return (
             <div>
@@ -110,6 +191,22 @@ const AccountsTable = forwardRef(function AccountsTable(
 
   return (
     <>
+      <button
+        className="icon"
+        onClick={() => {
+          setAddDialogOpen(true);
+        }}
+      >
+        <FontAwesomeIcon color="green" icon={faPlus} />
+      </button>
+      <button
+        className="icon"
+        onClick={() => {
+          toggleTransferHoldings();
+        }}
+      >
+        <FontAwesomeIcon icon={faRightLeft} />
+      </button>
       <Table
         columns={getColumns()}
         dataList={accounts}
@@ -123,6 +220,15 @@ const AccountsTable = forwardRef(function AccountsTable(
         }}
         onCreate={() => {
           onUpdate();
+        }}
+      />
+      <AddAccountDialog
+        open={addDialogOpen}
+        onClose={() => {
+          setAddDialogOpen(false);
+        }}
+        onCreate={async () => {
+          await getAccounts();
         }}
       />
     </>
