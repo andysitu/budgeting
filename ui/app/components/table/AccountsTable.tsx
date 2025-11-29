@@ -125,7 +125,7 @@ const AccountsTable = forwardRef(function AccountsTable(
     const accountId = findAccountIdByHolding(holdingId);
     if (accountId != null) {
       await deleteHolding(accountId, holdingId);
-      onUpdate();
+      if (onUpdate) onUpdate();
     }
   };
 
@@ -219,7 +219,7 @@ const AccountsTable = forwardRef(function AccountsTable(
           setAccountForAddHolding(null);
         }}
         onCreate={() => {
-          onUpdate();
+          if (onUpdate) onUpdate();
         }}
       />
       <AddAccountDialog
