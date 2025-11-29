@@ -147,6 +147,7 @@ const AccountsTable = forwardRef(function AccountsTable(
         field: "",
         header: "",
         render: (holding) => {
+          if (toggledTransfer) return "";
           const id = holding.id;
           if (selectHoldingForDelete == id) {
             return (
