@@ -3,6 +3,8 @@ import styles from "./dialog.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
 import { hideLastMessage } from "@/lib/features/snackbar/snackbarSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 function Snackbar() {
   const delayTime = 10000;
@@ -10,7 +12,7 @@ function Snackbar() {
 
   const dispatch = useDispatch();
 
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const snackbarState = useSelector((state: RootState) => state.snackbar);
   const message = snackbarState.message;
@@ -30,8 +32,32 @@ function Snackbar() {
     ? `${styles.snackbar} ${styles.show}`
     : styles.snackbar;
 
+  const color = "#FFD4CC";
+
   return (
-    <div id={id} className={snackbarClass}>
+    <div
+      id={id}
+      className={snackbarClass}
+      style={{
+        minWidth: 200,
+        minHeight: 40,
+        backgroundColor: color,
+        borderRadius: "7px",
+        padding: "14px 6px",
+      }}
+    >
+      <button
+        className={"icon"}
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          background: color,
+        }}
+        onClick={() => setVisible(false)}
+      >
+        <FontAwesomeIcon icon={faXmark} />
+      </button>
       {message}
     </div>
   );
