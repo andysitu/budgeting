@@ -38,6 +38,14 @@ const AccountsTable = forwardRef(function AccountsTable(
     null | number
   >(null);
 
+  const [toggledTransfer, setToggledTransfer] = useState<boolean>(false);
+  const [selectedIdFromTransfer, setSelectedIdFromTransfer] = useState<
+    number | null
+  >(null);
+  const [selectedIdToTransfer, setSelectedIdToTransfer] = useState<
+    number | null
+  >(null);
+
   const getAccounts = async () => {
     const result = await fetchAccounts();
     console.log(result);
@@ -75,6 +83,7 @@ const AccountsTable = forwardRef(function AccountsTable(
         )
       );
     }
+    setToggledTransfer(true);
   };
 
   const getColumns = (): Columns<Account>[] => {
@@ -130,7 +139,7 @@ const AccountsTable = forwardRef(function AccountsTable(
   };
 
   const getHoldingColumns = (): Columns<Holding>[] => {
-    return [
+    const columns: Columns<Holding>[] = [
       {
         field: "name",
         header: "Name",
@@ -141,12 +150,12 @@ const AccountsTable = forwardRef(function AccountsTable(
       {
         field: "",
         header: "Total",
-        render: (holding) => String(holding.price * holding.shares),
+        render: (holding: Holding) => String(holding.price * holding.shares),
       },
       {
         field: "",
         header: "",
-        render: (holding) => {
+        render: (holding: Holding) => {
           if (toggledTransfer) return "";
           const id = holding.id;
           if (selectHoldingForDelete == id) {
@@ -178,6 +187,57 @@ const AccountsTable = forwardRef(function AccountsTable(
         },
       },
     ];
+
+    if (toggledTransfer) {
+      columns.unshift(
+        {
+          field: "",
+          header: "From",
+          render: (holding: Holding) => {
+            const id = holding.id;
+            return (
+              <input
+                type="checkbox"
+                disabled={id === selectedIdToTransfer}
+                checked={id === selectedIdFromTransfer}
+                onChange={() => {
+                  if (id === selectedIdFromTransfer) {
+                    setSelectedIdFromTransfer(null);
+                  } else {
+                    setSelectedIdFromTransfer(id);
+                  }
+                }}
+              />
+            );
+          },
+          cellStyle: { width: "50px" },
+        },
+        {
+          field: "",
+          header: "To",
+          render: (holding: Holding) => {
+            const id = holding.id;
+            return (
+              <input
+                type="checkbox"
+                disabled={id === selectedIdFromTransfer}
+                checked={id === selectedIdToTransfer}
+                onChange={() => {
+                  if (id === selectedIdToTransfer) {
+                    setSelectedIdToTransfer(null);
+                  } else {
+                    setSelectedIdToTransfer(id);
+                  }
+                }}
+              />
+            );
+          },
+          cellStyle: { width: "50px" },
+        }
+      );
+    }
+
+    return columns;
   };
 
   const renderInnerHoldingsTable = (account: Account) => {
@@ -190,24 +250,52 @@ const AccountsTable = forwardRef(function AccountsTable(
     );
   };
 
+  const renderTopButtons = () => {
+    if (toggledTransfer) {
+      return (
+        <div style={{ display: "flex" }}>
+          {/* <input type="number" /> */}
+          <ConfirmOrCancel
+            onConfirm={() => {
+              if (
+                selectedIdFromTransfer == null ||
+                selectedIdToTransfer == null
+              ) {
+                dispatch(addMessage("To and From accounts must be selected."));
+              }
+            }}
+            onCancel={() => {
+              setToggledTransfer(false);
+            }}
+          />
+        </div>
+      );
+    }
+    return (
+      <div>
+        <button
+          className="icon"
+          onClick={() => {
+            setAddDialogOpen(true);
+          }}
+        >
+          <FontAwesomeIcon color="green" icon={faPlus} />
+        </button>
+        <button
+          className="icon"
+          onClick={() => {
+            toggleTransferHoldings();
+          }}
+        >
+          <FontAwesomeIcon icon={faRightLeft} />
+        </button>
+      </div>
+    );
+  };
+
   return (
     <>
-      <button
-        className="icon"
-        onClick={() => {
-          setAddDialogOpen(true);
-        }}
-      >
-        <FontAwesomeIcon color="green" icon={faPlus} />
-      </button>
-      <button
-        className="icon"
-        onClick={() => {
-          toggleTransferHoldings();
-        }}
-      >
-        <FontAwesomeIcon icon={faRightLeft} />
-      </button>
+      {renderTopButtons()}
       <Table
         columns={getColumns()}
         dataList={accounts}
