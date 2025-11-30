@@ -253,9 +253,16 @@ const AccountsTable = forwardRef(function AccountsTable(
 
   const renderTopButtons = () => {
     if (toggledTransfer) {
+      const transferId = "transfer-input";
+
+      const toAndFromSelected =
+        selectedIdFromTransfer != null && selectedIdToTransfer;
       return (
-        <div style={{ display: "flex" }}>
-          {/* <input type="number" /> */}
+        <div style={{ display: "flex", textAlign: "center" }}>
+          <label htmlFor={transferId} style={{ marginRight: 4 }}>
+            Shares to transfer
+          </label>
+          <input id={transferId} type="number" disabled={!toAndFromSelected} />
           <ConfirmOrCancel
             onConfirm={() => {
               if (
