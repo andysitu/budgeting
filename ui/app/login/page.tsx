@@ -73,27 +73,6 @@ function Login() {
           <button type="submit">Login</button>
         </div>
       </form>
-
-      <div>
-        <button
-          onClick={async () => {
-            const pizzas = await fetchPizzas();
-
-            console.log(pizzas);
-          }}
-        >
-          Pizza
-        </button>
-        <button
-          onClick={async () => {
-            const response = await dispatch(handleLogout());
-            console.log(response);
-          }}
-        >
-          Logout
-        </button>
-      </div>
-
       {hasErrorLogin && (
         <div style={{ marginTop: "10px", color: "red" }}>
           There was an error logging in. Please make sure the username and
