@@ -8,7 +8,7 @@ const login = async (username: string, password: string) => {
       password,
     }),
   });
-  return response.ok;
+  return true;
 };
 
 const logout = async () => {
