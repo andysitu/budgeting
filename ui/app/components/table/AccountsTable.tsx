@@ -117,12 +117,21 @@ const AccountsTable = forwardRef(function AccountsTable(
   };
 
   const findAccountIdByHolding = (holdingId: number): number | undefined => {
-    let accountId = null;
     for (const account of accounts) {
       const holdings = account.holdings;
       for (const h of holdings) {
         if (h.id == holdingId) {
           return account.id;
+        }
+      }
+    }
+  };
+  const findHoldingById = (holdingId: number): Holding | undefined => {
+    for (const account of accounts) {
+      const holdings = account.holdings;
+      for (const h of holdings) {
+        if (h.id == holdingId) {
+          return h;
         }
       }
     }
@@ -242,7 +251,6 @@ const AccountsTable = forwardRef(function AccountsTable(
   };
 
   const renderInnerHoldingsTable = (account: Account) => {
-    console.log(account);
     const holdings = account.holdings;
     return (
       <div style={{ border: "1px solid lightgray" }}>
@@ -256,13 +264,26 @@ const AccountsTable = forwardRef(function AccountsTable(
       const transferId = "transfer-input";
 
       const toAndFromSelected =
-        selectedIdFromTransfer != null && selectedIdToTransfer;
+        selectedIdFromTransfer != null && selectedIdToTransfer != null;
+      let placeholder = "";
+      if (toAndFromSelected) {
+        const fromHolding = findHoldingById(selectedIdFromTransfer);
+        if (fromHolding) {
+          placeholder = `Max ${fromHolding.shares} Shares`;
+        }
+      }
+
       return (
         <div style={{ display: "flex", textAlign: "center" }}>
           <label htmlFor={transferId} style={{ marginRight: 4 }}>
             Shares to transfer
           </label>
-          <input id={transferId} type="number" disabled={!toAndFromSelected} />
+          <input
+            id={transferId}
+            type="number"
+            disabled={!toAndFromSelected}
+            placeholder={placeholder}
+          />
           <ConfirmOrCancel
             onConfirm={() => {
               if (
