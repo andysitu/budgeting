@@ -48,7 +48,6 @@ const AccountsTable = forwardRef(function AccountsTable(
 
   const getAccounts = async () => {
     const result = await fetchAccounts();
-    console.log(result);
     setAccounts(result);
   };
 
@@ -134,6 +133,7 @@ const AccountsTable = forwardRef(function AccountsTable(
     const accountId = findAccountIdByHolding(holdingId);
     if (accountId != null) {
       await deleteHolding(accountId, holdingId);
+      await getAccounts();
       if (onUpdate) onUpdate();
     }
   };
@@ -315,7 +315,8 @@ const AccountsTable = forwardRef(function AccountsTable(
         onClose={() => {
           setAccountForAddHolding(null);
         }}
-        onCreate={() => {
+        onCreate={async () => {
+          await getAccounts();
           if (onUpdate) onUpdate();
         }}
       />
