@@ -39,11 +39,12 @@ function Snackbar() {
       id={id}
       className={snackbarClass}
       style={{
-        minWidth: 200,
-        minHeight: 40,
+        width: 20,
         backgroundColor: color,
         borderRadius: "7px",
-        padding: "14px 6px",
+        padding: "30px 30px",
+        maxWidth: "100px",
+        overflowWrap: "break-word",
       }}
     >
       <button
