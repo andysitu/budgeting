@@ -45,6 +45,7 @@ const AccountsTable = forwardRef(function AccountsTable(
   const [selectedIdToTransfer, setSelectedIdToTransfer] = useState<
     number | null
   >(null);
+  const [sharesToTransfer, setSharesToTransfer] = useState<"" | number>("");
 
   const getAccounts = async () => {
     const result = await fetchAccounts();
@@ -259,6 +260,23 @@ const AccountsTable = forwardRef(function AccountsTable(
     );
   };
 
+  const confirmTransferShares = () => {
+    if (selectedIdFromTransfer == null || selectedIdToTransfer == null) {
+      return dispatch(addMessage("To and From accounts must be selected."));
+    } else if (sharesToTransfer == "") {
+      return dispatch(addMessage("Shares to transfer must not be empty"));
+    }
+    const fromHolding = findHoldingById(selectedIdFromTransfer);
+    const sharesFromholding = fromHolding?.shares ?? 0;
+    if (sharesFromholding < sharesToTransfer) {
+      return dispatch(
+        addMessage(
+          `There are not enough shares in the holding ${fromHolding?.name}`
+        )
+      );
+    }
+  };
+
   const renderTopButtons = () => {
     if (toggledTransfer) {
       const transferId = "transfer-input";
@@ -274,7 +292,7 @@ const AccountsTable = forwardRef(function AccountsTable(
       }
 
       return (
-        <div style={{ display: "flex", textAlign: "center" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <label htmlFor={transferId} style={{ marginRight: 4 }}>
             Shares to transfer
           </label>
@@ -283,15 +301,19 @@ const AccountsTable = forwardRef(function AccountsTable(
             type="number"
             disabled={!toAndFromSelected}
             placeholder={placeholder}
+            value={sharesToTransfer}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value == "") {
+                setSharesToTransfer(value);
+              } else {
+                setSharesToTransfer(Number(e.target.value));
+              }
+            }}
           />
           <ConfirmOrCancel
             onConfirm={() => {
-              if (
-                selectedIdFromTransfer == null ||
-                selectedIdToTransfer == null
-              ) {
-                dispatch(addMessage("To and From accounts must be selected."));
-              }
+              confirmTransferShares();
             }}
             onCancel={() => {
               setToggledTransfer(false);
