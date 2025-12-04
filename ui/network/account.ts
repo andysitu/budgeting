@@ -67,4 +67,26 @@ const deleteHolding = async (accountId: number, holdingId: number) => {
   return result;
 };
 
-export { fetchAccounts, createAccount, addHoldingsToAccount, deleteHolding };
+const transferHolding = async (
+  fromHoldinId: number,
+  toholdingId: number,
+  fromShares: number,
+  toShares: number
+) => {
+  const result = await sendRequest("/api/holdings/transfer", "POST", {
+    body: JSON.stringify({
+      from_holding_id: fromHoldinId,
+      to_holding_id: toholdingId,
+      from_shares: fromShares,
+      to_shares: toShares,
+    }),
+  });
+};
+
+export {
+  fetchAccounts,
+  createAccount,
+  addHoldingsToAccount,
+  deleteHolding,
+  transferHolding,
+};

@@ -3,6 +3,7 @@ import {
   deleteHolding,
   fetchAccounts,
   Holding,
+  transferHolding,
 } from "@/network/account";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table, { Columns } from "./Table";
@@ -45,7 +46,10 @@ const AccountsTable = forwardRef(function AccountsTable(
   const [selectedIdToTransfer, setSelectedIdToTransfer] = useState<
     number | null
   >(null);
-  const [sharesToTransfer, setSharesToTransfer] = useState<"" | number>("");
+  const [sharesToTransferFrom, setSharesToTransferFrom] = useState<"" | number>(
+    ""
+  );
+  const [sharesToTransferTo, setSharesToTransferTo] = useState<"" | number>("");
 
   const getAccounts = async () => {
     const result = await fetchAccounts();
@@ -260,21 +264,37 @@ const AccountsTable = forwardRef(function AccountsTable(
     );
   };
 
-  const confirmTransferShares = () => {
+  const confirmTransferShares = async () => {
     if (selectedIdFromTransfer == null || selectedIdToTransfer == null) {
       return dispatch(addMessage("To and From accounts must be selected."));
-    } else if (sharesToTransfer == "") {
+    } else if (sharesToTransferFrom == "" || sharesToTransferTo == "") {
       return dispatch(addMessage("Shares to transfer must not be empty"));
     }
     const fromHolding = findHoldingById(selectedIdFromTransfer);
-    const sharesFromholding = fromHolding?.shares ?? 0;
-    if (sharesFromholding < sharesToTransfer) {
+    const sharesFromHolding = fromHolding?.shares ?? 0;
+
+    const toHolding = findHoldingById(selectedIdToTransfer);
+
+    if (sharesFromHolding < sharesToTransferFrom) {
       return dispatch(
         addMessage(
           `There are not enough shares in the holding ${fromHolding?.name}`
         )
       );
+    } else if (!(sharesToTransferTo > 0)) {
+      return dispatch(
+        addMessage(
+          `There are not enough shares in the holding ${toHolding?.name}`
+        )
+      );
     }
+
+    await transferHolding(
+      selectedIdFromTransfer,
+      selectedIdToTransfer,
+      sharesToTransferFrom,
+      sharesToTransferTo
+    );
   };
 
   const renderTopButtons = () => {
@@ -287,7 +307,7 @@ const AccountsTable = forwardRef(function AccountsTable(
       if (toAndFromSelected) {
         const fromHolding = findHoldingById(selectedIdFromTransfer);
         if (fromHolding) {
-          placeholder = `Max ${fromHolding.shares} Shares`;
+          placeholder = `Max ${fromHolding.shares} Shares From`;
         }
       }
 
@@ -301,13 +321,27 @@ const AccountsTable = forwardRef(function AccountsTable(
             type="number"
             disabled={!toAndFromSelected}
             placeholder={placeholder}
-            value={sharesToTransfer}
+            value={sharesToTransferFrom}
             onChange={(e) => {
               const value = e.target.value;
               if (value == "") {
-                setSharesToTransfer(value);
+                setSharesToTransferFrom(value);
               } else {
-                setSharesToTransfer(Number(e.target.value));
+                setSharesToTransferFrom(Number(e.target.value));
+              }
+            }}
+          />
+          <input
+            type="number"
+            disabled={!toAndFromSelected}
+            value={sharesToTransferTo}
+            placeholder="Shares To"
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value == "") {
+                setSharesToTransferTo(value);
+              } else {
+                setSharesToTransferTo(Number(e.target.value));
               }
             }}
           />
