@@ -53,6 +53,7 @@ const addHoldingsToAccount = async (
       }),
     }
   );
+  return result;
 };
 
 const deleteHolding = async (accountId: number, holdingId: number) => {
@@ -63,6 +64,7 @@ const deleteHolding = async (accountId: number, holdingId: number) => {
     `api/accounts/${accountId}/holdings/${holdingId}`,
     "DELETE"
   );
+  return result;
 };
 
 export { fetchAccounts, createAccount, addHoldingsToAccount, deleteHolding };
