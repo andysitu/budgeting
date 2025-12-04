@@ -51,6 +51,8 @@ const AccountsTable = forwardRef(function AccountsTable(
   );
   const [sharesToTransferTo, setSharesToTransferTo] = useState<"" | number>("");
 
+  const [loading, setLoading] = useState(false);
+
   const getAccounts = async () => {
     const result = await fetchAccounts();
     setAccounts(result);
@@ -264,6 +266,13 @@ const AccountsTable = forwardRef(function AccountsTable(
     );
   };
 
+  const clearTransferringInput = () => {
+    setSelectedIdFromTransfer(null);
+    setSelectedIdToTransfer(null);
+    setSharesToTransferFrom("");
+    setSharesToTransferTo("");
+  };
+
   const confirmTransferShares = async () => {
     if (selectedIdFromTransfer == null || selectedIdToTransfer == null) {
       return dispatch(addMessage("To and From accounts must be selected."));
@@ -289,12 +298,21 @@ const AccountsTable = forwardRef(function AccountsTable(
       );
     }
 
-    await transferHolding(
-      selectedIdFromTransfer,
-      selectedIdToTransfer,
-      sharesToTransferFrom,
-      sharesToTransferTo
-    );
+    setLoading(true);
+    try {
+      await transferHolding(
+        selectedIdFromTransfer,
+        selectedIdToTransfer,
+        sharesToTransferFrom,
+        sharesToTransferTo
+      );
+      clearTransferringInput();
+      await getAccounts();
+    } catch (error) {
+      dispatch(addMessage("An error occurred transferring the holdings"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderTopButtons = () => {
