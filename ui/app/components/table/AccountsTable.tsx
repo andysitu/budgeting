@@ -317,7 +317,8 @@ const AccountsTable = forwardRef(function AccountsTable(
 
   const renderTopButtons = () => {
     if (toggledTransfer) {
-      const transferId = "transfer-input";
+      const transferFromId = "transfer-input-from";
+      const transferToId = "transfer-input-to";
 
       const toAndFromSelected =
         selectedIdFromTransfer != null && selectedIdToTransfer != null;
@@ -325,52 +326,59 @@ const AccountsTable = forwardRef(function AccountsTable(
       if (toAndFromSelected) {
         const fromHolding = findHoldingById(selectedIdFromTransfer);
         if (fromHolding) {
-          placeholder = `Max ${fromHolding.shares} Shares From`;
+          placeholder = `Max ${fromHolding.shares} Shares`;
         }
       }
 
       return (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <label htmlFor={transferId} style={{ marginRight: 4 }}>
-            Shares to transfer
-          </label>
-          <input
-            id={transferId}
-            type="number"
-            disabled={!toAndFromSelected}
-            placeholder={placeholder}
-            value={sharesToTransferFrom}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value == "") {
-                setSharesToTransferFrom(value);
-              } else {
-                setSharesToTransferFrom(Number(e.target.value));
-              }
-            }}
-          />
-          <input
-            type="number"
-            disabled={!toAndFromSelected}
-            value={sharesToTransferTo}
-            placeholder="Shares To"
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value == "") {
-                setSharesToTransferTo(value);
-              } else {
-                setSharesToTransferTo(Number(e.target.value));
-              }
-            }}
-          />
-          <ConfirmOrCancel
-            onConfirm={() => {
-              confirmTransferShares();
-            }}
-            onCancel={() => {
-              setToggledTransfer(false);
-            }}
-          />
+        <div style={{ width: 240 }}>
+          <div>Transfer Shares</div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <label htmlFor={transferFromId}>From</label>
+            <input
+              id={transferFromId}
+              type="number"
+              disabled={!toAndFromSelected}
+              placeholder={placeholder}
+              value={sharesToTransferFrom}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value == "") {
+                  setSharesToTransferFrom(value);
+                } else {
+                  setSharesToTransferFrom(Number(e.target.value));
+                }
+              }}
+            />
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <label htmlFor={transferToId}>To</label>
+            <input
+              id={transferToId}
+              type="number"
+              disabled={!toAndFromSelected}
+              value={sharesToTransferTo}
+              placeholder="Shares To"
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value == "") {
+                  setSharesToTransferTo(value);
+                } else {
+                  setSharesToTransferTo(Number(e.target.value));
+                }
+              }}
+            />
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ConfirmOrCancel
+              onConfirm={() => {
+                confirmTransferShares();
+              }}
+              onCancel={() => {
+                setToggledTransfer(false);
+              }}
+            />
+          </div>
         </div>
       );
     }
