@@ -96,10 +96,11 @@ const AccountsTable = forwardRef(function AccountsTable(
     return [
       {
         field: "name",
-        header: "Name",
-        cellStyle: { width: 100 },
+        header: "Accounts",
+        render: ({ name }) => {
+          return <div style={{ fontWeight: "bold" }}>{name}</div>;
+        },
       },
-      { field: "description", header: "Description" },
       {
         field: "",
         header: "",
@@ -257,15 +258,6 @@ const AccountsTable = forwardRef(function AccountsTable(
     return columns;
   };
 
-  const renderInnerHoldingsTable = (account: Account) => {
-    const holdings = account.holdings;
-    return (
-      <div style={{ border: "1px solid lightgray" }}>
-        <Table columns={getHoldingColumns()} dataList={holdings} />
-      </div>
-    );
-  };
-
   const clearTransferringInput = () => {
     setSelectedIdFromTransfer(null);
     setSelectedIdToTransfer(null);
@@ -404,14 +396,54 @@ const AccountsTable = forwardRef(function AccountsTable(
     );
   };
 
+  const renderAccountsLists = () => {
+    const accountList = [];
+    for (const account of accounts) {
+      const { id, name, holdings } = account;
+      accountList.push(
+        <div
+          key={`account-row-${id}`}
+          style={{ width: "600px", marginBottom: "14px" }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ fontWeight: "bold" }}>{name}</div>
+            <div>
+              <button
+                className="icon"
+                onClick={() => {
+                  const account = accounts.find((a) => a.id == Number(id));
+                  setAccountForAddHolding(account);
+                }}
+              >
+                <FontAwesomeIcon color="green" icon={faPlus} />
+              </button>
+            </div>
+          </div>
+          <div
+            style={{
+              borderTop: "1px solid lightgray",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+            }}
+          >
+            <Table columns={getHoldingColumns()} dataList={holdings} />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <div style={{ fontWeight: "bold", marginBottom: "18px" }}>Accounts</div>
+        {accountList}
+      </>
+    );
+  };
+
   return (
     <>
       {renderTopButtons()}
-      <Table
-        columns={getColumns()}
-        dataList={accounts}
-        renderInnerTable={renderInnerHoldingsTable}
-      />
+      {renderAccountsLists()}
       <AddHoldingDialog
         open={accountForAddHolding != null}
         account={accountForAddHolding}
