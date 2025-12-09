@@ -92,38 +92,6 @@ const AccountsTable = forwardRef(function AccountsTable(
     setToggledTransfer(true);
   };
 
-  const getColumns = (): Columns<Account>[] => {
-    return [
-      {
-        field: "name",
-        header: "Accounts",
-        render: ({ name }) => {
-          return <div style={{ fontWeight: "bold" }}>{name}</div>;
-        },
-      },
-      {
-        field: "",
-        header: "",
-        render: (acct) => {
-          return (
-            <div>
-              <button
-                className="icon"
-                onClick={() => {
-                  const id = acct.id;
-                  const account = accounts.find((a) => a.id == Number(id));
-                  setAccountForAddHolding(account);
-                }}
-              >
-                <FontAwesomeIcon color="green" icon={faPlus} />
-              </button>
-            </div>
-          );
-        },
-      },
-    ];
-  };
-
   const findAccountIdByHolding = (holdingId: number): number | undefined => {
     for (const account of accounts) {
       const holdings = account.holdings;
