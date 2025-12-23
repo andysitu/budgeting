@@ -47,10 +47,22 @@ public class HoldingsController : Controller
             return BadRequest("Need a positive shares to transfer to the new holding");
         }
 
-        fromHolding.Shares -= holdingTransferDto.from_shares;
-        toHolding.Shares += holdingTransferDto.to_shares;
+        await using var transaction = await _context.Database.BeginTransactionAsync();
 
-        await _context.SaveChangesAsync();
+        try
+        {
+            fromHolding.Shares -= holdingTransferDto.from_shares;
+            toHolding.Shares += holdingTransferDto.to_shares;
+
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
 
         return Ok();
     }
