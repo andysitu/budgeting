@@ -12,6 +12,6 @@ public class HoldingTransaction : BaseEntity
     [ForeignKey(nameof(HoldingId))]
     public virtual Holding Holding { get; set; } = null!;
 
-    public Transaction? SourceTransaction { get; set; }
-    public Transaction? DestinationTransaction { get; set; }
+    public virtual Transaction? SourceTransaction { get; set; }
+    public virtual Transaction? DestinationTransaction { get; set; }
 }
