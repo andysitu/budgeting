@@ -7,8 +7,8 @@ namespace Budgeting.Models.Accounts
     public class Transaction : BaseEntity
     {
         public DateTime Date { get; set; }
-        public string Name { get; set; } = null!;
-        public string? Description { get; set; }
+        public string Name { get; set; } = "";
+        public string Description { get; set; } = "";
         public decimal Amount { get; set; }
         [Comment("If the transaction affected the holding price/shares.")]
         public bool ModifiedHolding { get; set; } = true;
