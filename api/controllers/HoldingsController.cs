@@ -1,3 +1,4 @@
+using Budget.Util;
 using Budgeting.Data;
 using Budgeting.Models.Accounts;
 using Microsoft.AspNetCore.Authorization;
@@ -23,9 +24,16 @@ public class HoldingsController : Controller
         _context = context;
     }
 
+    [Authorize]
     [HttpPost("transfer")]
     public async Task<ActionResult> TranserHoldings([FromBody] HoldingTransferDto holdingTransferDto)
     {
+        string? userId = Util.getCurrentUserId(HttpContext);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
         Holding? fromHolding = await _context.Holdings.Where(h => h.Id == holdingTransferDto.from_holding_id).SingleAsync();
         if (fromHolding == null)
         {
@@ -54,6 +62,32 @@ public class HoldingsController : Controller
             fromHolding.Shares -= holdingTransferDto.from_shares;
             toHolding.Shares += holdingTransferDto.to_shares;
 
+            var sourceHoldingTransaction = new HoldingTransaction
+            {
+                Shares = holdingTransferDto.from_shares,
+                Price = fromHolding.Price,
+                HoldingId = fromHolding.Id,
+                AppUserId = userId,
+            };
+
+            var destHoldingTransaction = new HoldingTransaction
+            {
+                Shares = holdingTransferDto.to_shares,
+                Price = toHolding.Price,
+                HoldingId = toHolding.Id,
+                AppUserId = userId,
+            };
+
+            Transaction t = new()
+            {
+                Date = DateTime.UtcNow,
+                ModifiedHolding = true,
+                FromHoldingTransaction = sourceHoldingTransaction,
+                ToHoldingTransaction = destHoldingTransaction,
+                AppUserId = userId,
+            };
+
+            _context.Transactions.Add(t);
             await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();
