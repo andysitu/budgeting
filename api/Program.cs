@@ -1,4 +1,3 @@
-using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Budgeting.Models;
 using Budgeting.Data;
@@ -18,14 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Budgeting API",
-        Version = "v1"
-    });
-});
+builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
 
@@ -69,11 +61,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Budget API V1");
-    });
+    app.MapOpenApi();
 }
 
 // Don't know if this will work locally
