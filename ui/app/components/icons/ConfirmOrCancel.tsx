@@ -4,9 +4,14 @@ import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 export type ConfirmOrCancelProps = {
   onConfirm: () => void;
   onCancel: () => void;
+  disabled: boolean;
 };
 
-function ConfirmOrCancel({ onConfirm, onCancel }: ConfirmOrCancelProps) {
+function ConfirmOrCancel({
+  onConfirm,
+  onCancel,
+  disabled,
+}: ConfirmOrCancelProps) {
   return (
     <div>
       <button
@@ -14,6 +19,7 @@ function ConfirmOrCancel({ onConfirm, onCancel }: ConfirmOrCancelProps) {
         onClick={() => {
           onConfirm();
         }}
+        disabled={disabled}
       >
         <FontAwesomeIcon color="green" icon={faCheck} />
       </button>

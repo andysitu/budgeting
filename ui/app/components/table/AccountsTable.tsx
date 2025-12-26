@@ -290,6 +290,8 @@ const AccountsTable = forwardRef(function AccountsTable(
         }
       }
 
+      const disabled = !toAndFromSelected;
+
       return (
         <div style={{ width: 240 }}>
           <div>Transfer Shares</div>
@@ -298,7 +300,7 @@ const AccountsTable = forwardRef(function AccountsTable(
             <input
               id={transferFromId}
               type="number"
-              disabled={!toAndFromSelected}
+              disabled={disabled}
               placeholder={placeholder}
               value={sharesToTransferFrom}
               onChange={(e) => {
@@ -337,6 +339,7 @@ const AccountsTable = forwardRef(function AccountsTable(
               onCancel={() => {
                 setToggledTransfer(false);
               }}
+              disabled={disabled}
             />
           </div>
         </div>
