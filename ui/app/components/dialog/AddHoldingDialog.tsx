@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Dialog from "./Dialog";
 import TextListItem from "../inputs/TextLisItem";
 import { Account, HoldingData, addHoldingsToAccount } from "@/network/account";
