@@ -22,6 +22,12 @@ button.icon {
   align-items: center;
 }
 
+button.icon:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
 button:hover {
   background-color: #ddd;
 }
