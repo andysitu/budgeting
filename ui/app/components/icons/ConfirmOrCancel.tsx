@@ -4,13 +4,13 @@ import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 export type ConfirmOrCancelProps = {
   onConfirm: () => void;
   onCancel: () => void;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
 function ConfirmOrCancel({
   onConfirm,
   onCancel,
-  disabled,
+  disabled = false,
 }: ConfirmOrCancelProps) {
   return (
     <div>
