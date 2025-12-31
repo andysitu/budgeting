@@ -371,6 +371,12 @@ const AccountsTable = forwardRef(function AccountsTable(
     const accountList = [];
     for (const account of accounts) {
       const { id, name, holdings } = account;
+
+      let total = 0;
+      for (const holding of holdings) {
+        total += holding.shares * holding.price;
+      }
+
       accountList.push(
         <div
           key={`account-row-${id}`}
@@ -393,12 +399,14 @@ const AccountsTable = forwardRef(function AccountsTable(
           <div
             style={{
               borderTop: "1px solid lightgray",
-              paddingLeft: "10px",
-              paddingRight: "10px",
+              borderBottom: "1px solid lightgray",
+              paddingTop: "6px",
+              paddingBottom: "6px",
             }}
           >
             <Table columns={getHoldingColumns()} dataList={holdings} />
           </div>
+          <div style={{ margin: "px 0px" }}>{`Total: ${total}`}</div>
         </div>
       );
     }
