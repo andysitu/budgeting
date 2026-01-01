@@ -54,7 +54,7 @@ function AddHoldingDialog({
 
   return (
     <Dialog
-      title={"Add Holding"}
+      title={"Create Holding"}
       loading={loading}
       open={open}
       onClose={onClose}

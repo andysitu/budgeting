@@ -42,7 +42,7 @@ function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
 
   return (
     <Dialog
-      title={"Add Account"}
+      title={"Create Account"}
       loading={loading}
       open={open}
       onClose={onClose}
