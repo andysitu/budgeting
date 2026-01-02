@@ -53,8 +53,7 @@ namespace Budgeting.Data
             modelBuilder.Entity<Transaction>()
                 .HasOne(e => e.FromHoldingTransaction)
                 .WithOne(e => e.DestinationTransaction)
-                .HasForeignKey<Transaction>(e => e.FromHoldingTransactionId)
-                .IsRequired();
+                .HasForeignKey<Transaction>(e => e.FromHoldingTransactionId);
 
             modelBuilder.Entity<Transaction>()
                 .HasOne(e => e.ToHoldingTransaction)

@@ -14,7 +14,7 @@ namespace Budgeting.Models.Accounts
         public bool ModifiedHolding { get; set; } = true;
 
         public long ToHoldingTransactionId { get; set; }
-        public long FromHoldingTransactionId { get; set; }
+        public long? FromHoldingTransactionId { get; set; } = null;
 
         [ForeignKey(nameof(ToHoldingTransactionId))]
         public virtual HoldingTransaction ToHoldingTransaction { get; set; } = null!;
