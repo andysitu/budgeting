@@ -10,6 +10,7 @@ public class HoldingDataDto
     public string Name { get; set; } = "";
     public decimal Shares { get; set; } = 0;
     public decimal Price { get; set; } = 1;
+    public bool IsMonetary { get; set; } = false;
 }
 public class HoldingDto
 {
@@ -18,6 +19,7 @@ public class HoldingDto
     public string Name { get; set; } = "";
     public decimal Shares { get; set; } = 0;
     public decimal Price { get; set; } = 1;
+    public bool IsMonetary { get; set; } = false;
 }
 public class AccountDto
 {
@@ -71,7 +73,8 @@ public class AccountsController : Controller
                 Id = h.Id,
                 Name = h.Name,
                 Shares = h.Shares,
-                Price = h.Price
+                Price = h.Price,
+                IsMonetary = h.IsMonetary,
             }).ToList(),
         }).ToList();
         return accountsDto;
@@ -154,6 +157,7 @@ public class AccountsController : Controller
                 Price = holding.Price,
                 AccountId = id,
                 AppUserId = userId,
+                IsMonetary = holding.IsMonetary,
             });
         }
 

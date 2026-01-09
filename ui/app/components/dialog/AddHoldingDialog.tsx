@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import Dialog from "./Dialog";
 import TextListItem from "../inputs/TextLisItem";
 import { Account, HoldingData, addHoldingsToAccount } from "@/network/account";
+import CheckboxListItem from "../inputs/CheckboxListItem";
 
 interface AddHoldingDialogProps {
   account: Account | undefined | null;
@@ -19,6 +20,7 @@ function AddHoldingDialog({
   const [name, setName] = useState("");
   const [shares, setShares] = useState(1);
   const [price, setPrice] = useState(1);
+  const [monetary, setMonetary] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -31,10 +33,12 @@ function AddHoldingDialog({
   };
 
   const handleSubmit = async () => {
+    console.log("monetary", monetary);
     const data: HoldingData = {
       name,
       shares,
       price,
+      isMonetary: monetary,
     };
 
     try {
@@ -83,6 +87,12 @@ function AddHoldingDialog({
         label="Price"
         onChange={(value: string) => setPrice(Number(value))}
         type="number"
+        containerStyle={{ marginBottom: "12px" }}
+      />
+      <CheckboxListItem
+        value={monetary}
+        label="Monetary"
+        onChange={(value: boolean) => setMonetary(value)}
         containerStyle={{ marginBottom: "12px" }}
       />
     </Dialog>

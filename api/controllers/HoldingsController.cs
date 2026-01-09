@@ -26,7 +26,7 @@ public class HoldingsController : Controller
 
     [Authorize]
     [HttpPost("transfer")]
-    public async Task<ActionResult> TranserHoldings([FromBody] HoldingTransferDto holdingTransferDto)
+    public async Task<ActionResult> Transfer([FromBody] HoldingTransferDto holdingTransferDto)
     {
         string? userId = Util.getCurrentUserId(HttpContext);
         if (string.IsNullOrEmpty(userId))

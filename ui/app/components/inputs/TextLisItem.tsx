@@ -19,7 +19,7 @@ const TextListItem = forwardRef<HTMLInputElement, TextListItemProps>(
     { label, value, onChange, type = "text", containerStyle, ...rest },
     ref
   ) {
-    const divStyle = {
+    const divStyle: React.CSSProperties = {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
     };

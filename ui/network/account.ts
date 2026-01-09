@@ -5,6 +5,7 @@ export type Holding = {
   name: string;
   shares: number;
   price: number;
+  isMonetary: boolean;
 };
 
 export type Account = {
@@ -23,6 +24,7 @@ export type HoldingData = {
   name: string;
   shares: number;
   price: number;
+  isMonetary: boolean;
 };
 
 const fetchAccounts = async (
