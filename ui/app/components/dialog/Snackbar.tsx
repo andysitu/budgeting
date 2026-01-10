@@ -42,7 +42,7 @@ function Snackbar() {
         width: 20,
         backgroundColor: color,
         borderRadius: "7px",
-        padding: "30px 30px",
+        padding: "20px 20px",
         maxWidth: "100px",
         overflowWrap: "break-word",
       }}
