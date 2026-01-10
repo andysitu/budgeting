@@ -25,7 +25,7 @@ function Dialog({
   loading,
   focusInput,
 }: DialogProps) {
-  const showClassName = open ? styles["modal-show"] : styles["modal-hidden"];
+  const showClassName = open ? "" : styles["modal-hidden"];
 
   useEffect(() => {
     if (open && focusInput?.focus) {
