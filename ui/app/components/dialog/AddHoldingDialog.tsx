@@ -33,11 +33,10 @@ function AddHoldingDialog({
   };
 
   const handleSubmit = async () => {
-    console.log("monetary", monetary);
     const data: HoldingData = {
       name,
       shares,
-      price,
+      price: monetary ? 1 : price,
       isMonetary: monetary,
     };
 
@@ -77,18 +76,20 @@ function AddHoldingDialog({
       />
       <TextListItem
         value={shares}
-        label="Shares"
+        label={monetary ? "Amount" : "Shares"}
         onChange={(value: string) => setShares(Number(value))}
         type="number"
         containerStyle={{ marginBottom: "12px" }}
       />
-      <TextListItem
-        value={price}
-        label="Price"
-        onChange={(value: string) => setPrice(Number(value))}
-        type="number"
-        containerStyle={{ marginBottom: "12px" }}
-      />
+      {!monetary && (
+        <TextListItem
+          value={price}
+          label="Price"
+          onChange={(value: string) => setPrice(Number(value))}
+          type="number"
+          containerStyle={{ marginBottom: "12px" }}
+        />
+      )}
       <CheckboxListItem
         value={monetary}
         label="Monetary"

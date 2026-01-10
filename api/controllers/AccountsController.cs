@@ -154,7 +154,7 @@ public class AccountsController : Controller
             {
                 Name = holding.Name,
                 Shares = holding.Shares,
-                Price = holding.Price,
+                Price = holding.IsMonetary ? 1 : holding.Price,
                 AccountId = id,
                 AppUserId = userId,
                 IsMonetary = holding.IsMonetary,
