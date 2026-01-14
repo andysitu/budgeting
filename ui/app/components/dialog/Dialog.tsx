@@ -11,7 +11,7 @@ interface DialogProps {
   id?: string;
   title?: string;
   onSubmit?: () => void;
-  loading: boolean;
+  loading?: boolean;
   focusInput?: HTMLElement | null | undefined;
 }
 

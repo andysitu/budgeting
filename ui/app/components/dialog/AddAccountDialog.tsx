@@ -30,7 +30,7 @@ function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
 
     try {
       setLoading(true);
-      const response = await createAccount(data);
+      await createAccount(data);
       resetDialog();
       onCreate();
     } catch (error) {
