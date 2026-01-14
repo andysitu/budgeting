@@ -130,7 +130,18 @@ const AccountsTable = forwardRef(function AccountsTable(
         header: "Name",
         cellStyle: { width: 100 },
       },
-      { field: "price", header: "Price", cellStyle: { width: "70px" } },
+      {
+        field: "price",
+        header: "Price",
+        cellStyle: { width: "70px" },
+        render: (holding: Holding) => {
+          if (holding.isMonetary) {
+            return "-";
+          } else {
+            return String(holding.shares);
+          }
+        },
+      },
       { field: "shares", header: "Shares", cellStyle: { width: "70px" } },
       {
         field: "",
