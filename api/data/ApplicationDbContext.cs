@@ -50,6 +50,17 @@ namespace Budgeting.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                // Add default true value for active
+                if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    modelBuilder.Entity(entityType.ClrType)
+                        .Property("Active")
+                        .HasDefaultValue(true);
+                }
+            }
+
             modelBuilder.Entity<Transaction>()
                 .HasOne(e => e.FromHoldingTransaction)
                 .WithOne(e => e.DestinationTransaction)

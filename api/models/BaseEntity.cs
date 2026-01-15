@@ -8,6 +8,8 @@ namespace Budgeting.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
+        public bool Active { get; set; } = true;
+
         public string AppUserId { get; set; } = null!;
         public virtual AppUser AppUser { get; set; } = null!;
     }
