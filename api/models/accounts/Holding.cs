@@ -13,4 +13,5 @@ public class Holding : BaseEntity
     public required long AccountId { get; set; }
     [ForeignKey(nameof(AccountId))]
     public virtual Account? Account { get; set; }
+    public virtual ICollection<HoldingTransaction> HoldingTransactions { get; set; } = new List<HoldingTransaction>();
 }

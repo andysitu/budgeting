@@ -61,16 +61,25 @@ namespace Budgeting.Data
                 }
             }
 
-            modelBuilder.Entity<Transaction>()
-                .HasOne(e => e.FromHoldingTransaction)
-                .WithOne(e => e.DestinationTransaction)
-                .HasForeignKey<Transaction>(e => e.FromHoldingTransactionId);
+            modelBuilder.Entity<HoldingTransaction>(entity =>
+            {
+                entity.HasOne(ht => ht.Holding)
+                    .WithMany(h => h.HoldingTransactions)
+                    .HasForeignKey(t => t.HoldingId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
-            modelBuilder.Entity<Transaction>()
-                .HasOne(e => e.ToHoldingTransaction)
-                .WithOne(e => e.SourceTransaction)
-                .HasForeignKey<Transaction>(e => e.ToHoldingTransactionId)
-                .IsRequired();
+            modelBuilder.Entity<Transaction>(entity =>
+            {
+                entity.HasOne(e => e.FromHoldingTransaction)
+                    .WithOne(e => e.DestinationTransaction)
+                    .HasForeignKey<Transaction>(e => e.FromHoldingTransactionId);
+
+                entity.HasOne(e => e.ToHoldingTransaction)
+                    .WithOne(e => e.SourceTransaction)
+                    .HasForeignKey<Transaction>(e => e.ToHoldingTransactionId)
+                    .IsRequired();
+            });
 
             // For identity tables
             base.OnModelCreating(modelBuilder);
