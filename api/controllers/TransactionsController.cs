@@ -57,16 +57,13 @@ public class TransactionsController : Controller
     public async Task<IActionResult> GetTransactions([FromQuery] TransactionQuery query)
     {
         var transactionQuery = _context.Transactions
-                .Include(t => t.ToHoldingTransaction)
-                .Include(t => t.FromHoldingTransaction)
-                .AsQueryable();
+            .AsQueryable();
 
         if (query.holdingId != null)
         {
             transactionQuery = transactionQuery.Where(t => t.ToHoldingTransactionId == query.holdingId ||
                 t.FromHoldingTransactionId == query.holdingId);
         }
-        Console.WriteLine(query.holdingId);
         var transactions = await transactionQuery
             .Select (t =>  new TransactionDto
             {
@@ -80,12 +77,22 @@ public class TransactionsController : Controller
                     id = t.ToHoldingTransaction.Id,
                     shares = t.ToHoldingTransaction.Shares,
                     price = t.ToHoldingTransaction.Price,
+                    holding = t.ToHoldingTransaction.Holding == null ? null : new HoldingDto
+                    {
+                        Id = t.ToHoldingTransaction.Holding.Id,
+                        Name = t.ToHoldingTransaction.Holding.Name,
+                    }
                 },
                 from_holding_transaction = t.FromHoldingTransaction == null ? null : new()
                 {
                     id = t.FromHoldingTransaction.Id,
                     shares = t.FromHoldingTransaction.Shares,
                     price = t.FromHoldingTransaction.Price,
+                    holding = t.FromHoldingTransaction.Holding == null ? null : new HoldingDto
+                    {
+                        Id = t.FromHoldingTransaction.Holding.Id,
+                        Name = t.FromHoldingTransaction.Holding.Name,
+                    }
                 },
 
             })
