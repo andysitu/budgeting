@@ -27,7 +27,7 @@ export interface HoldingData {
   isMonetary: boolean;
 }
 
-export interface TransactionInHoldingTransaction {
+export interface BaseTransaction {
   id: number;
   name: string;
   description: string;
@@ -35,13 +35,21 @@ export interface TransactionInHoldingTransaction {
   modified_holding: boolean;
 }
 
-export interface HoldingTransaction {
+export interface BaseHoldingTransaction {
   id: number;
   shares: number;
   price: number;
-  source_transaction?: TransactionInHoldingTransaction;
-  destination_transaction?: TransactionInHoldingTransaction;
   holding: Holding;
+}
+
+export interface HoldingTransaction extends BaseHoldingTransaction {
+  source_transaction?: BaseTransaction;
+  destination_transaction?: BaseTransaction;
+}
+
+export interface Transaction extends BaseTransaction {
+  from_holding_transaction?: BaseHoldingTransaction;
+  to_holding_transaction: BaseHoldingTransaction;
 }
 
 const fetchAccounts = async (
@@ -102,11 +110,23 @@ const transferHolding = async (
   });
 };
 
-const fetchHoldingTransactions = async (holdingId: number) => {
+const fetchHoldingTransactions = async (
+  holdingId: number
+): Promise<HoldingTransaction[]> => {
   if (!holdingId) {
     throw new Error("Holding id is not provided for holding transactions");
   }
   return sendRequest(`api/holdings/${holdingId}/transactions`, "GET");
+};
+
+const fetchTransactions = async (
+  holdingId?: number
+): Promise<Transaction[]> => {
+  const params: Record<string, any> = {};
+  if (holdingId) {
+    params.holdingId = holdingId;
+  }
+  return sendRequest(`api/transactions`, "GET", params);
 };
 
 export {
@@ -115,5 +135,6 @@ export {
   addHoldingsToAccount,
   deleteHolding,
   transferHolding,
+  fetchTransactions,
   fetchHoldingTransactions,
 };

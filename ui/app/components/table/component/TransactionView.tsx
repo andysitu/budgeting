@@ -1,47 +1,121 @@
-import { isEmptyObject } from "@/lib/common/util";
 import {
   fetchHoldingTransactions,
-  HoldingTransaction,
+  fetchTransactions,
+  Holding,
+  Transaction,
 } from "@/network/account";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 
 interface TransactionViewProps {
-  holdingId: number | null;
+  holding: Holding | null;
   onClose: () => void;
 }
 
-function TransactionView({ holdingId, onClose }: TransactionViewProps) {
-  const [holdingTranactions, setHoldingTransactions] = useState<
-    HoldingTransaction[]
-  >([]);
+function TransactionView({ holding, onClose }: TransactionViewProps) {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const rightLeftPadding = "14px";
 
   const getHoldingTransactions = async (holdingId: number) => {
-    const result = await fetchHoldingTransactions(holdingId);
-    console.log("result", result);
-    setHoldingTransactions(result);
+    setLoading(true);
+    try {
+      const transactions = (await fetchTransactions(holdingId)) ?? [];
+      setTransactions(transactions);
+    } catch (error) {
+      setTransactions([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    if (!holdingId) return;
+    if (!holding) return;
+    const holdingId = holding.id;
 
     getHoldingTransactions(holdingId);
-  }, [holdingId]);
+  }, [holding]);
 
-  if (holdingId == null) return "";
+  if (loading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        Loading...
+      </div>
+    );
+  } else if (holding == null) return "";
 
   const showTransactions = () => {
-    if (holdingTranactions.length == 0) {
+    if (transactions.length == 0) {
       return <div>There are no Transactions</div>;
     }
-    const transactions = [];
 
-    for (const ht of holdingTranactions) {
-      //
+    const transactionElements = [];
+    for (const t of transactions) {
+      const {
+        id,
+        name,
+        description,
+        amount,
+        from_holding_transaction,
+        to_holding_transaction,
+      } = t;
+
+      const holdingTransactions = [];
+
+      if (from_holding_transaction) {
+        const { shares, price, holding } = from_holding_transaction;
+        const { name, id: holdingId } = holding;
+        holdingTransactions.push(
+          <div
+            key={`from_holding_${id}_${holdingId}`}
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <div>{`From ${holding.name ? holding.name : "-"}`}</div>
+            <div>{`Shares: ${shares} | Price: ${price}`}</div>
+          </div>
+        );
+      } else {
+        holdingTransactions.push(<div>No From Holding</div>);
+      }
+
+      if (to_holding_transaction) {
+        const { shares, price, holding } = to_holding_transaction;
+        const { name, id: holdingId } = holding;
+        holdingTransactions.push(
+          <div
+            key={`to_holding_${id}_${holdingId}`}
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <div>{`To ${holding.name ? holding.name : "-"}`}</div>
+            <div>{`Shares: ${shares} | Price: ${price}`}</div>
+          </div>
+        );
+      } else {
+        holdingTransactions.push(<div>No To Holding</div>);
+      }
+
+      const body = (
+        <div
+          key={`transaction-list-${id}`}
+          style={{
+            paddingBottom: "8px",
+            marginBottom: "8px",
+            borderBottom: "1px solid lightgray",
+          }}
+        >
+          {`Amount: ${amount}`}
+          {holdingTransactions}
+        </div>
+      );
+
+      transactionElements.push(body);
     }
 
-    return <div></div>;
+    return (
+      <div style={{ marginRight: rightLeftPadding }}>{transactionElements}</div>
+    );
   };
 
   return (
@@ -51,7 +125,7 @@ function TransactionView({ holdingId, onClose }: TransactionViewProps) {
         border: "1px solid black",
         borderRadius: "5px",
         padding: "5px",
-        paddingLeft: "14px",
+        paddingLeft: rightLeftPadding,
         height: "100%",
       }}
     >
@@ -62,7 +136,9 @@ function TransactionView({ holdingId, onClose }: TransactionViewProps) {
           justifyContent: "space-between",
         }}
       >
-        <div>Transactions</div>
+        <div>{`Transactions${
+          holding != null ? ` for ${holding.name ? holding.name : "-"}` : ""
+        }`}</div>
         <button
           className={"icon"}
           onClick={() => {

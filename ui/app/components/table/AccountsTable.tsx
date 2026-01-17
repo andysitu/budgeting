@@ -52,9 +52,8 @@ const AccountsTable = forwardRef(function AccountsTable(
   );
   const [sharesToTransferTo, setSharesToTransferTo] = useState<"" | number>("");
 
-  const [holdingIdForTransactions, setHoldingIdForTransactions] = useState<
-    number | null
-  >(null);
+  const [holdingForTransactions, setHoldingForTransactions] =
+    useState<Holding | null>(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -179,7 +178,7 @@ const AccountsTable = forwardRef(function AccountsTable(
               <button
                 className="icon"
                 onClick={() => {
-                  setHoldingIdForTransactions(holding.id);
+                  setHoldingForTransactions(holding);
                 }}
               >
                 <FontAwesomeIcon icon={faMoneyBill1} />
@@ -471,9 +470,9 @@ const AccountsTable = forwardRef(function AccountsTable(
       </div>
       <div style={{ width: "100%", margin: "5px" }}>
         <TransactionView
-          holdingId={holdingIdForTransactions}
+          holding={holdingForTransactions}
           onClose={() => {
-            setHoldingIdForTransactions(null);
+            setHoldingForTransactions(null);
           }}
         />
       </div>
