@@ -1,3 +1,5 @@
+### Notes
+
 `psql -U postgres`
 `create database ...;`
 `create user ... with password '...'`
