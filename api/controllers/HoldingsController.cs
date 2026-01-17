@@ -27,6 +27,7 @@ public class HoldingTransactionDto
     public long id { get; set; }
     public decimal shares { get; set; }
     public decimal price { get; set; }
+    public HoldingDto holding { get; set; }
     public TransactionDto? source_transaction { get; set; }
     public TransactionDto? destination_transaction { get; set; }
 }
@@ -159,6 +160,20 @@ public class HoldingsController : Controller
                 };
                 holdingTransactionDto.destination_transaction = destTransaction;
             }
+            if (holdingTransaction.Holding != null)
+            {
+                Holding h = holdingTransaction.Holding;
+                HoldingDto dto = new()
+                {
+                    Id = h.Id,
+                    AccountId = h.AccountId,
+                    Name = h.Name,
+                    Shares = h.Shares,
+                    Price = h.Price,
+                    IsMonetary = h.IsMonetary,
+                };
+                holdingTransactionDto.holding = dto;
+            }
             dtos.Add(holdingTransactionDto);
         }
 
@@ -172,6 +187,7 @@ public class HoldingsController : Controller
         var holdingTransactions = await _context.HoldingTransactions
             .Include(ht => ht.SourceTransaction)
             .Include(ht => ht.DestinationTransaction)
+            .Include(ht => ht.Holding)
             .Where(ht => ht.HoldingId == holdingId)
             .ToListAsync();
         return MapHoldingTransactionDto(holdingTransactions);
