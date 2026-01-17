@@ -27,6 +27,23 @@ export type HoldingData = {
   isMonetary: boolean;
 };
 
+export type Transaction = {
+  id: number;
+  name: string;
+  description: string;
+  amount: number;
+  modified_holding: boolean;
+};
+
+export type HoldingTransaction = {
+  id: number;
+  shares: number;
+  price: number;
+  source_transaction?: Transaction;
+  destination_transaction?: Transaction;
+  holding: Holding;
+};
+
 const fetchAccounts = async (
   params: Record<string, any> = {}
 ): Promise<Account[]> => {
@@ -85,10 +102,18 @@ const transferHolding = async (
   });
 };
 
+const fetchHoldingTransactions = async (holdingId: number) => {
+  if (!holdingId) {
+    throw new Error("Holding id is not provided for holding transactions");
+  }
+  return sendRequest(`api/holdings/${holdingId}/transactions`, "GET");
+};
+
 export {
   fetchAccounts,
   createAccount,
   addHoldingsToAccount,
   deleteHolding,
   transferHolding,
+  fetchHoldingTransactions,
 };

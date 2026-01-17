@@ -10,12 +10,13 @@ import Table, { Columns } from "./Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import AddHoldingDialog from "../dialog/AddHoldingDialog";
-import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { faMoneyBill1, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import ConfirmOrCancel from "../icons/ConfirmOrCancel";
 import { useDispatch } from "react-redux";
 import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
 import { useMount } from "@/lib/common/util";
 import AddAccountDialog from "../dialog/AddAccountDialog";
+import TransactionView from "./component/TransactionView";
 
 export type AccountTableHandle = {};
 
@@ -50,6 +51,10 @@ const AccountsTable = forwardRef(function AccountsTable(
     ""
   );
   const [sharesToTransferTo, setSharesToTransferTo] = useState<"" | number>("");
+
+  const [holdingIdForTransactions, setHoldingIdForTransactions] = useState<
+    number | null
+  >(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -171,6 +176,14 @@ const AccountsTable = forwardRef(function AccountsTable(
           }
           return (
             <div>
+              <button
+                className="icon"
+                onClick={() => {
+                  setHoldingIdForTransactions(holding.id);
+                }}
+              >
+                <FontAwesomeIcon icon={faMoneyBill1} />
+              </button>
               <button
                 className="icon"
                 onClick={() => {
@@ -431,30 +444,40 @@ const AccountsTable = forwardRef(function AccountsTable(
   };
 
   return (
-    <>
-      {renderTopButtons()}
-      {renderAccountsLists()}
-      <AddHoldingDialog
-        open={accountForAddHolding != null}
-        account={accountForAddHolding}
-        onClose={() => {
-          setAccountForAddHolding(null);
-        }}
-        onCreate={async () => {
-          await getAccounts();
-          if (onUpdate) onUpdate();
-        }}
-      />
-      <AddAccountDialog
-        open={addDialogOpen}
-        onClose={() => {
-          setAddDialogOpen(false);
-        }}
-        onCreate={async () => {
-          await getAccounts();
-        }}
-      />
-    </>
+    <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div>
+        {renderTopButtons()}
+        {renderAccountsLists()}
+        <AddHoldingDialog
+          open={accountForAddHolding != null}
+          account={accountForAddHolding}
+          onClose={() => {
+            setAccountForAddHolding(null);
+          }}
+          onCreate={async () => {
+            await getAccounts();
+            if (onUpdate) onUpdate();
+          }}
+        />
+        <AddAccountDialog
+          open={addDialogOpen}
+          onClose={() => {
+            setAddDialogOpen(false);
+          }}
+          onCreate={async () => {
+            await getAccounts();
+          }}
+        />
+      </div>
+      <div style={{ width: "100%", margin: "5px" }}>
+        <TransactionView
+          holdingId={holdingIdForTransactions}
+          onClose={() => {
+            setHoldingIdForTransactions(null);
+          }}
+        />
+      </div>
+    </div>
   );
 });
 
