@@ -1,48 +1,48 @@
 import { sendRequest } from "./util";
 
-export type Holding = {
+export interface Holding {
   id: number;
   name: string;
   shares: number;
   price: number;
   isMonetary: boolean;
-};
+}
 
-export type Account = {
+export interface Account {
   id: number;
   name: string;
   description: string;
   holdings: Holding[];
-};
+}
 
-export type AccountData = {
+export interface AccountData {
   name: string;
   description: string;
-};
+}
 
-export type HoldingData = {
+export interface HoldingData {
   name: string;
   shares: number;
   price: number;
   isMonetary: boolean;
-};
+}
 
-export type Transaction = {
+export interface TransactionInHoldingTransaction {
   id: number;
   name: string;
   description: string;
   amount: number;
   modified_holding: boolean;
-};
+}
 
-export type HoldingTransaction = {
+export interface HoldingTransaction {
   id: number;
   shares: number;
   price: number;
-  source_transaction?: Transaction;
-  destination_transaction?: Transaction;
+  source_transaction?: TransactionInHoldingTransaction;
+  destination_transaction?: TransactionInHoldingTransaction;
   holding: Holding;
-};
+}
 
 const fetchAccounts = async (
   params: Record<string, any> = {}
