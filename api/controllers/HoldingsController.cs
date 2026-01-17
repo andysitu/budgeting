@@ -13,16 +13,6 @@ public class HoldingTransferDto
     public long to_shares { get; set; }
 }
 
-public class HoldingTransactionDto
-{
-    public long id { get; set; }
-    public decimal shares { get; set; }
-    public decimal price { get; set; }
-    public HoldingDto holding { get; set; }
-    public TransactionDto? source_transaction { get; set; }
-    public TransactionDto? destination_transaction { get; set; }
-}
-
 [Authorize]
 [ApiController]
 [Route("holdings")]
@@ -127,7 +117,7 @@ public class HoldingsController : Controller
             if (holdingTransaction.SourceTransaction != null)
             {
                 Transaction t = holdingTransaction.SourceTransaction;
-                TransactionDto sourceTransaction = new()
+                TransactionBaseDto sourceTransaction = new()
                 {
                     id = t.Id,
                     name = t.Name,
@@ -141,7 +131,7 @@ public class HoldingsController : Controller
             if (holdingTransaction.DestinationTransaction != null)
             {
                 Transaction t = holdingTransaction.DestinationTransaction;
-                TransactionDto destTransaction = new()
+                TransactionBaseDto destTransaction = new()
                 {
                     id = t.Id,
                     name = t.Name,
