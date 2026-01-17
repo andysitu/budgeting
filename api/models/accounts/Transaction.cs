@@ -19,6 +19,6 @@ namespace Budgeting.Models.Accounts
         [ForeignKey(nameof(ToHoldingTransactionId))]
         public virtual HoldingTransaction ToHoldingTransaction { get; set; } = null!;
         [ForeignKey(nameof(FromHoldingTransactionId))]
-        public virtual HoldingTransaction FromHoldingTransaction { get; set; } = null!;
+        public virtual HoldingTransaction? FromHoldingTransaction { get; set; } = null!;
     }
 }
