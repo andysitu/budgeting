@@ -13,15 +13,6 @@ public class HoldingTransferDto
     public long to_shares { get; set; }
 }
 
-public class TransactionDto
-{
-    public long id { get; set; }
-    public string name { get; set; }
-    public string description { get; set; }
-    public decimal amount { get; set; }
-    public bool modified_holding { get; set; }
-}
-
 public class HoldingTransactionDto
 {
     public long id { get; set; }
