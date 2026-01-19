@@ -1,9 +1,4 @@
-import {
-  fetchHoldingTransactions,
-  fetchTransactions,
-  Holding,
-  Transaction,
-} from "@/network/account";
+import { fetchTransactions, Holding, Transaction } from "@/network/account";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
@@ -57,7 +52,6 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
         id,
         name,
         description,
-        amount,
         from_holding_transaction,
         to_holding_transaction,
       } = t;
@@ -105,7 +99,6 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
             borderBottom: "1px solid lightgray",
           }}
         >
-          {`Amount: ${amount}`}
           {holdingTransactions}
         </div>
       );

@@ -31,7 +31,6 @@ export interface BaseTransaction {
   id: number;
   name: string;
   description: string;
-  amount: number;
   modified_holding: boolean;
 }
 

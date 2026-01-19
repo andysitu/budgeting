@@ -70,7 +70,6 @@ public class TransactionsController : Controller
                 id = t.Id,
                 name = t.Name,
                 description = t.Description,
-                amount = t.Amount,
                 modified_holding = t.ModifiedHolding,
                 to_holding_transaction = new()
                 {

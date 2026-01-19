@@ -122,7 +122,6 @@ public class HoldingsController : Controller
                     id = t.Id,
                     name = t.Name,
                     description = t.Description,
-                    amount = t.Amount,
                     modified_holding = t.ModifiedHolding,
                 };
                 holdingTransactionDto.source_transaction = sourceTransaction;
@@ -136,7 +135,6 @@ public class HoldingsController : Controller
                     id = t.Id,
                     name = t.Name,
                     description = t.Description,
-                    amount = t.Amount,
                     modified_holding = t.ModifiedHolding,
                 };
                 holdingTransactionDto.destination_transaction = destTransaction;
