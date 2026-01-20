@@ -1,5 +1,5 @@
 import { fetchTransactions, Holding, Transaction } from "@/network/account";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 
@@ -62,32 +62,32 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
         const { shares, price, holding } = from_holding_transaction;
         const { name, id: holdingId } = holding;
         holdingTransactions.push(
-          <div
-            key={`from_holding_${id}_${holdingId}`}
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <div>{`From ${holding.name ? holding.name : "-"}`}</div>
-            <div>{`Shares: ${shares} | Price: ${price}`}</div>
-          </div>
+          <div key={`from_holding_${id}_${holdingId}`}>
+            <div>{`${holding.name ? holding.name : "-"}`}</div>
+            <div>{`Shares: ${shares} | Price: ${price} | Total: ${shares * price}`}</div>
+          </div>,
         );
       } else {
-        holdingTransactions.push(<div>No From Holding</div>);
+        holdingTransactions.push(<div>-</div>);
       }
+
+      holdingTransactions.push(
+        <div>
+          <FontAwesomeIcon icon={faArrowRight} />
+        </div>,
+      );
 
       if (to_holding_transaction) {
         const { shares, price, holding } = to_holding_transaction;
         const { name, id: holdingId } = holding;
         holdingTransactions.push(
-          <div
-            key={`to_holding_${id}_${holdingId}`}
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <div>{`To ${holding.name ? holding.name : "-"}`}</div>
-            <div>{`Shares: ${shares} | Price: ${price}`}</div>
-          </div>
+          <div key={`to_holding_${id}_${holdingId}`}>
+            <div>{`${holding.name ? holding.name : "-"}`}</div>
+            <div>{`Shares: ${shares} | Price: ${price} | Total: ${shares * price}`}</div>
+          </div>,
         );
       } else {
-        holdingTransactions.push(<div>No To Holding</div>);
+        holdingTransactions.push(<div>-</div>);
       }
 
       const body = (
@@ -97,6 +97,8 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
             paddingBottom: "8px",
             marginBottom: "8px",
             borderBottom: "1px solid lightgray",
+            display: "flex",
+            justifyContent: "space-between",
           }}
         >
           {holdingTransactions}
