@@ -8,9 +8,13 @@ import {
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Table, { Columns } from "./Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faRightLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileInvoiceDollar,
+  faPlus,
+  faRightLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import AddHoldingDialog from "../dialog/AddHoldingDialog";
-import { faMoneyBill1, faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import ConfirmOrCancel from "../icons/ConfirmOrCancel";
 import { useDispatch } from "react-redux";
 import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
@@ -26,7 +30,7 @@ interface AccountTableProps {
 
 const AccountsTable = forwardRef(function AccountsTable(
   { onUpdate }: AccountTableProps,
-  ref
+  ref,
 ) {
   const dispatch = useDispatch();
 
@@ -48,7 +52,7 @@ const AccountsTable = forwardRef(function AccountsTable(
     number | null
   >(null);
   const [sharesToTransferFrom, setSharesToTransferFrom] = useState<"" | number>(
-    ""
+    "",
   );
   const [sharesToTransferTo, setSharesToTransferTo] = useState<"" | number>("");
 
@@ -75,7 +79,7 @@ const AccountsTable = forwardRef(function AccountsTable(
 
     if (!(accounts.length > 0)) {
       return dispatch(
-        addMessage("There are no accounts created. Please create an account.")
+        addMessage("There are no accounts created. Please create an account."),
       );
     }
 
@@ -89,8 +93,8 @@ const AccountsTable = forwardRef(function AccountsTable(
     if (!(totalHoldings >= 2)) {
       return dispatch(
         addMessage(
-          "There must be at least 2 holdings total in all the accounts."
-        )
+          "There must be at least 2 holdings total in all the accounts.",
+        ),
       );
     }
     setToggledTransfer(true);
@@ -181,7 +185,7 @@ const AccountsTable = forwardRef(function AccountsTable(
                   setHoldingForTransactions(holding);
                 }}
               >
-                <FontAwesomeIcon icon={faMoneyBill1} />
+                <FontAwesomeIcon icon={faFileInvoiceDollar} />
               </button>
               <button
                 className="icon"
@@ -242,7 +246,7 @@ const AccountsTable = forwardRef(function AccountsTable(
             );
           },
           cellStyle: { width: "50px" },
-        }
+        },
       );
     }
 
@@ -270,14 +274,14 @@ const AccountsTable = forwardRef(function AccountsTable(
     if (sharesFromHolding < sharesToTransferFrom) {
       return dispatch(
         addMessage(
-          `There are not enough shares in the holding ${fromHolding?.name}`
-        )
+          `There are not enough shares in the holding ${fromHolding?.name}`,
+        ),
       );
     } else if (!(sharesToTransferTo > 0)) {
       return dispatch(
         addMessage(
-          `There are not enough shares in the holding ${toHolding?.name}`
-        )
+          `There are not enough shares in the holding ${toHolding?.name}`,
+        ),
       );
     }
 
@@ -287,7 +291,7 @@ const AccountsTable = forwardRef(function AccountsTable(
         selectedIdFromTransfer,
         selectedIdToTransfer,
         sharesToTransferFrom,
-        sharesToTransferTo
+        sharesToTransferTo,
       );
       clearTransferringInput();
       await getAccounts();
@@ -430,7 +434,7 @@ const AccountsTable = forwardRef(function AccountsTable(
             <Table columns={getHoldingColumns()} dataList={holdings} />
           </div>
           <div style={{ margin: "px 0px" }}>{`Total: ${total}`}</div>
-        </div>
+        </div>,
       );
     }
 
