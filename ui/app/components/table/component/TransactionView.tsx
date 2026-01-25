@@ -68,11 +68,11 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
           </div>,
         );
       } else {
-        holdingTransactions.push(<div>-</div>);
+        holdingTransactions.push(<div key={`from_holding_${id}_none`}>-</div>);
       }
 
       holdingTransactions.push(
-        <div>
+        <div key={`transaction_arrow_${id}`}>
           <FontAwesomeIcon icon={faArrowRight} />
         </div>,
       );
@@ -87,7 +87,7 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
           </div>,
         );
       } else {
-        holdingTransactions.push(<div>-</div>);
+        holdingTransactions.push(<div key={`to_holding_${id}_none`}>-</div>);
       }
 
       const body = (
