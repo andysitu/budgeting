@@ -53,7 +53,7 @@ public class TransactionsController : Controller
     }
 
     [Authorize]
-    [HttpGet("/transactions")]
+    [HttpGet("")]
     public async Task<IActionResult> GetTransactions([FromQuery] TransactionQuery query)
     {
         var transactionQuery = _context.Transactions
