@@ -61,8 +61,8 @@ public class TransactionsController : Controller
 
         if (query.holdingId != null)
         {
-            transactionQuery = transactionQuery.Where(t => t.ToHoldingTransactionId == query.holdingId ||
-                t.FromHoldingTransactionId == query.holdingId);
+            transactionQuery = transactionQuery.Where(t => t.ToHoldingTransaction.HoldingId == query.holdingId ||
+                (t.FromHoldingTransaction != null && t.FromHoldingTransaction.HoldingId == query.holdingId));
         }
         var transactions = await transactionQuery
             .Select (t =>  new TransactionDto
