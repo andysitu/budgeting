@@ -18,12 +18,18 @@ const getConfiguration = (method: FetchRequest = "GET") => {
 const sendRequest = async (
   url: string | URL,
   sendType: FetchRequest,
-  additionalParams?: Object
+  additionalParams?: Record<string, any>,
 ) => {
   let requestParam = getConfiguration(sendType);
 
-  if (!isEmptyObject(additionalParams))
+  if (sendType === "GET") {
+    if (!isEmptyObject(additionalParams)) {
+      const params = new URLSearchParams(additionalParams).toString();
+      url = `${url}?${params}`;
+    }
+  } else if (!isEmptyObject(additionalParams)) {
     Object.assign(requestParam, additionalParams);
+  }
 
   const result = await fetch(url, requestParam);
 
@@ -40,7 +46,7 @@ const sendRequest = async (
   } else {
     const resultText = await result.text();
     throw new Error(
-      `Error: ${result.status}. Response: ${resultText.substring(0, 100)}...`
+      `Error: ${result.status}. Response: ${resultText.substring(0, 100)}...`,
     );
   }
 };
