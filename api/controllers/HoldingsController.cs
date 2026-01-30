@@ -13,6 +13,13 @@ public class HoldingTransferDto
     public decimal to_shares { get; set; }
 }
 
+public class AddToHoldingDto
+{
+    public decimal? shares { get; set; }
+    public decimal? amount { get; set; }
+    public bool modify { get; set; } = true;
+}
+
 [Authorize]
 [ApiController]
 [Route("holdings")]
@@ -98,6 +105,75 @@ public class HoldingsController : Controller
             throw;
         }
 
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("{holdingId}/add")]
+    public async Task<ActionResult> AddToHolding(long holdingId, [FromBody] AddToHoldingDto addToHoldingDto)
+    {
+        string? userId = Util.getCurrentUserId(HttpContext);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        Holding? toHolding = await _context.Holdings.Where(h => h.Id == holdingId).SingleAsync();
+
+        if (toHolding == null) return NotFound();
+
+        decimal shares = 1;
+        decimal price = toHolding.Price;
+        if (addToHoldingDto.amount != null & addToHoldingDto.amount != 0)
+        {
+            shares = (addToHoldingDto.amount ?? 1) / price;
+        }
+        else if (addToHoldingDto.shares != null & addToHoldingDto.shares != 0)
+        {
+            shares = addToHoldingDto.shares ?? 1;
+        }
+        else
+        {
+            return BadRequest("Either amount or shares must be provided.");
+        }
+
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
+        try
+        {
+            var destHoldingTransaction = new HoldingTransaction
+            {
+                HoldingId = toHolding.Id,
+                AppUserId = userId,
+                Shares = shares,
+                Price = price
+            };
+
+            Transaction t = new()
+            {
+                Date = DateTime.UtcNow,
+                ModifiedHolding = addToHoldingDto.modify,
+                ToHoldingTransaction = destHoldingTransaction,
+                AppUserId = userId,
+            };
+
+            if (addToHoldingDto.modify)
+            {
+                toHolding.Shares += shares;
+            }
+
+            _context.Transactions.Add(t);
+
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+        
         return Ok();
     }
 
