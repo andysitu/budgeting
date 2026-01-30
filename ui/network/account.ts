@@ -52,7 +52,7 @@ export interface Transaction extends BaseTransaction {
 }
 
 const fetchAccounts = async (
-  params: Record<string, any> = {}
+  params: Record<string, any> = {},
 ): Promise<Account[]> => {
   const result = await sendRequest("/api/accounts", "GET", params);
 
@@ -68,7 +68,7 @@ const createAccount = async (account: AccountData) => {
 
 const addHoldingsToAccount = async (
   accountId: number,
-  holdings: HoldingData[]
+  holdings: HoldingData[],
 ) => {
   const result = await sendRequest(
     `api/accounts/${accountId}/holdings`,
@@ -77,7 +77,7 @@ const addHoldingsToAccount = async (
       body: JSON.stringify({
         holdings,
       }),
-    }
+    },
   );
   return result;
 };
@@ -88,7 +88,7 @@ const deleteHolding = async (accountId: number, holdingId: number) => {
   }
   const result = await sendRequest(
     `api/accounts/${accountId}/holdings/${holdingId}`,
-    "DELETE"
+    "DELETE",
   );
   return result;
 };
@@ -97,7 +97,7 @@ const transferHolding = async (
   fromHoldinId: number,
   toholdingId: number,
   fromShares: number,
-  toShares: number
+  toShares: number,
 ) => {
   const result = await sendRequest("/api/holdings/transfer", "POST", {
     body: JSON.stringify({
@@ -110,7 +110,7 @@ const transferHolding = async (
 };
 
 const fetchHoldingTransactions = async (
-  holdingId: number
+  holdingId: number,
 ): Promise<HoldingTransaction[]> => {
   if (!holdingId) {
     throw new Error("Holding id is not provided for holding transactions");
@@ -119,7 +119,7 @@ const fetchHoldingTransactions = async (
 };
 
 const fetchTransactions = async (
-  holdingId?: number
+  holdingId?: number,
 ): Promise<Transaction[]> => {
   const params: Record<string, any> = {};
   if (holdingId) {
