@@ -9,8 +9,8 @@ public class HoldingTransferDto
 {
     public long from_holding_id { get; set; }
     public long to_holding_id { get; set; }
-    public long from_shares { get; set; }
-    public long to_shares { get; set; }
+    public decimal from_shares { get; set; }
+    public decimal to_shares { get; set; }
 }
 
 [Authorize]
