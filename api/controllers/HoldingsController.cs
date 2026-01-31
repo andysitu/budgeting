@@ -18,6 +18,8 @@ public class AddToHoldingDto
     public decimal? shares { get; set; }
     public decimal? amount { get; set; }
     public bool modify { get; set; } = true;
+    public string? name { get; set; }
+    public string? description { get; set; }
 }
 
 [Authorize]
@@ -155,6 +157,8 @@ public class HoldingsController : Controller
                 ModifiedHolding = addToHoldingDto.modify,
                 ToHoldingTransaction = destHoldingTransaction,
                 AppUserId = userId,
+                Name = addToHoldingDto.name ?? "",
+                Description = addToHoldingDto.description ?? "",
             };
 
             if (addToHoldingDto.modify)
