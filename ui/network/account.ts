@@ -54,43 +54,34 @@ export interface Transaction extends BaseTransaction {
 const fetchAccounts = async (
   params: Record<string, any> = {},
 ): Promise<Account[]> => {
-  const result = await sendRequest("/api/accounts", "GET", params);
-
-  return result;
+  return sendRequest("/api/accounts", "GET", params);
 };
 
 const createAccount = async (account: AccountData) => {
-  const result = await sendRequest("/api/accounts", "POST", {
+  return sendRequest("/api/accounts", "POST", {
     body: JSON.stringify(account),
   });
-  return result;
 };
 
 const addHoldingsToAccount = async (
   accountId: number,
   holdings: HoldingData[],
 ) => {
-  const result = await sendRequest(
-    `api/accounts/${accountId}/holdings`,
-    "POST",
-    {
-      body: JSON.stringify({
-        holdings,
-      }),
-    },
-  );
-  return result;
+  return sendRequest(`api/accounts/${accountId}/holdings`, "POST", {
+    body: JSON.stringify({
+      holdings,
+    }),
+  });
 };
 
 const deleteHolding = async (accountId: number, holdingId: number) => {
   if (!holdingId || !accountId) {
     throw new Error("Holding or account id not provided to delete holding");
   }
-  const result = await sendRequest(
+  return sendRequest(
     `api/accounts/${accountId}/holdings/${holdingId}`,
     "DELETE",
   );
-  return result;
 };
 
 const transferHolding = async (
@@ -99,7 +90,7 @@ const transferHolding = async (
   fromShares: number,
   toShares: number,
 ) => {
-  const result = await sendRequest("/api/holdings/transfer", "POST", {
+  return sendRequest("/api/holdings/transfer", "POST", {
     body: JSON.stringify({
       from_holding_id: fromHoldinId,
       to_holding_id: toholdingId,
