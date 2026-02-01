@@ -3,11 +3,10 @@ import styles from "./textlistitem.module.css";
 import ListItem from "./ListItem";
 import { forwardRef } from "react";
 
-interface CheckboxListItemProps
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    "onChange" | "value"
-  > {
+interface CheckboxListItemProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "onChange" | "value"
+> {
   label: string;
   value: boolean;
   onChange: (value: boolean) => void;
@@ -19,7 +18,7 @@ interface CheckboxListItemProps
 const CheckboxListItem = forwardRef<HTMLInputElement, CheckboxListItemProps>(
   function CheckboxListItemWithRef(
     { label, value, onChange, containerStyle, ...rest },
-    ref
+    ref,
   ) {
     const divStyle: React.CSSProperties = {
       display: "grid",
@@ -43,7 +42,7 @@ const CheckboxListItem = forwardRef<HTMLInputElement, CheckboxListItemProps>(
         />
       </ListItem>
     );
-  }
+  },
 );
 
 export default CheckboxListItem;

@@ -21,6 +21,7 @@ import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
 import { useMount } from "@/lib/common/util";
 import AddAccountDialog from "../dialog/AddAccountDialog";
 import TransactionView from "./component/TransactionView";
+import AddToHoldingDialog from "../dialog/AddToHoldingDialog";
 
 export type AccountTableHandle = {};
 
@@ -40,7 +41,7 @@ const AccountsTable = forwardRef(function AccountsTable(
   const [accountForAddHolding, setAccountForAddHolding] = useState<
     undefined | Account | null
   >(null);
-  const [selectHoldingForDelete, setSelectHoldingForDelete] = useState<
+  const [selectHoldingIdForDelete, setSelectHoldingIdForDelete] = useState<
     null | number
   >(null);
 
@@ -55,6 +56,10 @@ const AccountsTable = forwardRef(function AccountsTable(
     "",
   );
   const [sharesToTransferTo, setSharesToTransferTo] = useState<"" | number>("");
+
+  const [selectedHoldingForAdding, setSelectedHoldingForAdding] = useState<
+    undefined | Holding
+  >(undefined);
 
   const [holdingForTransactions, setHoldingForTransactions] =
     useState<Holding | null>(null);
@@ -163,7 +168,7 @@ const AccountsTable = forwardRef(function AccountsTable(
         render: (holding: Holding) => {
           if (toggledTransfer) return "";
           const id = holding.id;
-          if (selectHoldingForDelete == id) {
+          if (selectHoldingIdForDelete == id) {
             return (
               <div>
                 <ConfirmOrCancel
@@ -171,7 +176,7 @@ const AccountsTable = forwardRef(function AccountsTable(
                     confirmDeleteHolding(id);
                   }}
                   onCancel={() => {
-                    setSelectHoldingForDelete(null);
+                    setSelectHoldingIdForDelete(null);
                   }}
                 />
               </div>
@@ -179,6 +184,14 @@ const AccountsTable = forwardRef(function AccountsTable(
           }
           return (
             <div>
+              <button
+                className="icon"
+                onClick={() => {
+                  setSelectedHoldingForAdding(holding);
+                }}
+              >
+                <FontAwesomeIcon color="green" icon={faPlus} />
+              </button>
               <button
                 className="icon"
                 onClick={() => {
@@ -190,7 +203,7 @@ const AccountsTable = forwardRef(function AccountsTable(
               <button
                 className="icon"
                 onClick={() => {
-                  setSelectHoldingForDelete(id);
+                  setSelectHoldingIdForDelete(id);
                 }}
               >
                 <FontAwesomeIcon color="red" icon={faTrashCan} />
@@ -460,6 +473,14 @@ const AccountsTable = forwardRef(function AccountsTable(
           onCreate={async () => {
             await getAccounts();
             if (onUpdate) onUpdate();
+          }}
+        />
+        <AddToHoldingDialog
+          open={selectedHoldingForAdding != null}
+          onClose={() => setSelectedHoldingForAdding(undefined)}
+          holding={selectedHoldingForAdding}
+          onAdd={(data) => {
+            console.log(data);
           }}
         />
         <AddAccountDialog
