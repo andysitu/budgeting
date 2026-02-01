@@ -479,8 +479,9 @@ const AccountsTable = forwardRef(function AccountsTable(
           open={selectedHoldingForAdding != null}
           onClose={() => setSelectedHoldingForAdding(undefined)}
           holding={selectedHoldingForAdding}
-          onAdd={(data) => {
-            console.log(data);
+          onAdd={async (data) => {
+            await getAccounts();
+            if (onUpdate) onUpdate();
           }}
         />
         <AddAccountDialog

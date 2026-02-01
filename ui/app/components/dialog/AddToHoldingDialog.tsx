@@ -4,6 +4,8 @@ import TextListItem from "../inputs/TextLisItem";
 import { Holding } from "@/network/account";
 import CheckboxListItem from "../inputs/CheckboxListItem";
 import { addToHolding, AddToHolding } from "@/network/holding";
+import { useDispatch } from "react-redux";
+import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
 
 interface AddHoldingDialogProps {
   holding?: Holding;
@@ -18,6 +20,8 @@ function AddToHoldingDialog({
   onClose,
   onAdd,
 }: AddHoldingDialogProps) {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [shares, setShares] = useState<number | "">("");
@@ -38,10 +42,27 @@ function AddToHoldingDialog({
   const handleSubmit = async () => {
     const id = holding?.id;
     if (holding == null || id == null) return;
+
+    const sharesValue = shares == "" ? undefined : shares,
+      amountValue = amount == "" ? undefined : amount;
+
+    const validShares = sharesValue && sharesValue > 0,
+      validAmount = amountValue && amountValue > 0;
+
+    if (!validShares && !validAmount) {
+      return dispatch(addMessage("Please enter a valid amount or shares"));
+    } else if (validShares && validAmount) {
+      return dispatch(
+        addMessage(
+          "Please either enter a valid amount or shares, but not both.",
+        ),
+      );
+    }
+
     const data: AddToHolding = {
       id: holding.id,
-      shares,
-      amount,
+      shares: sharesValue,
+      amount: amountValue,
       description,
       modifyHolding,
     };
@@ -50,9 +71,8 @@ function AddToHoldingDialog({
       if (id == null) return;
       setLoading(true);
       const response = await addToHolding(data);
-      console.log(response);
-      resetDialog();
       onAdd(response);
+      resetDialog();
     } catch (error) {
       console.error("Error adding to holding", error);
     } finally {
