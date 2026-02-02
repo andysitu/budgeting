@@ -14,6 +14,7 @@ public class TransactionBaseDto
     public string description { get; set; }
     public decimal amount { get; set; }
     public bool modified_holding { get; set; }
+    public DateTime date { get; set; }
 }
 
 public class HoldingTransactionBaseDto
@@ -71,6 +72,7 @@ public class TransactionsController : Controller
                 name = t.Name,
                 description = t.Description,
                 modified_holding = t.ModifiedHolding,
+                date = t.Date,
                 to_holding_transaction = new()
                 {
                     id = t.ToHoldingTransaction.Id,

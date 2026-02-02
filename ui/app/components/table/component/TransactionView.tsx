@@ -54,24 +54,27 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
         description,
         from_holding_transaction,
         to_holding_transaction,
+        date,
       } = t;
 
-      const holdingTransactions = [];
+      const d = new Date(date);
+
+      const transactionView = [];
 
       if (from_holding_transaction) {
         const { shares, price, holding } = from_holding_transaction;
         const { name, id: holdingId } = holding;
-        holdingTransactions.push(
+        transactionView.push(
           <div key={`from_holding_${id}_${holdingId}`}>
             <div>{`${holding.name ? holding.name : "-"}`}</div>
             <div>{`Shares: ${shares} | Price: ${price} | Total: ${shares * price}`}</div>
           </div>,
         );
       } else {
-        holdingTransactions.push(<div key={`from_holding_${id}_none`}>-</div>);
+        transactionView.push(<div key={`from_holding_${id}_none`}>-</div>);
       }
 
-      holdingTransactions.push(
+      transactionView.push(
         <div key={`transaction_arrow_${id}`}>
           <FontAwesomeIcon icon={faArrowRight} />
         </div>,
@@ -80,28 +83,30 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
       if (to_holding_transaction) {
         const { shares, price, holding } = to_holding_transaction;
         const { name, id: holdingId } = holding;
-        holdingTransactions.push(
+        transactionView.push(
           <div key={`to_holding_${id}_${holdingId}`}>
             <div>{`${holding.name ? holding.name : "-"}`}</div>
             <div>{`Shares: ${shares} | Price: ${price} | Total: ${shares * price}`}</div>
           </div>,
         );
       } else {
-        holdingTransactions.push(<div key={`to_holding_${id}_none`}>-</div>);
+        transactionView.push(<div key={`to_holding_${id}_none`}>-</div>);
       }
 
       const body = (
-        <div
-          key={`transaction-list-${id}`}
-          style={{
-            paddingBottom: "8px",
-            marginBottom: "8px",
-            borderBottom: "1px solid lightgray",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          {holdingTransactions}
+        <div key={`transaction-list-${id}`}>
+          <div>{`${d.toLocaleString()}`}</div>
+          <div
+            style={{
+              paddingBottom: "8px",
+              marginBottom: "8px",
+              borderBottom: "1px solid lightgray",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            {transactionView}
+          </div>
         </div>
       );
 
