@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 interface TextListItemProps {
   label: ReactNode | string;
   children: ReactNode | string;
-  containerStyle?: Record<string, any>;
+  containerStyle?: React.CSSProperties;
 }
 
 function ListItem({ label, children, containerStyle }: TextListItemProps) {

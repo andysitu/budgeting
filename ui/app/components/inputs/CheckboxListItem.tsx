@@ -10,7 +10,7 @@ interface CheckboxListItemProps extends Omit<
   label: string;
   value: boolean;
   onChange: (value: boolean) => void;
-  containerStyle?: Record<string, any>;
+  containerStyle?: React.CSSProperties;
   // For rest of props going to input
   [key: string]: any;
 }

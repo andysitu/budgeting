@@ -3,13 +3,15 @@ import styles from "./textlistitem.module.css";
 import ListItem from "./ListItem";
 import { forwardRef } from "react";
 
-interface TextListItemProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+interface TextListItemProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "onChange"
+> {
   label: string;
   value: string;
   onChange: (value: string) => void;
   type?: string;
-  containerStyle?: Record<string, any>;
+  containerStyle?: React.CSSProperties;
   // For rest of props going to input
   [key: string]: any;
 }
@@ -17,7 +19,7 @@ interface TextListItemProps
 const TextListItem = forwardRef<HTMLInputElement, TextListItemProps>(
   function TextListItemWithRef(
     { label, value, onChange, type = "text", containerStyle, ...rest },
-    ref
+    ref,
   ) {
     const divStyle: React.CSSProperties = {
       display: "grid",
@@ -41,7 +43,7 @@ const TextListItem = forwardRef<HTMLInputElement, TextListItemProps>(
         />
       </ListItem>
     );
-  }
+  },
 );
 
 export default TextListItem;

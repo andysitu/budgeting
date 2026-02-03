@@ -13,6 +13,7 @@ interface DialogProps {
   onSubmit?: () => void;
   loading?: boolean;
   focusInput?: HTMLElement | null | undefined;
+  containerStyle?: React.CSSProperties;
 }
 
 function Dialog({
@@ -24,6 +25,7 @@ function Dialog({
   title,
   loading,
   focusInput,
+  containerStyle = {},
 }: DialogProps) {
   const showClassName = open ? "" : styles["modal-hidden"];
 
@@ -55,6 +57,7 @@ function Dialog({
             paddingTop: "4px",
             paddingLeft: "10px",
             paddingRight: "10px",
+            ...containerStyle,
           }}
         >
           {title && <div>{title}</div>}
