@@ -1,4 +1,6 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ListItem from "./ListItem";
+import { faCalendarDay } from "@fortawesome/free-solid-svg-icons";
 
 interface DateTimeListItemProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -20,8 +22,30 @@ function DateTimeListItem({
   onChangeDate,
   onChangeTime,
 }: DateTimeListItemProps) {
+  const setToToday = () => {
+    const today = new Date().toISOString();
+    onChangeDate(today.split("T")[0]);
+    onChangeTime(today.split("T")[1].split(".")[0]);
+  };
   return (
-    <ListItem label={label}>
+    <ListItem
+      label={
+        <div>
+          {label}
+          <button
+            className={"icon"}
+            style={{ height: "28px", width: "28px" }}
+            onClick={(e) => {
+              e.preventDefault();
+              setToToday();
+            }}
+          >
+            <FontAwesomeIcon icon={faCalendarDay} />
+          </button>
+        </div>
+      }
+      containerStyle={{ alignItems: "center" }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <input
           type="date"
