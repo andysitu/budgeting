@@ -7,6 +7,7 @@ export interface AddToHolding {
   amount?: number;
   shares?: number;
   modifyHolding?: boolean;
+  date: Date | string;
 }
 
 const addToHolding = async (addToHoldingData: AddToHolding) => {
@@ -19,16 +20,8 @@ const addToHolding = async (addToHoldingData: AddToHolding) => {
     throw new Error("Invalid id provided to addToHolding");
   }
 
-  const holdingData = {
-    shares: addToHoldingData.shares,
-    amount: addToHoldingData.amount,
-    name: addToHoldingData.name,
-    description: addToHoldingData.description,
-    modify: addToHoldingData.modifyHolding,
-  };
-
   return sendRequest(`api/holdings/${addToHoldingData.id}/add`, "POST", {
-    body: JSON.stringify(holdingData),
+    body: JSON.stringify(addToHoldingData),
   });
 };
 

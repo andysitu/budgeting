@@ -62,9 +62,9 @@ function AddToHoldingDialog({
           "Please either enter a valid amount or shares, but not both.",
         ),
       );
-    } else if (dateStr && !timeStr) {
+    } else if (!timeStr) {
       return dispatch(addMessage("Time is missing"));
-    } else if (timeStr && !dateStr) {
+    } else if (!dateStr) {
       return dispatch(addMessage("Date is missing"));
     }
 
@@ -74,14 +74,8 @@ function AddToHoldingDialog({
       amount: amountValue,
       description,
       modifyHolding,
+      date: new Date(dateStr + " " + timeStr),
     };
-    if (dateStr && timeStr) {
-      data.date = new Date(dateStr + " " + timeStr);
-      console.log(dateStr + " " + timeStr);
-      console.log("data.date", data.date);
-    }
-
-    console.log(data);
 
     try {
       const id = holding?.id;
