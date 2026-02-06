@@ -20,6 +20,7 @@ public class AddToHoldingDto
     public bool modify { get; set; } = true;
     public string? name { get; set; }
     public string? description { get; set; }
+    public DateTime? date { get; set; }
 }
 
 [Authorize]

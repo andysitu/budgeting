@@ -6,6 +6,8 @@ import CheckboxListItem from "../inputs/CheckboxListItem";
 import { addToHolding, AddToHolding } from "@/network/holding";
 import { useDispatch } from "react-redux";
 import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
+import ListItem from "../inputs/ListItem";
+import DateTimeListItem from "../inputs/DateTimeListItem";
 
 interface AddHoldingDialogProps {
   holding?: Holding;
@@ -27,6 +29,9 @@ function AddToHoldingDialog({
   const [shares, setShares] = useState<number | "">("");
   const [amount, setAmount] = useState<number | "">("");
   const [modifyHolding, setModifHolding] = useState(true);
+
+  const [dateStr, setDateStr] = useState("");
+  const [timeStr, setTimeStr] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -57,6 +62,10 @@ function AddToHoldingDialog({
           "Please either enter a valid amount or shares, but not both.",
         ),
       );
+    } else if (dateStr && !timeStr) {
+      return dispatch(addMessage("Time is missing"));
+    } else if (timeStr && !dateStr) {
+      return dispatch(addMessage("Date is missing"));
     }
 
     const data: AddToHolding = {
@@ -66,6 +75,14 @@ function AddToHoldingDialog({
       description,
       modifyHolding,
     };
+    if (dateStr && timeStr) {
+      data.date = new Date(dateStr + " " + timeStr);
+      console.log(dateStr + " " + timeStr);
+      console.log("data.date", data.date);
+    }
+
+    console.log(data);
+
     try {
       const id = holding?.id;
       if (id == null) return;
@@ -90,6 +107,7 @@ function AddToHoldingDialog({
         handleSubmit();
       }}
       focusInput={nameInputRef?.current}
+      containerStyle={{ minWidth: "600px" }}
     >
       <TextListItem
         value={name}
@@ -136,6 +154,17 @@ function AddToHoldingDialog({
         label="Modify Holding"
         value={modifyHolding}
         onChange={(value: boolean) => setModifHolding(value)}
+      />
+      <DateTimeListItem
+        label={"Datetime"}
+        dateString={dateStr}
+        timeString={timeStr}
+        onChangeTime={(value) => {
+          setTimeStr(value);
+        }}
+        onChangeDate={(value) => {
+          setDateStr(value);
+        }}
       />
     </Dialog>
   );

@@ -14,7 +14,7 @@ public class TransactionBaseDto
     public string description { get; set; }
     public decimal amount { get; set; }
     public bool modified_holding { get; set; }
-    public DateTime date { get; set; }
+    public DateTime? date { get; set; }
     public DateTime created { get; set; }
     public DateTime updated { get; set; }
 }
