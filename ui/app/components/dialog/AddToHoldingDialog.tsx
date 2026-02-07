@@ -93,7 +93,7 @@ function AddToHoldingDialog({
 
   return (
     <Dialog
-      title={"Add to Holding"}
+      title={`Add to Holding ${holding?.name ?? ""}`}
       loading={loading}
       open={open}
       onClose={onClose}
