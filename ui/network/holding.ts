@@ -10,6 +10,13 @@ export interface AddToHolding {
   date: Date | string;
 }
 
+export interface EditHoldingData {
+  id: number;
+  name?: string;
+  amount?: number;
+  shares?: number;
+}
+
 const addToHolding = async (addToHoldingData: AddToHolding) => {
   if (
     (addToHoldingData.amount == null || !(addToHoldingData.amount > 0)) &&
@@ -25,4 +32,8 @@ const addToHolding = async (addToHoldingData: AddToHolding) => {
   });
 };
 
-export { addToHolding };
+const editHolding = async (editHoldingData: EditHoldingData) => {
+  //
+};
+
+export { addToHolding, editHolding };

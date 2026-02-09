@@ -9,6 +9,7 @@ import { forwardRef, useImperativeHandle, useState } from "react";
 import Table, { Columns } from "./Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCrop,
   faFileInvoiceDollar,
   faPlus,
   faRightLeft,
@@ -22,6 +23,7 @@ import { useMount } from "@/lib/common/util";
 import AddAccountDialog from "../dialog/AddAccountDialog";
 import TransactionView from "./component/TransactionView";
 import AddToHoldingDialog from "../dialog/AddToHoldingDialog";
+import EditHoldingDialog from "../dialog/EditHoldingDialog";
 
 export type AccountTableHandle = {};
 
@@ -58,6 +60,10 @@ const AccountsTable = forwardRef(function AccountsTable(
   const [sharesToTransferTo, setSharesToTransferTo] = useState<"" | number>("");
 
   const [selectedHoldingForAdding, setSelectedHoldingForAdding] = useState<
+    undefined | Holding
+  >(undefined);
+
+  const [selectedHoldingForEditing, setSelectedHoldingForEditing] = useState<
     undefined | Holding
   >(undefined);
 
@@ -191,6 +197,14 @@ const AccountsTable = forwardRef(function AccountsTable(
                 }}
               >
                 <FontAwesomeIcon color="green" icon={faPlus} />
+              </button>
+              <button
+                className="icon"
+                onClick={() => {
+                  setSelectedHoldingForEditing(holding);
+                }}
+              >
+                <FontAwesomeIcon color="grey" icon={faCrop} />
               </button>
               <button
                 className="icon"
@@ -491,6 +505,17 @@ const AccountsTable = forwardRef(function AccountsTable(
           }}
           onCreate={async () => {
             await getAccounts();
+          }}
+        />
+        <EditHoldingDialog
+          open={selectedHoldingForEditing != null}
+          onClose={() => {
+            setSelectedHoldingForEditing(undefined);
+          }}
+          holding={selectedHoldingForEditing}
+          onUpdate={async (data) => {
+            await getAccounts();
+            if (onUpdate) onUpdate();
           }}
         />
       </div>
