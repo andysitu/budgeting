@@ -10,6 +10,7 @@ interface DialogProps {
   children: ReactNode[] | ReactNode;
   id?: string;
   title?: string;
+  onReset?: () => void;
   onSubmit?: () => void;
   loading?: boolean;
   focusInput?: HTMLElement | null | undefined;
@@ -21,6 +22,7 @@ function Dialog({
   onClose,
   children,
   id,
+  onReset,
   onSubmit,
   title,
   loading,
@@ -93,6 +95,15 @@ function Dialog({
                   marginBottom: "10px",
                 }}
               >
+                {!loading && onReset && (
+                  <button
+                    onClick={() => onReset()}
+                    style={{ marginRight: "4px" }}
+                    type="button"
+                  >
+                    Reset
+                  </button>
+                )}
                 <button>{loading ? <Loading /> : "Submit"}</button>
               </div>
             )}
