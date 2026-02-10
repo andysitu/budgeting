@@ -38,9 +38,9 @@ function EditHoldingDialog({
   }, [holding]);
 
   const resetDialog = () => {
-    setName("");
-    setShares("");
-    setPrice("");
+    setName(holding?.name ?? "");
+    setPrice(holding?.price ?? "");
+    setShares(holding?.shares ?? "");
   };
 
   const handleSubmit = async () => {
