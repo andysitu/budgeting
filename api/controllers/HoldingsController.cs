@@ -23,6 +23,13 @@ public class AddToHoldingDto
     public DateTime? date { get; set; }
 }
 
+public class UpdateHoldingDto
+{
+    public string? Name;
+    public decimal? Shares;
+    public decimal? Price;
+}
+
 [Authorize]
 [ApiController]
 [Route("holdings")]
@@ -180,6 +187,60 @@ public class HoldingsController : Controller
         }
         
         return Ok();
+    }
+
+    [Authorize]
+    [HttpPatch("{holdingId}")]
+    public async Task<ActionResult<HoldingDto>> UpdateHolding(long holdingId, [FromBody] UpdateHoldingDto updateHoldingDto)
+    {
+        string? userId = Util.getCurrentUserId(HttpContext);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+        Holding? holding = await _context.Holdings.FirstOrDefaultAsync(h => h.Id == holdingId);
+        if (holding == null)
+        {
+            return NotFound();
+        }
+        if (holding.AppUserId != userId)
+        {
+            return Unauthorized();
+        }
+        bool modified = false;
+        if (!string.IsNullOrEmpty(updateHoldingDto.Name))
+        {
+            holding.Name = updateHoldingDto.Name;
+            _context.Entry(holding).Property(x => x.Name).IsModified = true;
+            modified = true;
+        }
+        if (updateHoldingDto.Shares != null && updateHoldingDto.Shares >= 0)
+        {
+            holding.Shares = (decimal)updateHoldingDto.Shares;
+            _context.Entry(holding).Property(x => x.Shares).IsModified = true;
+            modified = true;
+        }
+        if (updateHoldingDto.Price != null && updateHoldingDto.Price >= 0)
+        {
+            holding.Price = (decimal)updateHoldingDto.Price;
+            _context.Entry(holding).Property(x => x.Price).IsModified = true;
+            modified = true;
+        }
+
+        if (modified)
+        {
+            throw new Exception("Holding was unmodified");
+        }
+        await _context.SaveChangesAsync();
+
+        return new HoldingDto
+        {
+            Id = holding.Id,
+            Name = holding.Name,
+            Shares = holding.Shares,
+            Price = holding.Price,
+            IsMonetary = holding.IsMonetary,
+        };
     }
 
     private List<HoldingTransactionDto> MapHoldingTransactionDto(List<HoldingTransaction> holdingTransactions)
