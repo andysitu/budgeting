@@ -5,6 +5,7 @@ import { Holding } from "@/network/account";
 import { editHolding, EditHoldingData } from "@/network/holding";
 import { useDispatch } from "react-redux";
 import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
+import { isEmptyObject } from "@/lib/common/util";
 
 interface EditHoldingDialogProps {
   holding?: Holding;
@@ -57,19 +58,26 @@ function EditHoldingDialog({
       return dispatch(addMessage("Please enter a valid price and shares"));
     }
 
-    const data: EditHoldingData = {
-      id: holding.id,
-      shares: sharesValue,
-      amount: priceValue,
-    };
+    const data: EditHoldingData = {};
+
+    if (name != holding?.name) {
+      data.name = name;
+    }
+    if (shares != holding?.shares && shares != "") {
+      data.shares = shares;
+    }
+    if (price != holding?.price && price != "") {
+      data.price = price;
+    }
+
+    if (isEmptyObject(data)) {
+      return dispatch(addMessage("No data was modified."));
+    }
 
     try {
-      const id = holding?.id;
-      if (id == null) return;
       setLoading(true);
-      const response = await editHolding(data);
-      onUpdate(response);
-      resetDialog();
+      const response = await editHolding(id, data);
+      await onUpdate(response);
     } catch (error) {
       console.error("Error adding to holding", error);
     } finally {

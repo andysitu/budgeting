@@ -11,9 +11,8 @@ export interface AddToHolding {
 }
 
 export interface EditHoldingData {
-  id: number;
   name?: string;
-  amount?: number;
+  price?: number;
   shares?: number;
 }
 
@@ -32,8 +31,10 @@ const addToHolding = async (addToHoldingData: AddToHolding) => {
   });
 };
 
-const editHolding = async (editHoldingData: EditHoldingData) => {
-  //
+const editHolding = async (id: number, editHoldingData: EditHoldingData) => {
+  return sendRequest(`api/holdings/${id}`, "PATCH", {
+    body: JSON.stringify(editHoldingData),
+  });
 };
 
 export { addToHolding, editHolding };

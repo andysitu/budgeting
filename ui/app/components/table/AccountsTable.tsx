@@ -516,6 +516,8 @@ const AccountsTable = forwardRef(function AccountsTable(
           onUpdate={async (data) => {
             await getAccounts();
             if (onUpdate) onUpdate();
+            setSelectedHoldingForEditing(undefined);
+            dispatch(addMessage("The holding was updated"));
           }}
         />
       </div>

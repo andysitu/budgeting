@@ -25,9 +25,9 @@ public class AddToHoldingDto
 
 public class UpdateHoldingDto
 {
-    public string? Name;
-    public decimal? Shares;
-    public decimal? Price;
+    public string? name { get; set; }
+    public decimal? shares { get; set; }
+    public decimal? price { get; set; }
 }
 
 [Authorize]
