@@ -15,4 +15,16 @@ const generateUUID = () => {
   return crypto.randomUUID();
 };
 
-export { isEmptyObject, useMount, generateUUID };
+const stringSorter = (a?: string, b?: string) => {
+  const nameA = a?.toUpperCase() ?? "";
+  const nameB = b?.toUpperCase() ?? "";
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+  return 0;
+};
+
+export { isEmptyObject, useMount, generateUUID, stringSorter };

@@ -19,7 +19,7 @@ import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import ConfirmOrCancel from "../icons/ConfirmOrCancel";
 import { useDispatch } from "react-redux";
 import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
-import { useMount } from "@/lib/common/util";
+import { stringSorter, useMount } from "@/lib/common/util";
 import AddAccountDialog from "../dialog/AddAccountDialog";
 import TransactionView from "./component/TransactionView";
 import AddToHoldingDialog from "../dialog/AddToHoldingDialog";
@@ -74,6 +74,9 @@ const AccountsTable = forwardRef(function AccountsTable(
 
   const getAccounts = async () => {
     const result = await fetchAccounts();
+    result.sort((a, b) => {
+      return stringSorter(a.name, b.name);
+    });
     setAccounts(result);
   };
 
@@ -430,6 +433,8 @@ const AccountsTable = forwardRef(function AccountsTable(
       for (const holding of holdings) {
         total += holding.shares * holding.price;
       }
+
+      holdings.sort((a, b) => stringSorter(a.name, b.name));
 
       accountList.push(
         <div
