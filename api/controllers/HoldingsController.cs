@@ -227,9 +227,9 @@ public class HoldingsController : Controller
             modified = true;
         }
 
-        if (modified)
+        if (!modified)
         {
-            throw new Exception("Holding was unmodified");
+            return BadRequest("Holding was unmodified");
         }
         await _context.SaveChangesAsync();
 
