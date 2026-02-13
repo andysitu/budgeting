@@ -30,6 +30,8 @@ function EditHoldingDialog({
 
   const nameInputRef = useRef<HTMLInputElement>(null);
 
+  const isMonetary = holding?.isMonetary;
+
   useEffect(() => {
     if (holding != null) {
       setName(holding.name);
@@ -67,7 +69,7 @@ function EditHoldingDialog({
       data.shares = shares;
     }
     if (price != holding?.price && price != "") {
-      data.price = price;
+      data.price = isMonetary ? 1 : price;
     }
 
     if (isEmptyObject(data)) {
@@ -119,9 +121,11 @@ function EditHoldingDialog({
         type="number"
         containerStyle={{ marginBottom: "12px" }}
       />
+
       <TextListItem
         value={price}
         label="Amount"
+        disabled={isMonetary}
         onChange={(value: string) => {
           if (value == "") {
             setPrice(value);
