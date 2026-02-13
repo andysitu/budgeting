@@ -64,6 +64,7 @@ function AddHoldingDialog({
       onSubmit={() => {
         handleSubmit();
       }}
+      onReset={resetDialog}
       focusInput={nameInputRef?.current}
     >
       <TextListItem

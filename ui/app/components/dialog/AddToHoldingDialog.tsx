@@ -100,6 +100,7 @@ function AddToHoldingDialog({
       onSubmit={() => {
         handleSubmit();
       }}
+      onReset={resetDialog}
       focusInput={nameInputRef?.current}
       containerStyle={{ minWidth: "600px" }}
     >
