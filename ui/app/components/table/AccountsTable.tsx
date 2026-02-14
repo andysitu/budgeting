@@ -407,14 +407,6 @@ const AccountsTable = forwardRef(function AccountsTable(
         <button
           className="icon"
           onClick={() => {
-            setAddDialogOpen(true);
-          }}
-        >
-          <FontAwesomeIcon color="green" icon={faPlus} />
-        </button>
-        <button
-          className="icon"
-          onClick={() => {
             toggleTransferHoldings();
           }}
         >
@@ -472,7 +464,23 @@ const AccountsTable = forwardRef(function AccountsTable(
 
     return (
       <>
-        <div style={{ fontWeight: "bold", marginBottom: "18px" }}>Accounts</div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginBottom: "18px",
+          }}
+        >
+          <div style={{ fontWeight: "bold" }}>Accounts</div>
+          <button
+            className="icon"
+            onClick={() => {
+              setAddDialogOpen(true);
+            }}
+          >
+            <FontAwesomeIcon color="green" icon={faPlus} />
+          </button>
+        </div>
         {accountList}
       </>
     );
