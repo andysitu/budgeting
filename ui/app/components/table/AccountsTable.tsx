@@ -67,7 +67,7 @@ const AccountsTable = forwardRef(function AccountsTable(
     undefined | Holding
   >(undefined);
 
-  const [holdingForTransactions, setHoldingForTransactions] =
+  const [holdingForViewTransactions, setHoldingForViewTransactions] =
     useState<Holding | null>(null);
 
   const [loading, setLoading] = useState(false);
@@ -212,10 +212,10 @@ const AccountsTable = forwardRef(function AccountsTable(
               <button
                 className="icon"
                 onClick={() => {
-                  if (holding.id == holdingForTransactions?.id) {
-                    setHoldingForTransactions(null);
+                  if (holding.id == holdingForViewTransactions?.id) {
+                    setHoldingForViewTransactions(null);
                   } else {
-                    setHoldingForTransactions(holding);
+                    setHoldingForViewTransactions(holding);
                   }
                 }}
               >
@@ -540,9 +540,9 @@ const AccountsTable = forwardRef(function AccountsTable(
       </div>
       <div style={{ width: "100%", margin: "5px" }}>
         <TransactionView
-          holding={holdingForTransactions}
+          holding={holdingForViewTransactions}
           onClose={() => {
-            setHoldingForTransactions(null);
+            setHoldingForViewTransactions(null);
           }}
         />
       </div>
