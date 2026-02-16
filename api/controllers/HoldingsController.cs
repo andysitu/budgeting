@@ -208,21 +208,21 @@ public class HoldingsController : Controller
             return Unauthorized();
         }
         bool modified = false;
-        if (!string.IsNullOrEmpty(updateHoldingDto.Name))
+        if (!string.IsNullOrEmpty(updateHoldingDto.name))
         {
-            holding.Name = updateHoldingDto.Name;
+            holding.Name = updateHoldingDto.name;
             _context.Entry(holding).Property(x => x.Name).IsModified = true;
             modified = true;
         }
-        if (updateHoldingDto.Shares != null && updateHoldingDto.Shares >= 0)
+        if (updateHoldingDto.shares != null && updateHoldingDto.shares >= 0)
         {
-            holding.Shares = (decimal)updateHoldingDto.Shares;
+            holding.Shares = (decimal)updateHoldingDto.shares;
             _context.Entry(holding).Property(x => x.Shares).IsModified = true;
             modified = true;
         }
-        if (updateHoldingDto.Price != null && updateHoldingDto.Price >= 0)
+        if (updateHoldingDto.price != null && updateHoldingDto.price >= 0)
         {
-            holding.Price = (decimal)updateHoldingDto.Price;
+            holding.Price = (decimal)updateHoldingDto.price;
             _context.Entry(holding).Property(x => x.Price).IsModified = true;
             modified = true;
         }
