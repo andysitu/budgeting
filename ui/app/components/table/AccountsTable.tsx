@@ -212,7 +212,11 @@ const AccountsTable = forwardRef(function AccountsTable(
               <button
                 className="icon"
                 onClick={() => {
-                  setHoldingForTransactions(holding);
+                  if (holding.id == holdingForTransactions?.id) {
+                    setHoldingForTransactions(null);
+                  } else {
+                    setHoldingForTransactions(holding);
+                  }
                 }}
               >
                 <FontAwesomeIcon icon={faFileInvoiceDollar} />
