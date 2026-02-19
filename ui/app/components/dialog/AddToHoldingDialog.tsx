@@ -149,6 +149,7 @@ function AddToHoldingDialog({
         label="Modify Holding"
         value={modifyHolding}
         onChange={(value: boolean) => setModifHolding(value)}
+        containerStyle={{ paddingBottom: "6px" }}
       />
       <DateTimeListItem
         label={"Datetime"}

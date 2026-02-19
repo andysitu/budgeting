@@ -92,6 +92,7 @@ function Dialog({
                 style={{
                   display: "flex",
                   justifyContent: "flex-end",
+                  marginTop: "4px",
                   marginBottom: "10px",
                 }}
               >
