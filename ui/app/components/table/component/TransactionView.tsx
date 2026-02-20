@@ -59,26 +59,26 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
 
       const d = new Date(date);
 
-      const transactionView = [];
+      const transactionRow = [];
 
       if (from_holding_transaction) {
         const { shares, price, holding } = from_holding_transaction;
         const { name, id: holdingId } = holding;
-        transactionView.push(
+        transactionRow.push(
           <div key={`from_holding_${id}_${holdingId}`} style={{ flex: 1 }}>
             <div>{`${holding.name ? holding.name : "-"}`}</div>
             <div>{`Shares: ${shares} | Price: ${price} | Total: ${shares * price}`}</div>
           </div>,
         );
       } else {
-        transactionView.push(
+        transactionRow.push(
           <div key={`from_holding_${id}_none`} style={{ flex: 1 }}>
             -
           </div>,
         );
       }
 
-      transactionView.push(
+      transactionRow.push(
         <div key={`transaction_arrow_${id}`} style={{ paddingInline: 20 }}>
           <FontAwesomeIcon icon={faArrowRight} />
         </div>,
@@ -87,21 +87,21 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
       if (to_holding_transaction) {
         const { shares, price, holding } = to_holding_transaction;
         const { name, id: holdingId } = holding;
-        transactionView.push(
+        transactionRow.push(
           <div key={`to_holding_${id}_${holdingId}`} style={{ flex: 1 }}>
             <div>{`${holding.name ? holding.name : "-"}`}</div>
             <div>{`Shares: ${shares} | Price: ${price} | Total: ${shares * price}`}</div>
           </div>,
         );
       } else {
-        transactionView.push(
+        transactionRow.push(
           <div key={`to_holding_${id}_none`} style={{ flex: 1 }}>
             -
           </div>,
         );
       }
 
-      const body = (
+      const transactionBody = (
         <div key={`transaction-list-${id}`}>
           <div>{`${d.toLocaleString()}`}</div>
           <div
@@ -114,12 +114,12 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
               alignItems: "center",
             }}
           >
-            {transactionView}
+            {transactionRow}
           </div>
         </div>
       );
 
-      transactionElements.push(body);
+      transactionElements.push(transactionBody);
     }
 
     return (
