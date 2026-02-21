@@ -9,6 +9,7 @@ import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import Table, { Columns } from "./Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowRight,
   faCrop,
   faFileInvoiceDollar,
   faPlus,
@@ -369,55 +370,69 @@ const AccountsTable = forwardRef(function AccountsTable(
       const disabled = !toAndFromSelected;
 
       return (
-        <div style={{ width: 240 }}>
-          <div>Transfer Shares</div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <label htmlFor={transferFromId}>From</label>
-            <input
-              id={transferFromId}
-              type="number"
-              disabled={disabled}
-              placeholder={placeholder}
-              value={sharesToTransferFrom}
-              ref={fromTransferInputRef}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value == "") {
-                  setSharesToTransferFrom(value);
-                } else {
-                  setSharesToTransferFrom(Number(e.target.value));
-                }
-              }}
-            />
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <label htmlFor={transferToId}>To</label>
-            <input
-              id={transferToId}
-              type="number"
-              disabled={!toAndFromSelected}
-              value={sharesToTransferTo}
-              placeholder="Shares To"
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value == "") {
-                  setSharesToTransferTo(value);
-                } else {
-                  setSharesToTransferTo(Number(e.target.value));
-                }
-              }}
-            />
-          </div>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <ConfirmOrCancel
-              onConfirm={() => {
-                confirmTransferShares();
-              }}
-              onCancel={() => {
-                setToggledTransfer(false);
-              }}
-              disabled={disabled}
-            />
+        <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ marginBottom: "4px" }}>Transfer Shares</div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div>
+                <input
+                  id={transferFromId}
+                  type="number"
+                  disabled={disabled}
+                  placeholder={placeholder}
+                  value={sharesToTransferFrom}
+                  ref={fromTransferInputRef}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value == "") {
+                      setSharesToTransferFrom(value);
+                    } else {
+                      setSharesToTransferFrom(Number(e.target.value));
+                    }
+                  }}
+                  style={{ width: "120px" }}
+                />
+              </div>
+              <div style={{ padding: "0px 4px" }}>
+                <FontAwesomeIcon color="green" icon={faArrowRight} />
+              </div>
+              <div>
+                <input
+                  id={transferToId}
+                  type="number"
+                  disabled={!toAndFromSelected}
+                  value={sharesToTransferTo}
+                  placeholder="Shares To"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value == "") {
+                      setSharesToTransferTo(value);
+                    } else {
+                      setSharesToTransferTo(Number(e.target.value));
+                    }
+                  }}
+                  style={{ width: "120px" }}
+                />
+              </div>
+            </div>{" "}
+            <div>
+              <ConfirmOrCancel
+                onConfirm={() => {
+                  confirmTransferShares();
+                }}
+                onCancel={() => {
+                  setToggledTransfer(false);
+                }}
+                disabled={disabled}
+              />
+            </div>
           </div>
         </div>
       );
