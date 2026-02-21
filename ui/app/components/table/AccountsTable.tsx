@@ -5,7 +5,7 @@ import {
   Holding,
   transferHolding,
 } from "@/network/account";
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import Table, { Columns } from "./Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -71,6 +71,8 @@ const AccountsTable = forwardRef(function AccountsTable(
     useState<Holding | null>(null);
 
   const [loading, setLoading] = useState(false);
+
+  const fromTransferInputRef = useRef<HTMLInputElement>(null);
 
   const getAccounts = async () => {
     const result = await fetchAccounts();
@@ -252,6 +254,13 @@ const AccountsTable = forwardRef(function AccountsTable(
                     setSelectedIdFromTransfer(null);
                   } else {
                     setSelectedIdFromTransfer(id);
+
+                    if (selectedIdToTransfer != null) {
+                      setTimeout(() => {
+                        if (fromTransferInputRef.current)
+                          fromTransferInputRef.current.focus();
+                      }, 100);
+                    }
                   }
                 }}
               />
@@ -274,6 +283,12 @@ const AccountsTable = forwardRef(function AccountsTable(
                     setSelectedIdToTransfer(null);
                   } else {
                     setSelectedIdToTransfer(id);
+                    if (selectedIdFromTransfer != null) {
+                      setTimeout(() => {
+                        if (fromTransferInputRef.current)
+                          fromTransferInputRef.current.focus();
+                      }, 100);
+                    }
                   }
                 }}
               />
@@ -364,6 +379,7 @@ const AccountsTable = forwardRef(function AccountsTable(
               disabled={disabled}
               placeholder={placeholder}
               value={sharesToTransferFrom}
+              ref={fromTransferInputRef}
               onChange={(e) => {
                 const value = e.target.value;
                 if (value == "") {
