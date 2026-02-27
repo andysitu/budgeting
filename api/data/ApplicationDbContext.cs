@@ -31,7 +31,7 @@ namespace Budgeting.Data
 
         public DbSet<Budgeting.Models.Accounts.Transaction> Transactions { get; set; }
         public DbSet<Budgeting.Models.Accounts.HoldingTransaction> HoldingTransactions { get; set; }
-
+        public DbSet<Budgeting.Models.Accounts.HoldingLog> HoldingLog { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -79,6 +79,14 @@ namespace Budgeting.Data
                     .WithOne(e => e.SourceTransaction)
                     .HasForeignKey<Transaction>(e => e.ToHoldingTransactionId)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity<HoldingLog>(entity =>
+            {
+                entity.HasOne(ht => ht.Holding)
+                    .WithMany(h => h.HoldingLogs)
+                    .HasForeignKey(ht => ht.HoldingId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             // For identity tables
