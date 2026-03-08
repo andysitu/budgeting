@@ -198,6 +198,8 @@ public class HoldingsController : Controller
         {
             return Unauthorized();
         }
+        bool needHoldingLog = false;
+
         Holding? holding = await _context.Holdings.FirstOrDefaultAsync(h => h.Id == holdingId);
         if (holding == null)
         {
@@ -207,6 +209,16 @@ public class HoldingsController : Controller
         {
             return Unauthorized();
         }
+
+        var holdingLog = new HoldingLog{
+            OldShares = holding.Shares, 
+            NewShares = holding.Shares,
+            OldPrice = holding.Price,
+            NewPrice = holding.Price,
+            AppUserId = userId,
+            HoldingId = holding.Id,
+        };
+
         bool modified = false;
         if (!string.IsNullOrEmpty(updateHoldingDto.name))
         {
@@ -216,22 +228,46 @@ public class HoldingsController : Controller
         }
         if (updateHoldingDto.shares != null && updateHoldingDto.shares >= 0)
         {
+            holdingLog.NewShares = (decimal)updateHoldingDto.shares;
+
             holding.Shares = (decimal)updateHoldingDto.shares;
             _context.Entry(holding).Property(x => x.Shares).IsModified = true;
             modified = true;
+            needHoldingLog = true;
         }
         if (updateHoldingDto.price != null && updateHoldingDto.price >= 0)
         {
+            holdingLog.NewPrice = (decimal)updateHoldingDto.price;
+
             holding.Price = (decimal)updateHoldingDto.price;
             _context.Entry(holding).Property(x => x.Price).IsModified = true;
             modified = true;
+            needHoldingLog = true;
         }
 
         if (!modified)
         {
             return BadRequest("Holding was unmodified");
         }
-        await _context.SaveChangesAsync();
+
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
+        try
+        {
+            if (needHoldingLog)
+            {
+                _context.HoldingLog.Add(holdingLog);
+            }
+
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+        } catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+        
 
         return new HoldingDto
         {
