@@ -1,16 +1,15 @@
 using Budgeting.Data;
 
-namespace Budgeting.Models
+namespace Budgeting.Models;
+
+public abstract class BaseEntity
 {
-    public abstract class BaseEntity
-    {
-        public long Id { get; set; } // Or Guid if you prefer
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+    public long Id { get; set; } // Or Guid if you prefer
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
-        public bool Active { get; set; } = true;
+    public bool Active { get; set; } = true;
 
-        public string AppUserId { get; set; } = null!;
-        public virtual AppUser AppUser { get; set; } = null!;
-    }
+    public string AppUserId { get; set; } = null!;
+    public virtual AppUser AppUser { get; set; } = null!;
 }
