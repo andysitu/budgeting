@@ -1,8 +1,8 @@
 ﻿
+using Budget.Util;
 using Budgeting.Data;
 using Budgeting.Models.Accounts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -103,5 +103,65 @@ public class TransactionsController : Controller
             })
             .ToListAsync();
         return Ok(transactions);
+    }
+
+    [Authorize]
+    [HttpDelete("{transactionId}")]
+    public async Task<ActionResult> DeleteTransaction(long transactionId)
+    {
+        string? userId = Util.getCurrentUserId(HttpContext);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        Transaction? transaction = await _context.Transactions
+            .Include(t => t.ToHoldingTransaction)
+            .Include(t => t.FromHoldingTransaction)
+            .FirstOrDefaultAsync(t => t.Id == transactionId);
+
+        if (transaction == null)
+        {
+            return NotFound();
+        }
+        if (transaction.AppUserId != userId)
+        {
+            return Unauthorized();
+        }
+        if (!transaction.Active)
+        {
+            return BadRequest("The transaction is no longer active and cannot be modified.");
+        }
+
+        // Need to undo holdings
+        if (transaction.ModifiedHolding)
+        {
+            var toHoldingTrans = transaction.ToHoldingTransaction;
+            if (toHoldingTrans != null)
+            {
+                var holding = await _context.Holdings.FirstOrDefaultAsync(
+                    h => h.Id == toHoldingTrans.HoldingId);
+                if (holding != null) 
+                {
+                    holding.Shares += toHoldingTrans.Shares; 
+                }
+            }
+
+            var fromHoldingTrans = transaction.FromHoldingTransaction;
+            if (fromHoldingTrans != null)
+            {
+                var holding = await _context.Holdings.FirstOrDefaultAsync(
+                    h => h.Id == fromHoldingTrans.HoldingId);
+                if (holding != null)
+                {
+                    holding.Shares -= fromHoldingTrans.Shares;
+                }
+            }
+        }
+        transaction.Active = false;
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
     }
 }
