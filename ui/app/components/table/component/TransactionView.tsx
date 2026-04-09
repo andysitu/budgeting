@@ -1,4 +1,5 @@
 import { fetchTransactions, Holding, Transaction } from "@/network/account";
+import { deleteTransaction } from "@/network/transaction";
 import { faArrowRight, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
@@ -41,13 +42,19 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
     );
   } else if (holding == null) return "";
 
-  const showTransactions = () => {
-    if (transactions.length == 0) {
+  const showTransactions = (active: boolean) => {
+    if (active && transactions.length == 0) {
       return <div>There are no Transactions</div>;
     }
 
+    const filteredTransactions = transactions.filter((t) => t.active == active);
+
+    if (!active && filteredTransactions.length == 0) {
+      return null;
+    }
+
     const transactionElements = [];
-    for (const t of transactions) {
+    for (const t of filteredTransactions) {
       const {
         id,
         name,
@@ -115,6 +122,17 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
             }}
           >
             {transactionRow}
+            {active && (
+              <button
+                className="icon"
+                onClick={async () => {
+                  const result = await deleteTransaction(id);
+                  console.log("result", result);
+                }}
+              >
+                <FontAwesomeIcon icon={faClose} />
+              </button>
+            )}
           </div>
         </div>
       );
@@ -126,6 +144,8 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
       <div style={{ marginRight: rightLeftPadding }}>{transactionElements}</div>
     );
   };
+
+  const inactiveRows = showTransactions(false);
 
   return (
     <div
@@ -145,7 +165,7 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
           justifyContent: "space-between",
         }}
       >
-        <div>{`Transactions${
+        <div style={{ fontWeight: "bold" }}>{`Transactions${
           holding != null ? ` for ${holding.name ? holding.name : "-"}` : ""
         }`}</div>
         <button
@@ -157,7 +177,14 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
           <FontAwesomeIcon icon={faClose} />
         </button>
       </div>
-      {showTransactions()}
+      {showTransactions(true)}
+
+      {inactiveRows && (
+        <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+          <div style={{ fontWeight: "bold" }}>Inactive Transactions</div>
+          {inactiveRows}
+        </div>
+      )}
     </div>
   );
 }

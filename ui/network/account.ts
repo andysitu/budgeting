@@ -33,6 +33,7 @@ export interface BaseTransaction {
   description: string;
   modified_holding: boolean;
   date: Date;
+  active: boolean;
 }
 
 export interface BaseHoldingTransaction {

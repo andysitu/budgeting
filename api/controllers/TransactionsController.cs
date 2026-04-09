@@ -17,6 +17,7 @@ public class TransactionBaseDto
     public DateTime? date { get; set; }
     public DateTime created { get; set; }
     public DateTime updated { get; set; }
+    public bool active { get; set; }
 }
 
 public class HoldingTransactionBaseDto
@@ -71,6 +72,7 @@ public class TransactionsController : Controller
             .Select (t =>  new TransactionDto
             {
                 id = t.Id,
+                active = t.Active,
                 name = t.Name,
                 description = t.Description,
                 modified_holding = t.ModifiedHolding,
