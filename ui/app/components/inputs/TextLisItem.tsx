@@ -1,5 +1,4 @@
 import { isEmptyObject } from "@/lib/common/util";
-import styles from "./textlistitem.module.css";
 import ListItem from "./ListItem";
 import { forwardRef } from "react";
 

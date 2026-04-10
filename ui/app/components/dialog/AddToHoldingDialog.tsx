@@ -6,7 +6,6 @@ import CheckboxListItem from "../inputs/CheckboxListItem";
 import { addToHolding, AddToHolding } from "@/network/holding";
 import { useDispatch } from "react-redux";
 import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
-import ListItem from "../inputs/ListItem";
 import DateTimeListItem from "../inputs/DateTimeListItem";
 
 interface AddHoldingDialogProps {
