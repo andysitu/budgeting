@@ -120,7 +120,6 @@ public class TransactionsController : Controller
         Transaction? transaction = await _context.Transactions
             .Include(t => t.ToHoldingTransaction)
             .Include(t => t.FromHoldingTransaction)
-            .Where(t => t.Active)
             .FirstOrDefaultAsync(t => t.Id == transactionId);
 
         if (transaction == null)
@@ -133,7 +132,7 @@ public class TransactionsController : Controller
         }
         if (!transaction.Active)
         {
-            return BadRequest("The transaction is no longer active and cannot be modified.");
+            return BadRequest("The transaction is no longer active.");
         }
 
         // Need to undo holdings
@@ -158,6 +157,66 @@ public class TransactionsController : Controller
                 if (holding != null)
                 {
                     holding.Shares -= fromHoldingTrans.Shares;
+                }
+            }
+        }
+        transaction.Active = false;
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpDelete("{transactionId}/undo")]
+    public async Task<ActionResult> UndoDeleteTransaction(long transactionId)
+    {
+        string? userId = Util.getCurrentUserId(HttpContext);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        Transaction? transaction = await _context.Transactions
+            .Include(t => t.ToHoldingTransaction)
+            .Include(t => t.FromHoldingTransaction)
+            .FirstOrDefaultAsync(t => t.Id == transactionId);
+
+        if (transaction == null)
+        {
+            return NotFound();
+        }
+        if (transaction.AppUserId != userId)
+        {
+            return Unauthorized();
+        }
+        if (transaction.Active)
+        {
+            return BadRequest("The transaction is active.");
+        }
+
+        // Need to undo holdings
+        if (transaction.ModifiedHolding)
+        {
+            var toHoldingTrans = transaction.ToHoldingTransaction;
+            if (toHoldingTrans != null)
+            {
+                var holding = await _context.Holdings.FirstOrDefaultAsync(
+                    h => h.Id == toHoldingTrans.HoldingId);
+                if (holding != null)
+                {
+                    holding.Shares -= toHoldingTrans.Shares;
+                }
+            }
+
+            var fromHoldingTrans = transaction.FromHoldingTransaction;
+            if (fromHoldingTrans != null)
+            {
+                var holding = await _context.Holdings.FirstOrDefaultAsync(
+                    h => h.Id == fromHoldingTrans.HoldingId);
+                if (holding != null)
+                {
+                    holding.Shares += fromHoldingTrans.Shares;
                 }
             }
         }
