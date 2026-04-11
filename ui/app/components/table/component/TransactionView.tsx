@@ -7,9 +7,10 @@ import { useEffect, useState } from "react";
 interface TransactionViewProps {
   holding: Holding | null;
   onClose: () => void;
+  onUpdate: () => void;
 }
 
-function TransactionView({ holding, onClose }: TransactionViewProps) {
+function TransactionView({ holding, onClose, onUpdate }: TransactionViewProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -126,8 +127,8 @@ function TransactionView({ holding, onClose }: TransactionViewProps) {
               <button
                 className="icon"
                 onClick={async () => {
-                  const result = await deleteTransaction(id);
-                  console.log("result", result);
+                  await deleteTransaction(id);
+                  onUpdate();
                 }}
               >
                 <FontAwesomeIcon icon={faClose} />

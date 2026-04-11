@@ -575,6 +575,10 @@ const AccountsTable = forwardRef(function AccountsTable(
           onClose={() => {
             setHoldingForViewTransactions(null);
           }}
+          onUpdate={() => {
+            console.log("update");
+            getAccounts();
+          }}
         />
       </div>
     </div>
