@@ -120,6 +120,7 @@ public class TransactionsController : Controller
         Transaction? transaction = await _context.Transactions
             .Include(t => t.ToHoldingTransaction)
             .Include(t => t.FromHoldingTransaction)
+            .Where(t => t.Active)
             .FirstOrDefaultAsync(t => t.Id == transactionId);
 
         if (transaction == null)
