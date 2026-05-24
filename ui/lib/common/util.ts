@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { v7 as uuidv7 } from "uuid";
 
 function isEmptyObject(o: any | Record<string, any>) {
   if (!o) return true;
@@ -12,7 +13,7 @@ const useMount = (fn: () => void) => {
 };
 
 const generateUUID = () => {
-  return crypto.randomUUID();
+  return uuidv7();
 };
 
 const stringSorter = (a?: string, b?: string) => {
