@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
 using Budgeting.Models;
 using Budgeting.Models.Accounts;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace Budgeting.Data
 {
@@ -13,6 +14,28 @@ namespace Budgeting.Data
         public override string? PasswordHash { get; set; }
     }
 
+
+    public class ConsoleEmailSender : IEmailSender
+    {
+        private readonly ILogger<ConsoleEmailSender> _logger;
+
+        public ConsoleEmailSender(ILogger<ConsoleEmailSender> logger)
+        {
+            _logger = logger;
+        }
+
+        public Task SendEmailAsync(string email, string subject, string htmlMessage)
+        {
+            // Print it loud and clear in the logs
+            _logger.LogInformation("================================================");
+            _logger.LogInformation($"EMAIL SENT TO: {email}");
+            _logger.LogInformation($"SUBJECT: {subject}");
+            _logger.LogInformation($"BODY/TOKEN: {htmlMessage}");
+            _logger.LogInformation("================================================");
+
+            return Task.CompletedTask;
+        }
+    }
 
     public class ApplicationDbContext : IdentityDbContext<AppUser>
     {

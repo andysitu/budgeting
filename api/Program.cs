@@ -1,9 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using Budgeting.Models;
 using Budgeting.Data;
+using Budgeting.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +71,9 @@ if (app.Environment.IsDevelopment())
 
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    // Write to console emails for dev.
+    builder.Services.AddTransient<IEmailSender, ConsoleEmailSender>();
 }
 
 // Don't know if this will work locally
