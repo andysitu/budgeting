@@ -3,6 +3,9 @@
 `dotnet new web -o api -f net9.0`
 `dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 9.0`
 
+api doc
+https://localhost:{PORT}/scalar
+
 dotnet run
 https://localhost:{PORT}/swagger
 `dotnet watch run`
