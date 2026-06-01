@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-[Authorize]
 [ApiController]
 [Route("user")]
 public class UserController : Controller
