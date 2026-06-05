@@ -76,11 +76,16 @@ const AccountsTable = forwardRef(function AccountsTable(
   const fromTransferInputRef = useRef<HTMLInputElement>(null);
 
   const getAccounts = async () => {
-    const result = await fetchAccounts();
-    result.sort((a, b) => {
-      return stringSorter(a.name, b.name);
-    });
-    setAccounts(result);
+    try {
+      const result = await fetchAccounts();
+      result.sort((a, b) => {
+        return stringSorter(a.name, b.name);
+      });
+      setAccounts(result);
+    } catch (error) {
+      // Might not be logged in
+      setAccounts([]);
+    }
   };
 
   useMount(() => {
