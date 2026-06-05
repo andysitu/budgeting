@@ -581,7 +581,6 @@ const AccountsTable = forwardRef(function AccountsTable(
             setHoldingForViewTransactions(null);
           }}
           onUpdate={() => {
-            console.log("update");
             getAccounts();
           }}
         />

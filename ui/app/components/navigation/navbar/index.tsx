@@ -11,7 +11,7 @@ function Navbar() {
   const router = useRouter();
 
   const { checkedLoginStatus, loggedIn, account } = useAppSelector(
-    (state) => state.userAccount
+    (state) => state.userAccount,
   );
 
   const renderLoginButton = () => {
@@ -32,6 +32,7 @@ function Navbar() {
             <button
               onClick={() => {
                 dispatch(handleLogout());
+                router.push(`${UrlLibrary.LOGIN}?ref=${pathname}`);
               }}
             >
               Logout
