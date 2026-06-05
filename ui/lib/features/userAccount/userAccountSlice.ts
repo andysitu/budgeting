@@ -70,6 +70,7 @@ export const userAccountSlice = createSlice({
 
     builder.addCase(handleLogout.fulfilled, (state, action) => {
       state.loggedIn = false;
+      state.account = null;
     });
 
     builder.addCase(handleLogin.fulfilled, (state, action) => {
