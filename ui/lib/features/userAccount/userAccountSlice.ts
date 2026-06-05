@@ -19,7 +19,7 @@ const checkLoginStatus = createAsyncThunk(
   async () => {
     const account = await fetchLoginStatus();
     return account;
-  }
+  },
 );
 
 const handleLogout = createAsyncThunk("userAccount/logout", async () => {
@@ -28,13 +28,13 @@ const handleLogout = createAsyncThunk("userAccount/logout", async () => {
 
 const handleLogin = createAsyncThunk(
   "userAccount/login",
-  async (data: { username: string; password: string; }) => {
+  async (data: { username: string; password: string }) => {
     const { username, password } = data;
 
     const result = await login(username, password);
-
+    if (result) checkLoginStatus();
     return result;
-  }
+  },
 );
 
 const initialState: UserAccountState = {
