@@ -1,18 +1,12 @@
 "use client";
 
-import {
-  handleLogin,
-  handleLogout,
-} from "@/lib/features/userAccount/userAccountSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { fetchPizzas } from "@/network/pizzas";
+import { handleLogin } from "@/lib/features/userAccount/userAccountSlice";
+import { useAppDispatch } from "@/lib/hooks";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import UrlLibrary from "../library/UrlLibrary";
 
 function Login() {
-  const { loggedIn } = useAppSelector((state) => state.userAccount);
-
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
