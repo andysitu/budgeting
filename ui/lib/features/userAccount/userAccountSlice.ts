@@ -23,7 +23,8 @@ const checkLoginStatus = createAsyncThunk(
 );
 
 const handleLogout = createAsyncThunk("userAccount/logout", async () => {
-  await logout();
+  const result = await logout();
+  console.log(result);
 });
 
 const handleLogin = createAsyncThunk(
@@ -32,7 +33,6 @@ const handleLogin = createAsyncThunk(
     const { username, password } = data;
 
     const result = await login(username, password);
-    if (result) checkLoginStatus();
     return result;
   },
 );

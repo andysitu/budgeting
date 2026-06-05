@@ -1,6 +1,9 @@
 "use client";
 
-import { handleLogin } from "@/lib/features/userAccount/userAccountSlice";
+import {
+  checkLoginStatus,
+  handleLogin,
+} from "@/lib/features/userAccount/userAccountSlice";
 import { useAppDispatch } from "@/lib/hooks";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -29,6 +32,7 @@ function Login() {
             const success = result?.payload == true;
 
             if (success) {
+              dispatch(checkLoginStatus());
               router.push(searchParams.get("ref") ?? UrlLibrary.HOME);
             } else {
               setHaserrorLogin(true);
