@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 // Does not include references to holding transactions
-public class TransactionBaseDto 
+public class TransactionBaseDto
 {
     public long id { get; set; }
     public string name { get; set; }
@@ -69,7 +69,7 @@ public class TransactionsController : Controller
                 (t.FromHoldingTransaction != null && t.FromHoldingTransaction.HoldingId == query.holdingId));
         }
         var transactions = await transactionQuery
-            .Select (t =>  new TransactionDto
+            .Select(t => new TransactionDto
             {
                 id = t.Id,
                 active = t.Active,
@@ -107,9 +107,57 @@ public class TransactionsController : Controller
         return Ok(transactions);
     }
 
+    public async Task setTransactionActive(Transaction transaction, bool active)
+    {
+        // Need to undo holdings
+        if (transaction.ModifiedHolding)
+        {
+            var toHoldingTrans = transaction.ToHoldingTransaction;
+            if (toHoldingTrans != null)
+            {
+                var holding = await _context.Holdings.FirstOrDefaultAsync(
+                    h => h.Id == toHoldingTrans.HoldingId);
+                if (holding != null)
+                {
+                    if (active)
+                    {
+                        holding.Shares -= toHoldingTrans.Shares;
+                    }
+                    else
+                    {
+                        holding.Shares += toHoldingTrans.Shares;
+                    }
+                }
+            }
+
+            var fromHoldingTrans = transaction.FromHoldingTransaction;
+            if (fromHoldingTrans != null)
+            {
+                var holding = await _context.Holdings.FirstOrDefaultAsync(
+                    h => h.Id == fromHoldingTrans.HoldingId);
+                if (holding != null)
+                {
+                    if (active)
+                    {
+                        holding.Shares += fromHoldingTrans.Shares;
+                    }
+                    else
+                    {
+                        holding.Shares -= fromHoldingTrans.Shares;
+
+                    }
+
+                }
+            }
+        }
+        transaction.Active = active;
+
+        await _context.SaveChangesAsync();
+    }
+
     [Authorize]
     [HttpDelete("{transactionId}")]
-    public async Task<ActionResult> DeleteTransaction(long transactionId)
+    public async Task<ActionResult> SetTransactionInactive(long transactionId)
     {
         string? userId = Util.getCurrentUserId(HttpContext);
         if (string.IsNullOrEmpty(userId))
@@ -133,38 +181,43 @@ public class TransactionsController : Controller
         }
         if (!transaction.Active)
         {
-            return BadRequest("The transaction is no longer active and cannot be modified.");
+            return BadRequest("The transaction is already inactive.");
         }
 
-        // Need to undo holdings
-        if (transaction.ModifiedHolding)
+        await setTransactionActive(transaction, false);
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("{transactionId}")]
+    public async Task<ActionResult> SetTransactionActive(long transactionId)
+    {
+        string? userId = Util.getCurrentUserId(HttpContext);
+        if (string.IsNullOrEmpty(userId))
         {
-            var toHoldingTrans = transaction.ToHoldingTransaction;
-            if (toHoldingTrans != null)
-            {
-                var holding = await _context.Holdings.FirstOrDefaultAsync(
-                    h => h.Id == toHoldingTrans.HoldingId);
-                if (holding != null) 
-                {
-                    holding.Shares += toHoldingTrans.Shares; 
-                }
-            }
-
-            var fromHoldingTrans = transaction.FromHoldingTransaction;
-            if (fromHoldingTrans != null)
-            {
-                var holding = await _context.Holdings.FirstOrDefaultAsync(
-                    h => h.Id == fromHoldingTrans.HoldingId);
-                if (holding != null)
-                {
-                    holding.Shares -= fromHoldingTrans.Shares;
-                }
-            }
+            return Unauthorized();
         }
-        transaction.Active = false;
 
-        await _context.SaveChangesAsync();
+        Transaction? transaction = await _context.Transactions
+            .Include(t => t.ToHoldingTransaction)
+            .Include(t => t.FromHoldingTransaction)
+            .Where(t => !t.Active)
+            .FirstOrDefaultAsync(t => t.Id == transactionId);
 
+        if (transaction == null)
+        {
+            return NotFound();
+        }
+        if (transaction.AppUserId != userId)
+        {
+            return Unauthorized();
+        }
+        if (transaction.Active)
+        {
+            return BadRequest("The transaction is already active.");
+        }
+
+        await setTransactionActive(transaction, true);
         return Ok();
     }
 }

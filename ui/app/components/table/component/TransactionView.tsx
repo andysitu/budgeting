@@ -1,6 +1,14 @@
 import { fetchTransactions, Holding, Transaction } from "@/network/account";
-import { deleteTransaction } from "@/network/transaction";
-import { faArrowRight, faClose } from "@fortawesome/free-solid-svg-icons";
+import {
+  setTransactionActive,
+  setTransactionInactive,
+} from "@/network/transaction";
+import { faCircle } from "@fortawesome/free-regular-svg-icons";
+import {
+  faArrowRight,
+  faCircleCheck,
+  faClose,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 
@@ -123,17 +131,25 @@ function TransactionView({ holding, onClose, onUpdate }: TransactionViewProps) {
             }}
           >
             {transactionRow}
-            {active && (
+            {
               <button
                 className="icon"
                 onClick={async () => {
-                  await deleteTransaction(id);
+                  if (active) {
+                    await setTransactionInactive(id);
+                  } else {
+                    await setTransactionActive(id);
+                  }
                   onUpdate();
                 }}
               >
-                <FontAwesomeIcon icon={faClose} />
+                {active ? (
+                  <FontAwesomeIcon icon={faCircleCheck} />
+                ) : (
+                  <FontAwesomeIcon icon={faCircle} />
+                )}
               </button>
-            )}
+            }
           </div>
         </div>
       );

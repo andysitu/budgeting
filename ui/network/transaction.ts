@@ -1,7 +1,11 @@
 import { sendRequest } from "./util";
 
-const deleteTransaction = async (id: number) => {
+const setTransactionInactive = async (id: number) => {
   return sendRequest(`api/transactions/${id}`, "DELETE");
 };
 
-export { deleteTransaction };
+const setTransactionActive = async (id: number) => {
+  return sendRequest(`api/transactions/${id}`, "POST");
+};
+
+export { setTransactionInactive, setTransactionActive };
