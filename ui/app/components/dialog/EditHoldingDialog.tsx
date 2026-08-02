@@ -124,7 +124,7 @@ function EditHoldingDialog({
 
       <TextListItem
         value={price}
-        label="Amount"
+        label="Price"
         disabled={isMonetary}
         onChange={(value: string) => {
           if (value == "") {
