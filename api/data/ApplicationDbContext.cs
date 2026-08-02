@@ -43,7 +43,6 @@ namespace Budgeting.Data
             base(options)
         { }
 
-        public DbSet<Budgeting.Models.Pizza> Pizzas { get; set; }
         public DbSet<Budgeting.Models.Vendor> Vendors { get; set; }
         public DbSet<Budgeting.Models.ExpenseType> ExpenseTypes { get; set; }
         public DbSet<Budgeting.Models.Expense> Expenses { get; set; }

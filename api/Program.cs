@@ -101,39 +101,6 @@ app.MapGet("/check_login_status", () =>
     return Results.Ok();
 }).RequireAuthorization();
 
-app.MapGet("/pizzas", async (ApplicationDbContext db) => await db.Pizzas.ToListAsync()).RequireAuthorization();
-
-app.MapPost("/pizza", async (ApplicationDbContext db, Pizza pizza) =>
-{
-    await db.Pizzas.AddAsync(pizza);
-    await db.SaveChangesAsync();
-    return Results.Created($"/pizza/{pizza.Id}", pizza);
-});
-
-app.MapGet("/pizza/{id}", async (ApplicationDbContext db, int id) => await db.Pizzas.FindAsync(id));
-
-app.MapPut("/pizza/{id}", async (ApplicationDbContext db, Pizza updatePizza, int id) =>
-{
-    var pizza = await db.Pizzas.FindAsync(id);
-    if (pizza is null) return Results.NotFound();
-    pizza.Name = updatePizza.Name;
-    pizza.Description = updatePizza.Description;
-    await db.SaveChangesAsync();
-    return Results.NoContent();
-}).RequireAuthorization();
-
-app.MapDelete("/pizza/{id}", async (ApplicationDbContext db, int id) =>
-{
-    var pizza = await db.Pizzas.FindAsync(id);
-    if (pizza is null)
-    {
-        return Results.NotFound();
-    }
-    db.Pizzas.Remove(pizza);
-    await db.SaveChangesAsync();
-    return Results.Ok();
-});
-
 app.MapControllers();
 
 app.Run();
