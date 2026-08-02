@@ -77,11 +77,29 @@ const AccountsTable = forwardRef(function AccountsTable(
 
   const getAccounts = async () => {
     try {
-      const result = await fetchAccounts();
-      result.sort((a, b) => {
+      const accounts = await fetchAccounts();
+      accounts.sort((a, b) => {
         return stringSorter(a.name, b.name);
       });
-      setAccounts(result);
+      // Update selected view holding
+      if (holdingForViewTransactions) {
+        const id = holdingForViewTransactions.id;
+        let newSelectedHolding = null;
+        for (const account of accounts) {
+          const newHoldings = account?.holdings ?? [];
+
+          for (const newHolding of newHoldings) {
+            if (newHolding.id === id) {
+              newSelectedHolding = newHolding;
+              break;
+            }
+          }
+          if (newSelectedHolding) break;
+        }
+        setHoldingForViewTransactions(newSelectedHolding);
+      }
+      console.log("result", accounts);
+      setAccounts(accounts);
     } catch (error) {
       // Might not be logged in
       setAccounts([]);
