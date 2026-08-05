@@ -61,6 +61,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 // Authorization services
 builder.Services.AddAuthorization();
 
+if (builder.Environment.IsDevelopment())
+{
+    // Write to console emails for dev.
+    builder.Services.AddTransient<IEmailSender, ConsoleEmailSender>();
+}
+
 var app = builder.Build();
 
 
@@ -71,9 +77,6 @@ if (app.Environment.IsDevelopment())
 
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    // Write to console emails for dev.
-    builder.Services.AddTransient<IEmailSender, ConsoleEmailSender>();
 }
 
 // Don't know if this will work locally
