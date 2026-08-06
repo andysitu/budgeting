@@ -1,13 +1,11 @@
-"use client";
-
 import { checkLoginStatus } from "@/lib/features/userAccount/userAccountSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { usePathname } from "next/navigation";
-import React, { ReactNode, useCallback, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { ReactNode, useCallback, useEffect } from "react";
 import UrlLibrary from "../library/UrlLibrary";
 
 function Wrapper({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
   const dispatch = useAppDispatch();
 
   const userAccount = useAppSelector((state) => state.userAccount);

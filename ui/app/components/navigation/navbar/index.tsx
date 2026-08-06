@@ -1,14 +1,13 @@
-"use client";
 import UrlLibrary from "@/app/library/UrlLibrary";
 import { handleLogout } from "@/lib/features/userAccount/userAccountSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { useRouter, usePathname } from "next/navigation";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Navbar() {
   const dispatch = useAppDispatch();
 
-  const pathname = usePathname();
-  const router = useRouter();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const { checkedLoginStatus, loggedIn, account } = useAppSelector(
     (state) => state.userAccount,
@@ -32,7 +31,7 @@ function Navbar() {
             <button
               onClick={() => {
                 dispatch(handleLogout());
-                router.push(`${UrlLibrary.LOGIN}?ref=${pathname}`);
+                navigate(`${UrlLibrary.LOGIN}?ref=${pathname}`);
               }}
             >
               Logout
@@ -48,7 +47,7 @@ function Navbar() {
           <div>
             <button
               onClick={() => {
-                router.push(`${UrlLibrary.LOGIN}?ref=${pathname}`);
+                navigate(`${UrlLibrary.LOGIN}?ref=${pathname}`);
               }}
             >
               Login

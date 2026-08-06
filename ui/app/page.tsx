@@ -1,5 +1,3 @@
-"use client";
-
 import Tabs from "./components/tabs";
 import Expenses from "./components/pages/Expenses";
 import Incomes from "./components/pages/Incomes";

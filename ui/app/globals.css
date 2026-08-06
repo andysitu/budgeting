@@ -1,3 +1,8 @@
+body {
+  /* Replaces the class next/font used to put on <body> */
+  font-family: "Inter", sans-serif;
+}
+
 button {
   cursor: pointer;
   border: 0;

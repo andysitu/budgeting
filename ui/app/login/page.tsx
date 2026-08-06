@@ -1,18 +1,16 @@
-"use client";
-
 import {
   checkLoginStatus,
   handleLogin,
 } from "@/lib/features/userAccount/userAccountSlice";
 import { useAppDispatch } from "@/lib/hooks";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import UrlLibrary from "../library/UrlLibrary";
 
 function Login() {
   const dispatch = useAppDispatch();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +31,7 @@ function Login() {
 
             if (success) {
               dispatch(checkLoginStatus());
-              router.push(searchParams.get("ref") ?? UrlLibrary.HOME);
+              navigate(searchParams.get("ref") ?? UrlLibrary.HOME);
             } else {
               setHaserrorLogin(true);
             }

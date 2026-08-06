@@ -20,7 +20,7 @@ const sendRequest = async (
   sendType: FetchRequest,
   additionalParams?: Record<string, any>,
 ) => {
-  let requestParam = getConfiguration(sendType);
+  const requestParam = getConfiguration(sendType);
 
   if (sendType === "GET") {
     if (!isEmptyObject(additionalParams)) {

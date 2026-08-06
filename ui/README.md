@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+A [React](https://react.dev/) SPA built with [Vite](https://vite.dev/) and
+[React Router](https://reactrouter.com/), talking to the ASP.NET Core API in
+[`../api`](../api).
 
 ## Getting Started
 
-First, run the development server:
+Run the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Set `PORT` to use a
+different port.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Requests to `/api/*` are proxied to the API on `http://localhost:5200` with the
+`/api` prefix stripped — see `server.proxy` in [vite.config.ts](vite.config.ts).
+Start the API separately for the app to load data.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Layout
 
-## Learn More
+- `index.html` — page shell (title, description, `#root`)
+- `main.tsx` — entry point; mounts React and defines the routes
+- `app/layout.tsx` — root layout (store provider, navbar, `<Outlet />`)
+- `app/page.tsx`, `app/login/page.tsx` — the two routes
+- `app/components/` — UI components
+- `lib/` — Redux Toolkit store, slices, and hooks
+- `network/` — API client functions
 
-To learn more about Next.js, take a look at the following resources:
+The `@/*` import alias resolves to this directory.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Build
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+npm run build
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Typechecks, then emits static files to `dist/`. Because this is a single-page
+app, whatever serves `dist/` must fall back to `index.html` for unknown paths,
+or deep links like `/login` will 404.
