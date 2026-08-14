@@ -17,6 +17,8 @@ interface DialogProps {
   containerStyle?: React.CSSProperties;
 }
 
+const TopMostCloseHandlers: Array<() => void> = [];
+
 function Dialog({
   open,
   onClose,
@@ -36,6 +38,30 @@ function Dialog({
       focusInput.focus();
     }
   }, [focusInput, open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    TopMostCloseHandlers.push(onClose);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const topHandler = TopMostCloseHandlers[TopMostCloseHandlers.length - 1];
+
+      if (event.key === "Escape" && topHandler == onClose) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      const index = TopMostCloseHandlers.indexOf(onClose);
+      if (index >= 0) {
+        TopMostCloseHandlers.splice(index, -1);
+      }
+    };
+  }, [open, onClose]);
 
   return (
     <>
