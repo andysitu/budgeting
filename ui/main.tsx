@@ -11,6 +11,7 @@ import "./app/globals.css";
 import RootLayout from "./app/layout";
 import Home from "./app/page";
 import Login from "./app/login/page";
+import CreateAccount from "./app/account/create/page";
 import UrlLibrary from "./app/library/UrlLibrary";
 
 const router = createBrowserRouter([
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
     children: [
       { path: UrlLibrary.HOME, element: <Home /> },
       { path: UrlLibrary.LOGIN, element: <Login /> },
+      { path: UrlLibrary.CREATE, element: <CreateAccount /> },
     ],
   },
 ]);

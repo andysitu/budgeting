@@ -1,7 +1,7 @@
-import UrlLibrary from "@/app/library/UrlLibrary";
-import { handleLogout } from "@/lib/features/userAccount/userAccountSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { useNavigate, useLocation } from "react-router-dom";
+import UrlLibrary from '@/app/library/UrlLibrary';
+import { handleLogout } from '@/lib/features/userAccount/userAccountSlice';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function Navbar() {
   const dispatch = useAppDispatch();
@@ -22,11 +22,11 @@ function Navbar() {
       return (
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          <div style={{ marginRight: "4px" }}>{Email}</div>
+          <div style={{ marginRight: '4px' }}>{Email}</div>
           <div>
             <button
               onClick={() => {
@@ -44,7 +44,8 @@ function Navbar() {
         return null;
       } else {
         return (
-          <div>
+          <div style={{ display: 'flex', gap: '4px' }}>
+            <button onClick={() => navigate(UrlLibrary.CREATE)}>Create</button>
             <button
               onClick={() => {
                 navigate(`${UrlLibrary.LOGIN}?ref=${pathname}`);
@@ -60,7 +61,7 @@ function Navbar() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
           <div className="pointer">Budget</div>
         </div>
