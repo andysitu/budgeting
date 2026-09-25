@@ -63,7 +63,15 @@ function Navbar() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
-          <div className="pointer">Budget</div>
+          <div
+            className="pointer"
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              navigate(UrlLibrary.HOME);
+            }}
+          >
+            Budget
+          </div>
         </div>
         {renderLoginButton()}
       </div>
