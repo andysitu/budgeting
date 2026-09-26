@@ -4,27 +4,27 @@ import {
   fetchAccounts,
   Holding,
   transferHolding,
-} from "@/network/account";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import Table, { Columns } from "./Table";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+} from '@/network/account';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import Table, { Columns } from './Table';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowRight,
   faCrop,
   faFileInvoiceDollar,
   faPlus,
   faRightLeft,
-} from "@fortawesome/free-solid-svg-icons";
-import AddHoldingDialog from "../dialog/AddHoldingDialog";
-import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import ConfirmOrCancel from "../icons/ConfirmOrCancel";
-import { useDispatch } from "react-redux";
-import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
-import { stringSorter, useMount } from "@/lib/common/util";
-import AddAccountDialog from "../dialog/AddAccountDialog";
-import TransactionView from "./component/TransactionView";
-import AddToHoldingDialog from "../dialog/AddToHoldingDialog";
-import EditHoldingDialog from "../dialog/EditHoldingDialog";
+} from '@fortawesome/free-solid-svg-icons';
+import AddHoldingDialog from '../dialog/AddHoldingDialog';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import ConfirmOrCancel from '../icons/ConfirmOrCancel';
+import { useDispatch } from 'react-redux';
+import { addMessage } from '@/lib/features/snackbar/snackbarSlice';
+import { stringSorter, useMount } from '@/lib/common/util';
+import AddAccountDialog from '../dialog/AddAccountDialog';
+import TransactionView from './component/TransactionView';
+import AddToHoldingDialog from '../dialog/AddToHoldingDialog';
+import EditHoldingDialog from '../dialog/EditHoldingDialog';
 
 export type AccountTableHandle = {};
 
@@ -55,10 +55,10 @@ const AccountsTable = forwardRef(function AccountsTable(
   const [selectedIdToTransfer, setSelectedIdToTransfer] = useState<
     number | null
   >(null);
-  const [sharesToTransferFrom, setSharesToTransferFrom] = useState<"" | number>(
-    "",
+  const [sharesToTransferFrom, setSharesToTransferFrom] = useState<'' | number>(
+    '',
   );
-  const [sharesToTransferTo, setSharesToTransferTo] = useState<"" | number>("");
+  const [sharesToTransferTo, setSharesToTransferTo] = useState<'' | number>('');
 
   const [selectedHoldingForAdding, setSelectedHoldingForAdding] = useState<
     undefined | Holding
@@ -98,7 +98,7 @@ const AccountsTable = forwardRef(function AccountsTable(
         }
         setHoldingForViewTransactions(newSelectedHolding);
       }
-      console.log("result", accounts);
+      console.log('result', accounts);
       setAccounts(accounts);
     } catch (error) {
       // Might not be logged in
@@ -119,7 +119,7 @@ const AccountsTable = forwardRef(function AccountsTable(
 
     if (!(accounts.length > 0)) {
       return dispatch(
-        addMessage("There are no accounts created. Please create an account."),
+        addMessage('There are no accounts created. Please create an account.'),
       );
     }
 
@@ -133,7 +133,7 @@ const AccountsTable = forwardRef(function AccountsTable(
     if (!(totalHoldings >= 2)) {
       return dispatch(
         addMessage(
-          "There must be at least 2 holdings total in all the accounts.",
+          'There must be at least 2 holdings total in all the accounts.',
         ),
       );
     }
@@ -174,34 +174,34 @@ const AccountsTable = forwardRef(function AccountsTable(
   const getHoldingColumns = (): Columns<Holding>[] => {
     const columns: Columns<Holding>[] = [
       {
-        field: "name",
-        header: "Name",
+        field: 'name',
+        header: 'Name',
         cellStyle: { width: 100 },
       },
       {
-        field: "price",
-        header: "Price",
-        cellStyle: { width: "70px" },
+        field: 'price',
+        header: 'Price',
+        cellStyle: { width: '70px' },
         render: (holding: Holding) => {
           if (holding.isMonetary) {
-            return "-";
+            return '-';
           } else {
             return String(holding.shares);
           }
         },
       },
-      { field: "shares", header: "Shares", cellStyle: { width: "70px" } },
+      { field: 'shares', header: 'Shares', cellStyle: { width: '70px' } },
       {
-        field: "",
-        header: "Total",
+        field: '',
+        header: 'Total',
         render: (holding: Holding) => String(holding.price * holding.shares),
-        cellStyle: { width: "70px" },
+        cellStyle: { width: '70px' },
       },
       {
-        field: "",
-        header: "",
+        field: '',
+        header: '',
         render: (holding: Holding) => {
-          if (toggledTransfer) return "";
+          if (toggledTransfer) return '';
           const id = holding.id;
           if (selectHoldingIdForDelete == id) {
             return (
@@ -264,8 +264,8 @@ const AccountsTable = forwardRef(function AccountsTable(
     if (toggledTransfer) {
       columns.unshift(
         {
-          field: "",
-          header: "From",
+          field: '',
+          header: 'From',
           render: (holding: Holding) => {
             const id = holding.id;
             return (
@@ -290,11 +290,11 @@ const AccountsTable = forwardRef(function AccountsTable(
               />
             );
           },
-          cellStyle: { width: "50px" },
+          cellStyle: { width: '50px' },
         },
         {
-          field: "",
-          header: "To",
+          field: '',
+          header: 'To',
           render: (holding: Holding) => {
             const id = holding.id;
             return (
@@ -318,7 +318,7 @@ const AccountsTable = forwardRef(function AccountsTable(
               />
             );
           },
-          cellStyle: { width: "50px" },
+          cellStyle: { width: '50px' },
         },
       );
     }
@@ -329,15 +329,15 @@ const AccountsTable = forwardRef(function AccountsTable(
   const clearTransferringInput = () => {
     setSelectedIdFromTransfer(null);
     setSelectedIdToTransfer(null);
-    setSharesToTransferFrom("");
-    setSharesToTransferTo("");
+    setSharesToTransferFrom('');
+    setSharesToTransferTo('');
   };
 
   const confirmTransferShares = async () => {
     if (selectedIdFromTransfer == null || selectedIdToTransfer == null) {
-      return dispatch(addMessage("To and From accounts must be selected."));
-    } else if (sharesToTransferFrom == "" || sharesToTransferTo == "") {
-      return dispatch(addMessage("Shares to transfer must not be empty"));
+      return dispatch(addMessage('To and From accounts must be selected.'));
+    } else if (sharesToTransferFrom == '' || sharesToTransferTo == '') {
+      return dispatch(addMessage('Shares to transfer must not be empty'));
     }
     const fromHolding = findHoldingById(selectedIdFromTransfer);
     const sharesFromHolding = fromHolding?.shares ?? 0;
@@ -368,8 +368,8 @@ const AccountsTable = forwardRef(function AccountsTable(
       );
       clearTransferringInput();
       await getAccounts();
-    } catch (error) {
-      dispatch(addMessage("An error occurred transferring the holdings"));
+    } catch {
+      dispatch(addMessage('An error occurred transferring the holdings'));
     } finally {
       setLoading(false);
     }
@@ -377,12 +377,12 @@ const AccountsTable = forwardRef(function AccountsTable(
 
   const renderTopButtons = () => {
     if (toggledTransfer) {
-      const transferFromId = "transfer-input-from";
-      const transferToId = "transfer-input-to";
+      const transferFromId = 'transfer-input-from';
+      const transferToId = 'transfer-input-to';
 
       const toAndFromSelected =
         selectedIdFromTransfer != null && selectedIdToTransfer != null;
-      let placeholder = "";
+      let placeholder = '';
       if (toAndFromSelected) {
         const fromHolding = findHoldingById(selectedIdFromTransfer);
         if (fromHolding) {
@@ -396,14 +396,14 @@ const AccountsTable = forwardRef(function AccountsTable(
         <div>
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            <div style={{ marginBottom: "4px" }}>Transfer Shares</div>
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ marginBottom: '4px' }}>Transfer Shares</div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
               <div>
                 <input
                   id={transferFromId}
@@ -414,16 +414,16 @@ const AccountsTable = forwardRef(function AccountsTable(
                   ref={fromTransferInputRef}
                   onChange={(e) => {
                     const value = e.target.value;
-                    if (value == "") {
+                    if (value == '') {
                       setSharesToTransferFrom(value);
                     } else {
                       setSharesToTransferFrom(Number(e.target.value));
                     }
                   }}
-                  style={{ width: "120px" }}
+                  style={{ width: '120px' }}
                 />
               </div>
-              <div style={{ padding: "0px 4px" }}>
+              <div style={{ padding: '0px 4px' }}>
                 <FontAwesomeIcon color="green" icon={faArrowRight} />
               </div>
               <div>
@@ -435,16 +435,16 @@ const AccountsTable = forwardRef(function AccountsTable(
                   placeholder="Shares To"
                   onChange={(e) => {
                     const value = e.target.value;
-                    if (value == "") {
+                    if (value == '') {
                       setSharesToTransferTo(value);
                     } else {
                       setSharesToTransferTo(Number(e.target.value));
                     }
                   }}
-                  style={{ width: "120px" }}
+                  style={{ width: '120px' }}
                 />
               </div>
-            </div>{" "}
+            </div>{' '}
             <div>
               <ConfirmOrCancel
                 onConfirm={() => {
@@ -489,10 +489,10 @@ const AccountsTable = forwardRef(function AccountsTable(
       accountList.push(
         <div
           key={`account-row-${id}`}
-          style={{ width: "600px", marginBottom: "14px" }}
+          style={{ width: '600px', marginBottom: '14px' }}
         >
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div style={{ fontWeight: "bold" }}>{name}</div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ fontWeight: 'bold' }}>{name}</div>
             <div>
               <button
                 className="icon"
@@ -507,15 +507,15 @@ const AccountsTable = forwardRef(function AccountsTable(
           </div>
           <div
             style={{
-              borderTop: "1px solid lightgray",
-              borderBottom: "1px solid lightgray",
-              paddingTop: "6px",
-              paddingBottom: "6px",
+              borderTop: '1px solid lightgray',
+              borderBottom: '1px solid lightgray',
+              paddingTop: '6px',
+              paddingBottom: '6px',
             }}
           >
             <Table columns={getHoldingColumns()} dataList={holdings} />
           </div>
-          <div style={{ margin: "px 0px" }}>{`Total: ${total}`}</div>
+          <div style={{ margin: 'px 0px' }}>{`Total: ${total}`}</div>
         </div>,
       );
     }
@@ -524,12 +524,12 @@ const AccountsTable = forwardRef(function AccountsTable(
       <>
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "18px",
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '18px',
           }}
         >
-          <div style={{ fontWeight: "bold" }}>Accounts</div>
+          <div style={{ fontWeight: 'bold' }}>Accounts</div>
           <button
             className="icon"
             onClick={() => {
@@ -545,7 +545,7 @@ const AccountsTable = forwardRef(function AccountsTable(
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <div>
         {renderTopButtons()}
         {renderAccountsLists()}
@@ -575,7 +575,12 @@ const AccountsTable = forwardRef(function AccountsTable(
             setAddDialogOpen(false);
           }}
           onCreate={async () => {
-            await getAccounts();
+            try {
+              await getAccounts();
+              setAddDialogOpen(false);
+            } catch {
+              dispatch(addMessage('Error adding an account.'));
+            }
           }}
         />
         <EditHoldingDialog
@@ -584,15 +589,15 @@ const AccountsTable = forwardRef(function AccountsTable(
             setSelectedHoldingForEditing(undefined);
           }}
           holding={selectedHoldingForEditing}
-          onUpdate={async (data) => {
+          onUpdate={async (_data) => {
             await getAccounts();
             if (onUpdate) onUpdate();
             setSelectedHoldingForEditing(undefined);
-            dispatch(addMessage("The holding was updated"));
+            dispatch(addMessage('The holding was updated'));
           }}
         />
       </div>
-      <div style={{ width: "100%", margin: "5px" }}>
+      <div style={{ width: '100%', margin: '5px' }}>
         <TransactionView
           holding={holdingForViewTransactions}
           onClose={() => {
