@@ -558,6 +558,7 @@ const AccountsTable = forwardRef(function AccountsTable(
           onCreate={async () => {
             await getAccounts();
             if (onUpdate) onUpdate();
+            setAccountForAddHolding(null);
           }}
         />
         <AddToHoldingDialog

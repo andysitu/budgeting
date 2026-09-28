@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
-import Dialog from "./Dialog";
-import TextListItem from "../inputs/TextLisItem";
-import { Account, HoldingData, addHoldingsToAccount } from "@/network/account";
-import CheckboxListItem from "../inputs/CheckboxListItem";
+import { useRef, useState } from 'react';
+import Dialog from './Dialog';
+import TextListItem from '../inputs/TextLisItem';
+import { Account, HoldingData, addHoldingsToAccount } from '@/network/account';
+import CheckboxListItem from '../inputs/CheckboxListItem';
 
 interface AddHoldingDialogProps {
   account: Account | undefined | null;
@@ -17,7 +17,7 @@ function AddHoldingDialog({
   onClose,
   onCreate,
 }: AddHoldingDialogProps) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [shares, setShares] = useState(1);
   const [price, setPrice] = useState(1);
   const [monetary, setMonetary] = useState(false);
@@ -27,7 +27,7 @@ function AddHoldingDialog({
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   const resetDialog = () => {
-    setName("");
+    setName('');
     setShares(1);
     setPrice(1);
   };
@@ -45,11 +45,11 @@ function AddHoldingDialog({
       if (accountId == null) return;
       setLoading(true);
 
-      const response = await addHoldingsToAccount(accountId, [data]);
+      await addHoldingsToAccount(accountId, [data]);
       resetDialog();
       onCreate();
     } catch (error) {
-      console.error("Error creating account", error);
+      console.error('Error creating account', error);
     } finally {
       setLoading(false);
     }
@@ -57,7 +57,7 @@ function AddHoldingDialog({
 
   return (
     <Dialog
-      title={"Create Holding"}
+      title={'Create Holding'}
       loading={loading}
       open={open}
       onClose={onClose}
@@ -72,15 +72,15 @@ function AddHoldingDialog({
         label="Name"
         onChange={(value: string) => setName(value)}
         type="text"
-        containerStyle={{ marginBottom: "12px" }}
+        containerStyle={{ marginBottom: '12px' }}
         ref={nameInputRef}
       />
       <TextListItem
         value={shares}
-        label={monetary ? "Amount" : "Shares"}
+        label={monetary ? 'Amount' : 'Shares'}
         onChange={(value: string) => setShares(Number(value))}
         type="number"
-        containerStyle={{ marginBottom: "12px" }}
+        containerStyle={{ marginBottom: '12px' }}
       />
       {!monetary && (
         <TextListItem
@@ -88,14 +88,14 @@ function AddHoldingDialog({
           label="Price"
           onChange={(value: string) => setPrice(Number(value))}
           type="number"
-          containerStyle={{ marginBottom: "12px" }}
+          containerStyle={{ marginBottom: '12px' }}
         />
       )}
       <CheckboxListItem
         value={monetary}
         label="Monetary"
         onChange={(value: boolean) => setMonetary(value)}
-        containerStyle={{ marginBottom: "12px" }}
+        containerStyle={{ marginBottom: '12px' }}
       />
     </Dialog>
   );
