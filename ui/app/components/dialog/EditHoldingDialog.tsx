@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import Dialog from "./Dialog";
-import TextListItem from "../inputs/TextLisItem";
-import { Holding } from "@/network/account";
-import { editHolding, EditHoldingData } from "@/network/holding";
-import { useDispatch } from "react-redux";
-import { addMessage } from "@/lib/features/snackbar/snackbarSlice";
-import { isEmptyObject } from "@/lib/common/util";
+import { useEffect, useRef, useState } from 'react';
+import Dialog from './Dialog';
+import TextListItem from '../inputs/TextLisItem';
+import { Holding } from '@/network/account';
+import { editHolding, EditHoldingData } from '@/network/holding';
+import { useDispatch } from 'react-redux';
+import { addMessage } from '@/lib/features/snackbar/snackbarSlice';
+import { isEmptyObject } from '@/lib/common/util';
 
 interface EditHoldingDialogProps {
   holding?: Holding;
@@ -22,9 +22,10 @@ function EditHoldingDialog({
 }: EditHoldingDialogProps) {
   const dispatch = useDispatch();
 
-  const [name, setName] = useState("");
-  const [shares, setShares] = useState<number | "">("");
-  const [price, setPrice] = useState<number | "">("");
+  const [name, setName] = useState('');
+  const [shares, setShares] = useState<number | ''>('');
+  const [price, setPrice] = useState<number | ''>('');
+  const [historicalDate, setHistoricalDate] = useState('');
 
   const [loading, setLoading] = useState(false);
 
@@ -37,43 +38,52 @@ function EditHoldingDialog({
       setName(holding.name);
       setPrice(holding.price);
       setShares(holding.shares);
+      setHistoricalDate('');
     }
   }, [holding]);
 
   const resetDialog = () => {
-    setName(holding?.name ?? "");
-    setPrice(holding?.price ?? "");
-    setShares(holding?.shares ?? "");
+    setName(holding?.name ?? '');
+    setPrice(holding?.price ?? '');
+    setShares(holding?.shares ?? '');
+    setHistoricalDate('');
   };
 
   const handleSubmit = async () => {
     const id = holding?.id;
     if (holding == null || id == null) return;
 
-    const sharesValue = shares == "" ? undefined : shares,
-      priceValue = price == "" ? undefined : price;
+    const sharesValue = shares == '' ? undefined : shares,
+      priceValue = price == '' ? undefined : price;
 
     const validShares = sharesValue && sharesValue > 0,
       validPrice = priceValue && priceValue > 0;
 
     if (!validShares || !validPrice) {
-      return dispatch(addMessage("Please enter a valid price and shares"));
+      return dispatch(addMessage('Please enter a valid price and shares'));
     }
 
     const data: EditHoldingData = {};
 
-    if (name != holding?.name) {
+    if (!historicalDate && name != holding?.name) {
       data.name = name;
     }
-    if (shares != holding?.shares && shares != "") {
+    if ((historicalDate || shares != holding?.shares) && shares !== '') {
       data.shares = shares;
     }
-    if (price != holding?.price && price != "") {
+    if ((historicalDate || price != holding?.price) && price !== '') {
       data.price = isMonetary ? 1 : price;
+    }
+    if (historicalDate) {
+      const parsedDate = new Date(historicalDate);
+      if (Number.isNaN(parsedDate.getTime())) {
+        return dispatch(addMessage('Please enter a valid historical date and time.'));
+      }
+      data.historicalDate = parsedDate.toISOString();
     }
 
     if (isEmptyObject(data)) {
-      return dispatch(addMessage("No data was modified."));
+      return dispatch(addMessage('No data was modified.'));
     }
 
     try {
@@ -81,7 +91,7 @@ function EditHoldingDialog({
       const response = await editHolding(id, data);
       await onUpdate(response);
     } catch (error) {
-      console.error("Error adding to holding", error);
+      console.error('Error adding to holding', error);
     } finally {
       setLoading(false);
     }
@@ -89,7 +99,7 @@ function EditHoldingDialog({
 
   return (
     <Dialog
-      title={`Edit Holding ${holding?.name ?? ""}`}
+      title={`Edit Holding ${holding?.name ?? ''}`}
       loading={loading}
       open={open}
       onClose={onClose}
@@ -98,28 +108,29 @@ function EditHoldingDialog({
       }}
       onReset={resetDialog}
       focusInput={nameInputRef?.current}
-      containerStyle={{ minWidth: "600px" }}
+      containerStyle={{ minWidth: '600px' }}
     >
       <TextListItem
         value={name}
         label="Name"
+        disabled={Boolean(historicalDate)}
         onChange={(value: string) => setName(value)}
         type="text"
-        containerStyle={{ marginBottom: "12px" }}
+        containerStyle={{ marginBottom: '12px' }}
         ref={nameInputRef}
       />
       <TextListItem
         value={shares}
         label="Shares"
         onChange={(value: string) => {
-          if (value == "") {
+          if (value == '') {
             setShares(value);
           } else if (Number(value) > 0) {
             setShares(Number(value));
           }
         }}
         type="number"
-        containerStyle={{ marginBottom: "12px" }}
+        containerStyle={{ marginBottom: '12px' }}
       />
 
       <TextListItem
@@ -127,15 +138,35 @@ function EditHoldingDialog({
         label="Price"
         disabled={isMonetary}
         onChange={(value: string) => {
-          if (value == "") {
+          if (value == '') {
             setPrice(value);
           } else if (Number(value) > 0) {
             setPrice(Number(value));
           }
         }}
         type="number"
-        containerStyle={{ marginBottom: "12px" }}
+        containerStyle={{ marginBottom: '12px' }}
       />
+      <TextListItem
+        value={historicalDate}
+        label="Historical date and time"
+        onChange={setHistoricalDate}
+        type="datetime-local"
+        step="1"
+        containerStyle={{ marginBottom: '8px' }}
+      />
+      <p
+        style={{
+          color: 'gray',
+          fontSize: '0.875rem',
+          lineHeight: 1.4,
+          margin: '0 0 12px',
+        }}
+      >
+        Optional: Enter a date and time in your local timezone to record historical
+        shares and price without updating the current holding. Leave blank for a
+        normal update.
+      </p>
     </Dialog>
   );
 }

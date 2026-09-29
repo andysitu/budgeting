@@ -192,7 +192,7 @@ namespace api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime?>("HistoricalDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("HoldingId")

@@ -10,8 +10,8 @@ public class HoldingLog : BaseEntity
     public decimal OldPrice { get; set; } = 1;
     public decimal NewPrice { get; set; } = 1;
     public long HoldingId { get; set; }
-    // Date this price / share took place
-    public DateTime Date { get; set; }
+    // Date and time of historical values; null for a normal holding update.
+    public DateTime? HistoricalDate { get; set; }
 
     [ForeignKey(nameof(HoldingId))]
     public virtual Holding Holding { get; set; } = null!;

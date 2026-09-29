@@ -28,6 +28,8 @@ public class UpdateHoldingDto
     public string? name { get; set; }
     public decimal? shares { get; set; }
     public decimal? price { get; set; }
+    // Providing a historical date and time records values without updating the holding.
+    public DateTime? historicalDate { get; set; }
 }
 
 [Authorize]
@@ -185,7 +187,7 @@ public class HoldingsController : Controller
             await transaction.RollbackAsync();
             throw;
         }
-        
+
         return Ok();
     }
 
@@ -193,6 +195,14 @@ public class HoldingsController : Controller
     [HttpPatch("{holdingId}")]
     public async Task<ActionResult<HoldingDto>> UpdateHolding(long holdingId, [FromBody] UpdateHoldingDto updateHoldingDto)
     {
+        DateTime? historicalDate = updateHoldingDto.historicalDate;
+
+        bool isHistoricalEntry = historicalDate.HasValue;
+        if (historicalDate.HasValue && historicalDate.Value.Kind == DateTimeKind.Unspecified)
+        {
+            return BadRequest("Historical date must include a timezone (for example, 2026-09-28T14:30:00Z).");
+        }
+
         string? userId = Util.getCurrentUserId(HttpContext);
         if (string.IsNullOrEmpty(userId))
         {
@@ -210,8 +220,9 @@ public class HoldingsController : Controller
             return Unauthorized();
         }
 
-        var holdingLog = new HoldingLog{
-            OldShares = holding.Shares, 
+        var holdingLog = new HoldingLog
+        {
+            OldShares = holding.Shares,
             NewShares = holding.Shares,
             OldPrice = holding.Price,
             NewPrice = holding.Price,
@@ -219,33 +230,50 @@ public class HoldingsController : Controller
             HoldingId = holding.Id,
         };
 
-        bool modified = false;
-        if (!string.IsNullOrEmpty(updateHoldingDto.name))
+        bool modifiedHolding = false;
+        if (isHistoricalEntry)
         {
-            holding.Name = updateHoldingDto.name;
-            _context.Entry(holding).Property(x => x.Name).IsModified = true;
-            modified = true;
-        }
-        if (updateHoldingDto.shares != null && updateHoldingDto.shares >= 0)
-        {
-            holdingLog.NewShares = (decimal)updateHoldingDto.shares;
+            if ((updateHoldingDto.shares == null && updateHoldingDto.price == null)
+                || updateHoldingDto.shares < 0 || updateHoldingDto.price < 0)
+            {
+                return BadRequest("Historical entries require non-negative shares or price.");
+            }
 
-            holding.Shares = (decimal)updateHoldingDto.shares;
-            _context.Entry(holding).Property(x => x.Shares).IsModified = true;
-            modified = true;
+            holdingLog.HistoricalDate = historicalDate?.ToUniversalTime();
+            holdingLog.NewShares = updateHoldingDto.shares ?? holding.Shares;
+            holdingLog.NewPrice = updateHoldingDto.price ?? holding.Price;
             needHoldingLog = true;
         }
-        if (updateHoldingDto.price != null && updateHoldingDto.price >= 0)
+        else
         {
-            holdingLog.NewPrice = (decimal)updateHoldingDto.price;
+            if (!string.IsNullOrEmpty(updateHoldingDto.name))
+            {
+                holding.Name = updateHoldingDto.name;
+                _context.Entry(holding).Property(x => x.Name).IsModified = true;
+                modifiedHolding = true;
+            }
+            if (updateHoldingDto.shares != null && updateHoldingDto.shares >= 0)
+            {
+                holdingLog.NewShares = (decimal)updateHoldingDto.shares;
 
-            holding.Price = (decimal)updateHoldingDto.price;
-            _context.Entry(holding).Property(x => x.Price).IsModified = true;
-            modified = true;
-            needHoldingLog = true;
+                holding.Shares = (decimal)updateHoldingDto.shares;
+                _context.Entry(holding).Property(x => x.Shares).IsModified = true;
+                modifiedHolding = true;
+                needHoldingLog = true;
+            }
+            if (updateHoldingDto.price != null && updateHoldingDto.price >= 0)
+            {
+                holdingLog.NewPrice = (decimal)updateHoldingDto.price;
+
+                holding.Price = (decimal)updateHoldingDto.price;
+                _context.Entry(holding).Property(x => x.Price).IsModified = true;
+                modifiedHolding = true;
+                needHoldingLog = true;
+            }
         }
 
-        if (!modified)
+
+        if (!isHistoricalEntry && !modifiedHolding)
         {
             return BadRequest("Holding was unmodified");
         }
@@ -262,12 +290,13 @@ public class HoldingsController : Controller
             await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();
-        } catch (Exception)
+        }
+        catch (Exception)
         {
             await transaction.RollbackAsync();
             throw;
         }
-        
+
 
         return new HoldingDto
         {
