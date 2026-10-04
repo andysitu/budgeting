@@ -1,4 +1,4 @@
-import { sendRequest } from "./util";
+import { sendRequest } from './util';
 
 export interface Holding {
   id: number;
@@ -53,14 +53,26 @@ export interface Transaction extends BaseTransaction {
   to_holding_transaction: BaseHoldingTransaction;
 }
 
+export interface HoldingHistory {
+  id: number;
+  old_shares: number;
+  new_shares: number;
+  old_price: number;
+  new_price: number;
+  date: Date | string;
+  created_at: Date | string;
+  updated_at: Date | string;
+  is_historical: boolean;
+}
+
 const fetchAccounts = async (
   params: Record<string, any> = {},
 ): Promise<Account[]> => {
-  return sendRequest("/api/accounts", "GET", params);
+  return sendRequest('/api/accounts', 'GET', params);
 };
 
 const createAccount = async (account: AccountData) => {
-  return sendRequest("/api/accounts", "POST", {
+  return sendRequest('/api/accounts', 'POST', {
     body: JSON.stringify(account),
   });
 };
@@ -69,7 +81,7 @@ const addHoldingsToAccount = async (
   accountId: number,
   holdings: HoldingData[],
 ) => {
-  return sendRequest(`api/accounts/${accountId}/holdings`, "POST", {
+  return sendRequest(`api/accounts/${accountId}/holdings`, 'POST', {
     body: JSON.stringify({
       holdings,
     }),
@@ -78,11 +90,11 @@ const addHoldingsToAccount = async (
 
 const deleteHolding = async (accountId: number, holdingId: number) => {
   if (!holdingId || !accountId) {
-    throw new Error("Holding or account id not provided to delete holding");
+    throw new Error('Holding or account id not provided to delete holding');
   }
   return sendRequest(
     `api/accounts/${accountId}/holdings/${holdingId}`,
-    "DELETE",
+    'DELETE',
   );
 };
 
@@ -92,7 +104,7 @@ const transferHolding = async (
   fromShares: number,
   toShares: number,
 ) => {
-  return sendRequest("/api/holdings/transfer", "POST", {
+  return sendRequest('/api/holdings/transfer', 'POST', {
     body: JSON.stringify({
       from_holding_id: fromHoldinId,
       to_holding_id: toholdingId,
@@ -106,9 +118,9 @@ const fetchHoldingTransactions = async (
   holdingId: number,
 ): Promise<HoldingTransaction[]> => {
   if (!holdingId) {
-    throw new Error("Holding id is not provided for holding transactions");
+    throw new Error('Holding id is not provided for holding transactions');
   }
-  return sendRequest(`api/holdings/${holdingId}/transactions`, "GET");
+  return sendRequest(`api/holdings/${holdingId}/transactions`, 'GET');
 };
 
 const fetchTransactions = async (
@@ -118,7 +130,16 @@ const fetchTransactions = async (
   if (holdingId) {
     params.holdingId = holdingId;
   }
-  return sendRequest(`api/transactions`, "GET", params);
+  return sendRequest(`api/transactions`, 'GET', params);
+};
+
+const fetchHoldingHistory = async (
+  holdingId: number,
+): Promise<HoldingHistory[]> => {
+  if (!holdingId) {
+    throw new Error('Holding id is not provided for holding history');
+  }
+  return sendRequest(`api/holdings/${holdingId}/history`, 'GET');
 };
 
 export {
@@ -129,4 +150,5 @@ export {
   transferHolding,
   fetchTransactions,
   fetchHoldingTransactions,
+  fetchHoldingHistory,
 };

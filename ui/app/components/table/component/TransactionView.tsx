@@ -1,16 +1,22 @@
-import { fetchTransactions, Holding, Transaction } from "@/network/account";
+import {
+  fetchHoldingHistory,
+  fetchTransactions,
+  Holding,
+  HoldingHistory,
+  Transaction,
+} from '@/network/account';
 import {
   setTransactionActive,
   setTransactionInactive,
-} from "@/network/transaction";
-import { faCircle } from "@fortawesome/free-regular-svg-icons";
+} from '@/network/transaction';
+import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import {
   faArrowRight,
   faCircleCheck,
   faClose,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from 'react';
 
 interface TransactionViewProps {
   holding: Holding | null;
@@ -20,17 +26,23 @@ interface TransactionViewProps {
 
 function TransactionView({ holding, onClose, onUpdate }: TransactionViewProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [holdingHistory, setHoldingHistory] = useState<HoldingHistory[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const rightLeftPadding = "14px";
+  const rightLeftPadding = '14px';
 
-  const getHoldingTransactions = async (holdingId: number) => {
+  const getHoldingActivity = async (holdingId: number) => {
     setLoading(true);
     try {
-      const transactions = (await fetchTransactions(holdingId)) ?? [];
+      const [transactions, history] = await Promise.all([
+        fetchTransactions(holdingId),
+        fetchHoldingHistory(holdingId),
+      ]);
       setTransactions(transactions);
+      setHoldingHistory(history);
     } catch (error) {
       setTransactions([]);
+      setHoldingHistory([]);
     } finally {
       setLoading(false);
     }
@@ -40,16 +52,16 @@ function TransactionView({ holding, onClose, onUpdate }: TransactionViewProps) {
     if (!holding) return;
     const holdingId = holding.id;
 
-    getHoldingTransactions(holdingId);
+    getHoldingActivity(holdingId);
   }, [holding]);
 
   if (loading) {
     return (
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
         Loading...
       </div>
     );
-  } else if (holding == null) return "";
+  } else if (holding == null) return '';
 
   const showTransactions = (active: boolean) => {
     if (active && transactions.length == 0) {
@@ -82,7 +94,7 @@ function TransactionView({ holding, onClose, onUpdate }: TransactionViewProps) {
         const { name, id: holdingId } = holding;
         transactionRow.push(
           <div key={`from_holding_${id}_${holdingId}`} style={{ flex: 1 }}>
-            <div>{`${holding.name ? holding.name : "-"}`}</div>
+            <div>{`${holding.name ? holding.name : '-'}`}</div>
             <div>{`Shares: ${shares} | Price: ${price} | Total: ${shares * price}`}</div>
           </div>,
         );
@@ -105,7 +117,7 @@ function TransactionView({ holding, onClose, onUpdate }: TransactionViewProps) {
         const { name, id: holdingId } = holding;
         transactionRow.push(
           <div key={`to_holding_${id}_${holdingId}`} style={{ flex: 1 }}>
-            <div>{`${holding.name ? holding.name : "-"}`}</div>
+            <div>{`${holding.name ? holding.name : '-'}`}</div>
             <div>{`Shares: ${shares} | Price: ${price} | Total: ${shares * price}`}</div>
           </div>,
         );
@@ -122,12 +134,12 @@ function TransactionView({ holding, onClose, onUpdate }: TransactionViewProps) {
           <div>{`${d.toLocaleString()}`}</div>
           <div
             style={{
-              paddingBottom: "8px",
-              marginBottom: "8px",
-              borderBottom: "1px solid lightgray",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              paddingBottom: '8px',
+              marginBottom: '8px',
+              borderBottom: '1px solid lightgray',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
           >
             {transactionRow}
@@ -164,29 +176,53 @@ function TransactionView({ holding, onClose, onUpdate }: TransactionViewProps) {
 
   const inactiveRows = showTransactions(false);
 
+  const historyRows = holdingHistory.map((history) => {
+    const oldTotal = history.old_shares * history.old_price;
+    const newTotal = history.new_shares * history.new_price;
+
+    return (
+      <div
+        key={`holding-history-${history.id}`}
+        style={{
+          paddingBottom: '8px',
+          marginBottom: '8px',
+          borderBottom: '1px solid lightgray',
+        }}
+      >
+        <div>
+          {new Date(history.date).toLocaleString()}
+          {history.is_historical ? ' (historical entry)' : ''}
+        </div>
+        <div>{`Shares: ${history.old_shares} to ${history.new_shares}`}</div>
+        <div>{`Price: ${history.old_price} to ${history.new_price}`}</div>
+        <div>{`Total: ${oldTotal} to ${newTotal}`}</div>
+      </div>
+    );
+  });
+
   return (
     <div
       style={{
-        overflow: "auto",
-        border: "1px solid black",
-        borderRadius: "5px",
-        padding: "5px",
+        overflow: 'auto',
+        border: '1px solid black',
+        borderRadius: '5px',
+        padding: '5px',
         paddingLeft: rightLeftPadding,
-        height: "100%",
+        height: '100%',
       }}
     >
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
-        <div style={{ fontWeight: "bold" }}>{`Transactions${
-          holding != null ? ` for ${holding.name ? holding.name : "-"}` : ""
+        <div style={{ fontWeight: 'bold' }}>{`Transactions${
+          holding != null ? ` for ${holding.name ? holding.name : '-'}` : ''
         }`}</div>
         <button
-          className={"icon"}
+          className={'icon'}
           onClick={() => {
             onClose();
           }}
@@ -197,11 +233,22 @@ function TransactionView({ holding, onClose, onUpdate }: TransactionViewProps) {
       {showTransactions(true)}
 
       {inactiveRows && (
-        <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
-          <div style={{ fontWeight: "bold" }}>Inactive Transactions</div>
+        <div style={{ paddingTop: '10px', paddingBottom: '10px' }}>
+          <div style={{ fontWeight: 'bold' }}>Inactive Transactions</div>
           {inactiveRows}
         </div>
       )}
+
+      <div style={{ paddingTop: '10px', marginRight: rightLeftPadding }}>
+        <div style={{ fontWeight: 'bold', paddingBottom: '8px' }}>
+          Historical Data
+        </div>
+        {historyRows.length > 0 ? (
+          historyRows
+        ) : (
+          <div>There is no historical data</div>
+        )}
+      </div>
     </div>
   );
 }

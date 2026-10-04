@@ -32,6 +32,19 @@ public class UpdateHoldingDto
     public DateTime? historicalDate { get; set; }
 }
 
+public class HoldingHistoryDto
+{
+    public long id { get; set; }
+    public decimal old_shares { get; set; }
+    public decimal new_shares { get; set; }
+    public decimal old_price { get; set; }
+    public decimal new_price { get; set; }
+    public DateTime date { get; set; }
+    public DateTime created_at { get; set; }
+    public DateTime updated_at { get; set; }
+    public bool is_historical { get; set; }
+}
+
 [Authorize]
 [ApiController]
 [Route("holdings")]
@@ -377,5 +390,42 @@ public class HoldingsController : Controller
             .Where(ht => ht.HoldingId == holdingId)
             .ToListAsync();
         return MapHoldingTransactionDto(holdingTransactions);
+    }
+
+    [Authorize]
+    [HttpGet("{holdingId}/history")]
+    public async Task<ActionResult<List<HoldingHistoryDto>>> GetHoldingHistory(long holdingId)
+    {
+        string? userId = Util.getCurrentUserId(HttpContext);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        bool holdingExists = await _context.Holdings
+            .AnyAsync(h => h.Id == holdingId && h.AppUserId == userId);
+        if (!holdingExists)
+        {
+            return NotFound();
+        }
+
+        var history = await _context.HoldingLog
+            .Where(log => log.HoldingId == holdingId && log.AppUserId == userId)
+            .OrderByDescending(log => log.HistoricalDate ?? log.CreatedAt)
+            .Select(log => new HoldingHistoryDto
+            {
+                id = log.Id,
+                old_shares = log.OldShares,
+                new_shares = log.NewShares,
+                old_price = log.OldPrice,
+                new_price = log.NewPrice,
+                date = log.HistoricalDate ?? log.CreatedAt,
+                created_at = log.CreatedAt,
+                updated_at = log.UpdatedAt,
+                is_historical = log.HistoricalDate.HasValue,
+            })
+            .ToListAsync();
+
+        return Ok(history);
     }
 }
