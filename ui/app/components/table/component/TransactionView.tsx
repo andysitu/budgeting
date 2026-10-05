@@ -17,6 +17,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
+import Tabs from '../../tabs';
 
 interface TransactionViewProps {
   holding: Holding | null;
@@ -230,25 +231,37 @@ function TransactionView({ holding, onClose, onUpdate }: TransactionViewProps) {
           <FontAwesomeIcon icon={faClose} />
         </button>
       </div>
-      {showTransactions(true)}
 
-      {inactiveRows && (
-        <div style={{ paddingTop: '10px', paddingBottom: '10px' }}>
-          <div style={{ fontWeight: 'bold' }}>Inactive Transactions</div>
-          {inactiveRows}
-        </div>
-      )}
+      <Tabs
+        elements={{
+          Transactions: (
+            <div>
+              {showTransactions(true)}
 
-      <div style={{ paddingTop: '10px', marginRight: rightLeftPadding }}>
-        <div style={{ fontWeight: 'bold', paddingBottom: '8px' }}>
-          Historical Data
-        </div>
-        {historyRows.length > 0 ? (
-          historyRows
-        ) : (
-          <div>There is no historical data</div>
-        )}
-      </div>
+              {inactiveRows && (
+                <div style={{ paddingTop: '10px', paddingBottom: '10px' }}>
+                  <div style={{ fontWeight: 'bold' }}>
+                    Inactive Transactions
+                  </div>
+                  {inactiveRows}
+                </div>
+              )}
+            </div>
+          ),
+          'Historical Data': (
+            <div style={{ paddingTop: '10px', marginRight: rightLeftPadding }}>
+              <div style={{ fontWeight: 'bold', paddingBottom: '8px' }}>
+                Historical Data
+              </div>
+              {historyRows.length > 0 ? (
+                historyRows
+              ) : (
+                <div>There is no historical data</div>
+              )}
+            </div>
+          ),
+        }}
+      />
     </div>
   );
 }
