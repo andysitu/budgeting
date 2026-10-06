@@ -7,8 +7,7 @@ public class TransactionItem : BaseEntity
 
     // Positive amounts represent income; negative amounts represent expenses.
     public decimal Amount { get; set; }
-    public long? CategoryId { get; set; }
-    public virtual Category? Category { get; set; }
+    public virtual ICollection<Category> Categories { get; set; } = [];
     public string Description { get; set; } = "";
     public DateOnly? StartDate { get; set; }
     public DateOnly? EndDate { get; set; }

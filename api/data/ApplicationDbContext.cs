@@ -47,6 +47,7 @@ namespace Budgeting.Data
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<TransactionItem> TransactionItems { get; set; }
+        public DbSet<TransactionItemCategory> TransactionItemCategories { get; set; }
         public DbSet<Budgeting.Models.Accounts.Account> Accounts { get; set; }
         public DbSet<Budgeting.Models.Accounts.Holding> Holdings { get; set; }
 
@@ -116,10 +117,22 @@ namespace Budgeting.Data
                     .HasForeignKey(e => e.TransactionId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(e => e.Category)
+                entity.HasMany(e => e.Categories)
                     .WithMany(c => c.TransactionItems)
-                    .HasForeignKey(e => e.CategoryId)
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .UsingEntity<TransactionItemCategory>(
+                        join => join.HasOne(e => e.Category)
+                            .WithMany()
+                            .HasForeignKey(e => e.CategoryId)
+                            .OnDelete(DeleteBehavior.Cascade),
+                        join => join.HasOne(e => e.TransactionItem)
+                            .WithMany()
+                            .HasForeignKey(e => e.TransactionItemId)
+                            .OnDelete(DeleteBehavior.Cascade),
+                        join =>
+                        {
+                            join.ToTable("TransactionItemCategories");
+                            join.HasKey(e => new { e.TransactionItemId, e.CategoryId });
+                        });
             });
 
             modelBuilder.Entity<HoldingLog>(entity =>
