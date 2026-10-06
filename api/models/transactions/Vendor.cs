@@ -1,6 +1,4 @@
-using Budgeting.Models.Accounts;
-
-namespace Budgeting.Models
+namespace Budgeting.Models.Transactions
 {
     public class Vendor : BaseEntity
     {

@@ -1,3 +1,4 @@
+using Budgeting.Models.Transactions;
 using Budgeting.Models;
 using Budgeting.Models.Accounts;
 using Microsoft.AspNetCore.Identity;
@@ -43,13 +44,13 @@ namespace Budgeting.Data
             base(options)
         { }
 
-        public DbSet<Budgeting.Models.Vendor> Vendors { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<TransactionItem> TransactionItems { get; set; }
         public DbSet<Budgeting.Models.Accounts.Account> Accounts { get; set; }
         public DbSet<Budgeting.Models.Accounts.Holding> Holdings { get; set; }
 
-        public DbSet<Budgeting.Models.Accounts.Transaction> Transactions { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Budgeting.Models.Accounts.HoldingTransaction> HoldingTransactions { get; set; }
         public DbSet<Budgeting.Models.Accounts.HoldingLog> HoldingLog { get; set; }
 

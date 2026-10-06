@@ -1,3 +1,4 @@
+using Budgeting.Models.Transactions;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 

@@ -1,4 +1,4 @@
-namespace Budgeting.Models;
+namespace Budgeting.Models.Transactions;
 
 public class Category : BaseEntity
 {

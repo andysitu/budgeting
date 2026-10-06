@@ -1,3 +1,4 @@
+using Budgeting.Models.Transactions;
 using Budget.Util;
 using Budgeting.Data;
 using Budgeting.Models.Accounts;

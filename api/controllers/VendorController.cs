@@ -1,3 +1,4 @@
+using Budgeting.Models.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Budgeting.Data;
 using Budgeting.Models;
