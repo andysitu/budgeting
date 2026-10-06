@@ -11,7 +11,7 @@ export type VendorData = {
 interface AddVendorDialogProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (createdIncome: VendorData) => void;
+  onCreate: (createdVendor: VendorData) => void;
 }
 
 function AddVendorDialog({ open, onClose, onCreate }: AddVendorDialogProps) {
@@ -49,7 +49,7 @@ function AddVendorDialog({ open, onClose, onCreate }: AddVendorDialogProps) {
 
           clearData();
         } catch (error) {
-          console.error("Error creating income", error);
+          console.error("Error creating vendor", error);
         } finally {
           setLoading(false);
         }

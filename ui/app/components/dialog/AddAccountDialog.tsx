@@ -3,13 +3,13 @@ import Dialog from "./Dialog";
 import TextListItem from "../inputs/TextLisItem";
 import { AccountData, createAccount } from "@/network/account";
 
-interface AddIncomeDialogProps {
+interface AddAccountDialogProps {
   open: boolean;
   onClose: () => void;
   onCreate: () => void;
 }
 
-function AddAccountDialog({ open, onClose, onCreate }: AddIncomeDialogProps) {
+function AddAccountDialog({ open, onClose, onCreate }: AddAccountDialogProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
