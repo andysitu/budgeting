@@ -44,10 +44,8 @@ namespace Budgeting.Data
         { }
 
         public DbSet<Budgeting.Models.Vendor> Vendors { get; set; }
-        public DbSet<Budgeting.Models.ExpenseType> ExpenseTypes { get; set; }
-        public DbSet<Budgeting.Models.Expense> Expenses { get; set; }
-        // Income instead of Incomes probably because I added the schema without adding it to this file
-        public DbSet<Budgeting.Models.Income> Income { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<TransactionItem> TransactionItems { get; set; }
         public DbSet<Budgeting.Models.Accounts.Account> Accounts { get; set; }
         public DbSet<Budgeting.Models.Accounts.Holding> Holdings { get; set; }
 
@@ -93,6 +91,13 @@ namespace Budgeting.Data
 
             modelBuilder.Entity<Transaction>(entity =>
             {
+                entity.Property(e => e.Settled).HasDefaultValue(true);
+
+                entity.HasOne(e => e.Vendor)
+                    .WithMany(v => v.Transactions)
+                    .HasForeignKey(e => e.VendorId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
                 entity.HasOne(e => e.FromHoldingTransaction)
                     .WithOne(e => e.DestinationTransaction)
                     .HasForeignKey<Transaction>(e => e.FromHoldingTransactionId);
@@ -100,7 +105,20 @@ namespace Budgeting.Data
                 entity.HasOne(e => e.ToHoldingTransaction)
                     .WithOne(e => e.SourceTransaction)
                     .HasForeignKey<Transaction>(e => e.ToHoldingTransactionId)
-                    .IsRequired();
+                    .IsRequired(false);
+            });
+
+            modelBuilder.Entity<TransactionItem>(entity =>
+            {
+                entity.HasOne(e => e.Transaction)
+                    .WithMany(t => t.TransactionItems)
+                    .HasForeignKey(e => e.TransactionId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Category)
+                    .WithMany(c => c.TransactionItems)
+                    .HasForeignKey(e => e.CategoryId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<HoldingLog>(entity =>

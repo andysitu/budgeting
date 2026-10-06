@@ -1,4 +1,4 @@
-using Budgeting.Data;
+using Budgeting.Models.Accounts;
 
 namespace Budgeting.Models
 {
@@ -6,7 +6,6 @@ namespace Budgeting.Models
     {
         public required string Name { get; set; }
         public string Description { get; set; } = "";
-        public ICollection<Expense> Expenses { get; set; } = [];
-        public ICollection<Income> Incomes { get; set; } = [];
+        public virtual ICollection<Transaction> Transactions { get; set; } = [];
     }
 }

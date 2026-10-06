@@ -36,7 +36,7 @@ public class HoldingTransactionDto : HoldingTransactionBaseDto
 
 public class TransactionDto : TransactionBaseDto
 {
-    public required HoldingTransactionDto to_holding_transaction { get; set; }
+    public HoldingTransactionDto? to_holding_transaction { get; set; }
     public HoldingTransactionDto? from_holding_transaction { get; set; }
 }
 
@@ -65,7 +65,7 @@ public class TransactionsController : Controller
 
         if (query.holdingId != null)
         {
-            transactionQuery = transactionQuery.Where(t => t.ToHoldingTransaction.HoldingId == query.holdingId ||
+            transactionQuery = transactionQuery.Where(t => (t.ToHoldingTransaction != null && t.ToHoldingTransaction.HoldingId == query.holdingId) ||
                 (t.FromHoldingTransaction != null && t.FromHoldingTransaction.HoldingId == query.holdingId));
         }
         var transactions = await transactionQuery
@@ -79,7 +79,7 @@ public class TransactionsController : Controller
                 date = t.Date,
                 created = t.CreatedAt,
                 updated = t.UpdatedAt,
-                to_holding_transaction = new()
+                to_holding_transaction = t.ToHoldingTransaction == null ? null : new()
                 {
                     id = t.ToHoldingTransaction.Id,
                     shares = t.ToHoldingTransaction.Shares,
@@ -110,7 +110,7 @@ public class TransactionsController : Controller
     public async Task setTransactionActive(Transaction transaction, bool active)
     {
         // Need to undo holdings
-        if (transaction.ModifiedHolding)
+        if (transaction.Settled && transaction.ModifiedHolding)
         {
             var toHoldingTrans = transaction.ToHoldingTransaction;
             if (toHoldingTrans != null)
