@@ -48,6 +48,8 @@ namespace Budgeting.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<TransactionItem> TransactionItems { get; set; }
         public DbSet<TransactionItemCategory> TransactionItemCategories { get; set; }
+        public DbSet<HoldingType> HoldingTypes { get; set; }
+        public DbSet<HoldingHoldingType> HoldingHoldingTypes { get; set; }
         public DbSet<Budgeting.Models.Accounts.Account> Accounts { get; set; }
         public DbSet<Budgeting.Models.Accounts.Holding> Holdings { get; set; }
 
@@ -142,6 +144,18 @@ namespace Budgeting.Data
                     .HasForeignKey(ht => ht.HoldingId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
+            modelBuilder.Entity<HoldingType>()
+                .HasIndex(t => new { t.AppUserId, t.Name }).IsUnique();
+            modelBuilder.Entity<Holding>()
+                .HasMany(h => h.Types)
+                .WithMany(t => t.Holdings)
+                .UsingEntity<HoldingHoldingType>(
+                    join => join.HasOne(j => j.HoldingType).WithMany()
+                        .HasForeignKey(j => j.HoldingTypeId).OnDelete(DeleteBehavior.Cascade),
+                    join => join.HasOne(j => j.Holding).WithMany()
+                        .HasForeignKey(j => j.HoldingId).OnDelete(DeleteBehavior.Cascade),
+                    join => join.HasKey(j => new { j.HoldingId, j.HoldingTypeId }));
 
             // For identity tables
             base.OnModelCreating(modelBuilder);

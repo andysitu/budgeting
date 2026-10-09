@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 public class HoldingDataDto
 {
+    public List<long> TypeIds { get; set; } = [];
     public string Name { get; set; } = "";
     public decimal Shares { get; set; } = 0;
     public decimal Price { get; set; } = 1;
@@ -14,6 +15,7 @@ public class HoldingDataDto
 }
 public class HoldingDto
 {
+    public List<HoldingTypeDto> Types { get; set; } = [];
     public long Id { get; set; }
     public long AccountId { get; set; }
     public string Name { get; set; } = "";
@@ -57,6 +59,7 @@ public class AccountsController : Controller
         var query = _context.Accounts
             .Where(a => a.AppUserId == userId)
             .Include(a => a.Holdings)
+            .ThenInclude(h => h.Types)
             .AsQueryable();
 
         var total = await query.CountAsync();
@@ -71,6 +74,8 @@ public class AccountsController : Controller
             Holdings = a.Holdings.Select(h => new HoldingDto
             {
                 Id = h.Id,
+                AccountId = h.AccountId,
+                Types = h.Types.Select(HoldingTypeDto.From).ToList(),
                 Name = h.Name,
                 Shares = h.Shares,
                 Price = h.Price,
@@ -148,11 +153,20 @@ public class AccountsController : Controller
 
         if (holdings == null || holdings.Count == 0)
             return BadRequest("Empty Holdings provided");
+        var requestedTypeIds = holdings.SelectMany(h => h.TypeIds).Distinct().ToList();
+        var types = await _context.HoldingTypes
+            .Where(hType =>
+                hType.AppUserId == userId &&
+                hType.Active && requestedTypeIds.Contains(hType.Id)
+            ).ToListAsync();
+        if (types.Count != requestedTypeIds.Count)
+            return BadRequest("One or more holding types are unavailable.");
         foreach (HoldingDataDto holding in holdings)
         {
             holdingsToAdd.Add(new Holding
             {
                 Name = holding.Name,
+                Types = types.Where(t => holding.TypeIds.Contains(t.Id)).ToList(),
                 Shares = holding.Shares,
                 Price = holding.IsMonetary ? 1 : holding.Price,
                 AccountId = id,

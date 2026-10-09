@@ -172,6 +172,21 @@ namespace api.Migrations
                     b.ToTable("Holdings");
                 });
 
+            modelBuilder.Entity("Budgeting.Models.Accounts.HoldingHoldingType", b =>
+                {
+                    b.Property<long>("HoldingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("HoldingTypeId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("HoldingId", "HoldingTypeId");
+
+                    b.HasIndex("HoldingTypeId");
+
+                    b.ToTable("HoldingHoldingTypes");
+                });
+
             modelBuilder.Entity("Budgeting.Models.Accounts.HoldingLog", b =>
                 {
                     b.Property<long>("Id")
@@ -261,6 +276,45 @@ namespace api.Migrations
                     b.HasIndex("HoldingId");
 
                     b.ToTable("HoldingTransactions");
+                });
+
+            modelBuilder.Entity("Budgeting.Models.Accounts.HoldingType", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("HoldingTypes");
                 });
 
             modelBuilder.Entity("Budgeting.Models.Transactions.Category", b =>
@@ -632,6 +686,25 @@ namespace api.Migrations
                     b.Navigation("AppUser");
                 });
 
+            modelBuilder.Entity("Budgeting.Models.Accounts.HoldingHoldingType", b =>
+                {
+                    b.HasOne("Budgeting.Models.Accounts.Holding", "Holding")
+                        .WithMany()
+                        .HasForeignKey("HoldingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Budgeting.Models.Accounts.HoldingType", "HoldingType")
+                        .WithMany()
+                        .HasForeignKey("HoldingTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Holding");
+
+                    b.Navigation("HoldingType");
+                });
+
             modelBuilder.Entity("Budgeting.Models.Accounts.HoldingLog", b =>
                 {
                     b.HasOne("Budgeting.Data.AppUser", "AppUser")
@@ -668,6 +741,17 @@ namespace api.Migrations
                     b.Navigation("AppUser");
 
                     b.Navigation("Holding");
+                });
+
+            modelBuilder.Entity("Budgeting.Models.Accounts.HoldingType", b =>
+                {
+                    b.HasOne("Budgeting.Data.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Budgeting.Models.Transactions.Category", b =>

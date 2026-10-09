@@ -26,6 +26,7 @@ public class AddToHoldingDto
 
 public class UpdateHoldingDto
 {
+    public List<long>? typeIds { get; set; }
     public string? name { get; set; }
     public decimal? shares { get; set; }
     public decimal? price { get; set; }
@@ -224,7 +225,7 @@ public class HoldingsController : Controller
         }
         bool needHoldingLog = false;
 
-        Holding? holding = await _context.Holdings.FirstOrDefaultAsync(h => h.Id == holdingId);
+        Holding? holding = await _context.Holdings.Include(h => h.Types).FirstOrDefaultAsync(h => h.Id == holdingId);
         if (holding == null)
         {
             return NotFound();
@@ -245,6 +246,20 @@ public class HoldingsController : Controller
         };
 
         bool modifiedHolding = false;
+        if (isHistoricalEntry && updateHoldingDto.typeIds != null)
+            return BadRequest("Types cannot be changed in a historical entry.");
+        if (updateHoldingDto.typeIds != null)
+        {
+            var ids = updateHoldingDto.typeIds.Distinct().ToList();
+            var existingIds = holding.Types.Select(t => t.Id).ToList();
+            var types = await _context.HoldingTypes
+                .Where(t => t.AppUserId == userId && ids.Contains(t.Id)
+                    && (t.Active || existingIds.Contains(t.Id))).ToListAsync();
+            if (types.Count != ids.Count)
+                return BadRequest("One or more holding types are unavailable.");
+            holding.Types = types;
+            modifiedHolding = true;
+        }
         if (isHistoricalEntry)
         {
             if ((updateHoldingDto.shares == null && updateHoldingDto.price == null)
@@ -315,6 +330,8 @@ public class HoldingsController : Controller
         return new HoldingDto
         {
             Id = holding.Id,
+            AccountId = holding.AccountId,
+            Types = holding.Types.Select(HoldingTypeDto.From).ToList(),
             Name = holding.Name,
             Shares = holding.Shares,
             Price = holding.Price,
@@ -367,6 +384,7 @@ public class HoldingsController : Controller
                 {
                     Id = h.Id,
                     AccountId = h.AccountId,
+                    Types = h.Types.Select(HoldingTypeDto.From).ToList(),
                     Name = h.Name,
                     Shares = h.Shares,
                     Price = h.Price,
@@ -387,8 +405,8 @@ public class HoldingsController : Controller
         var holdingTransactions = await _context.HoldingTransactions
             .Include(ht => ht.SourceTransaction)
             .Include(ht => ht.DestinationTransaction)
-            .Include(ht => ht.Holding)
-            .Where(ht => ht.HoldingId == holdingId)
+            .Include(ht => ht.Holding).ThenInclude(h => h!.Types)
+            .Where(ht => ht.HoldingId == holdingId && ht.AppUserId == Util.getCurrentUserId(HttpContext))
             .ToListAsync();
         return MapHoldingTransactionDto(holdingTransactions);
     }

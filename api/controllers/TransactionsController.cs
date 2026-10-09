@@ -61,8 +61,9 @@ public class TransactionsController : Controller
     [HttpGet("")]
     public async Task<IActionResult> GetTransactions([FromQuery] TransactionQuery query)
     {
+        var userId = Util.getCurrentUserId(HttpContext);
         var transactionQuery = _context.Transactions
-            .AsQueryable();
+            .Where(t => t.AppUserId == userId);
 
         if (query.holdingId != null)
         {
@@ -89,6 +90,9 @@ public class TransactionsController : Controller
                     {
                         Id = t.ToHoldingTransaction.Holding.Id,
                         Name = t.ToHoldingTransaction.Holding.Name,
+                        Types = t.ToHoldingTransaction.Holding.Types.Select(
+                            type => new HoldingTypeDto(
+                                type.Id, type.Name, type.Description, type.Active)).ToList(),
                     }
                 },
                 from_holding_transaction = t.FromHoldingTransaction == null ? null : new()
@@ -100,6 +104,9 @@ public class TransactionsController : Controller
                     {
                         Id = t.FromHoldingTransaction.Holding.Id,
                         Name = t.FromHoldingTransaction.Holding.Name,
+                        Types = t.FromHoldingTransaction.Holding.Types.Select(
+                            type => new HoldingTypeDto(
+                                type.Id, type.Name, type.Description, type.Active)).ToList(),
                     }
                 },
 

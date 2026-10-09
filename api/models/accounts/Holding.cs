@@ -5,6 +5,7 @@ namespace Budgeting.Models.Accounts;
 
 public class Holding : BaseEntity
 {
+    public virtual ICollection<HoldingType> Types { get; set; } = [];
     public required string Name { get; set; }
     public decimal Shares { get; set; } = 0;
     public decimal Price { get; set; } = 1;
