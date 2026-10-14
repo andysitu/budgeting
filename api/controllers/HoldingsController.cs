@@ -251,10 +251,8 @@ public class HoldingsController : Controller
         if (updateHoldingDto.typeIds != null)
         {
             var ids = updateHoldingDto.typeIds.Distinct().ToList();
-            var existingIds = holding.Types.Select(t => t.Id).ToList();
             var types = await _context.HoldingTypes
-                .Where(t => t.AppUserId == userId && ids.Contains(t.Id)
-                    && (t.Active || existingIds.Contains(t.Id))).ToListAsync();
+                .Where(t => t.AppUserId == userId && ids.Contains(t.Id)).ToListAsync();
             if (types.Count != ids.Count)
                 return BadRequest("One or more holding types are unavailable.");
             holding.Types = types;

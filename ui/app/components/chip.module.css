@@ -1,0 +1,38 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 3px 6px 3px 9px;
+  border: 1px solid #dce3ee;
+  border-radius: 16px;
+  background: #f0f4fa;
+  color: #354863;
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+
+.remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.remove:hover:not(:disabled) {
+  background: #dce3ee;
+}
+
+.remove:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

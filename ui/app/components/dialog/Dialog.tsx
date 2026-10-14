@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import styles from "./dialog.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -33,10 +33,16 @@ function Dialog({
 }: DialogProps) {
   const showClassName = open ? "" : styles["modal-hidden"];
 
+  const focusedForOpen = useRef(false);
+
   useEffect(() => {
-    if (open && focusInput?.focus) {
-      focusInput.focus();
+    if (!open) {
+      focusedForOpen.current = false;
+      return;
     }
+    if (focusedForOpen.current) return;
+    focusedForOpen.current = true;
+    focusInput?.focus();
   }, [focusInput, open]);
 
   useEffect(() => {

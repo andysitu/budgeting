@@ -1,3 +1,5 @@
+import Chip from '../Chip';
+import { HoldingType } from '@/network/holdingType';
 import {
   Account,
   deleteHolding,
@@ -29,18 +31,18 @@ import EditHoldingDialog from '../dialog/EditHoldingDialog';
 export type AccountTableHandle = {};
 
 interface AccountTableProps {
+  types: HoldingType[];
   onUpdate?: () => void;
 }
 
 const AccountsTable = forwardRef(function AccountsTable(
-  { onUpdate }: AccountTableProps,
+  { onUpdate, types }: AccountTableProps,
   ref,
 ) {
   const dispatch = useDispatch();
 
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [accounts, setAccounts] = useState<Account[]>([]);
-
   const [accountForAddHolding, setAccountForAddHolding] = useState<
     undefined | Account | null
   >(null);
@@ -177,6 +179,29 @@ const AccountsTable = forwardRef(function AccountsTable(
         field: 'name',
         header: 'Name',
         cellStyle: { width: 100 },
+      },
+      {
+        field: '',
+        header: 'Types',
+        render: (holding: Holding) =>
+          holding.types.length ? (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {holding.types
+                .map(
+                  (type) =>
+                    types.find((current) => current.id === type.id) ?? type,
+                )
+                .map((type) => (
+                  <Chip
+                    key={type.id}
+                    label={type.name}
+                    title={type.description}
+                  />
+                ))}
+            </div>
+          ) : (
+            'Unclassified'
+          ),
       },
       {
         field: 'price',
@@ -477,7 +502,8 @@ const AccountsTable = forwardRef(function AccountsTable(
   const renderAccountsLists = () => {
     const accountList = [];
     for (const account of accounts) {
-      const { id, name, holdings } = account;
+      const { id, name } = account;
+      const holdings = [...account.holdings];
 
       let total = 0;
       for (const holding of holdings) {
@@ -489,7 +515,7 @@ const AccountsTable = forwardRef(function AccountsTable(
       accountList.push(
         <div
           key={`account-row-${id}`}
-          style={{ width: '600px', marginBottom: '14px' }}
+          style={{ width: '760px', marginBottom: '14px' }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ fontWeight: 'bold' }}>{name}</div>
@@ -515,7 +541,7 @@ const AccountsTable = forwardRef(function AccountsTable(
           >
             <Table columns={getHoldingColumns()} dataList={holdings} />
           </div>
-          <div style={{ margin: 'px 0px' }}>{`Total: ${total}`}</div>
+          <div style={{ margin: '4px 0px' }}>{`Total: ${total}`}</div>
         </div>,
       );
     }
@@ -539,6 +565,7 @@ const AccountsTable = forwardRef(function AccountsTable(
             <FontAwesomeIcon color="green" icon={faPlus} />
           </button>
         </div>
+        {accountList.length === 0 && <p>No accounts yet.</p>}
         {accountList}
       </>
     );
@@ -550,6 +577,7 @@ const AccountsTable = forwardRef(function AccountsTable(
         {renderTopButtons()}
         {renderAccountsLists()}
         <AddHoldingDialog
+          types={types}
           open={accountForAddHolding != null}
           account={accountForAddHolding}
           onClose={() => {
@@ -585,6 +613,7 @@ const AccountsTable = forwardRef(function AccountsTable(
           }}
         />
         <EditHoldingDialog
+          types={types}
           open={selectedHoldingForEditing != null}
           onClose={() => {
             setSelectedHoldingForEditing(undefined);

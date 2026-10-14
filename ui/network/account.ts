@@ -1,6 +1,8 @@
+import { HoldingType } from './holdingType';
 import { sendRequest } from './util';
 
 export interface Holding {
+  types: HoldingType[];
   id: number;
   name: string;
   shares: number;
@@ -21,6 +23,7 @@ export interface AccountData {
 }
 
 export interface HoldingData {
+  typeIds?: number[];
   name: string;
   shares: number;
   price: number;

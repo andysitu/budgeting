@@ -11,6 +11,7 @@ export interface AddToHolding {
 }
 
 export interface EditHoldingData {
+  typeIds?: number[];
   name?: string;
   price?: number;
   shares?: number;

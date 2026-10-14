@@ -1,3 +1,5 @@
+import { HoldingType } from '@/network/holdingType';
+import HoldingTypePicker from '../inputs/HoldingTypePicker';
 import { useEffect, useRef, useState } from 'react';
 import Dialog from './Dialog';
 import TextListItem from '../inputs/TextLisItem';
@@ -10,6 +12,7 @@ import { isEmptyObject } from '@/lib/common/util';
 interface EditHoldingDialogProps {
   holding?: Holding;
   open: boolean;
+  types: HoldingType[];
   onClose: () => void;
   onUpdate: (data: any) => void;
 }
@@ -17,12 +20,14 @@ interface EditHoldingDialogProps {
 function EditHoldingDialog({
   holding,
   open,
+  types,
   onClose,
   onUpdate,
 }: EditHoldingDialogProps) {
   const dispatch = useDispatch();
 
   const [name, setName] = useState('');
+  const [typeIds, setTypeIds] = useState<number[]>([]);
   const [shares, setShares] = useState<number | ''>('');
   const [price, setPrice] = useState<number | ''>('');
   const [historicalDate, setHistoricalDate] = useState('');
@@ -36,6 +41,7 @@ function EditHoldingDialog({
   useEffect(() => {
     if (holding != null) {
       setName(holding.name);
+      setTypeIds(holding.types.map((t) => t.id));
       setPrice(holding.price);
       setShares(holding.shares);
       setHistoricalDate('');
@@ -44,6 +50,7 @@ function EditHoldingDialog({
 
   const resetDialog = () => {
     setName(holding?.name ?? '');
+    setTypeIds(holding?.types.map((t) => t.id) ?? []);
     setPrice(holding?.price ?? '');
     setShares(holding?.shares ?? '');
     setHistoricalDate('');
@@ -59,11 +66,24 @@ function EditHoldingDialog({
     const validShares = sharesValue && sharesValue > 0,
       validPrice = priceValue && priceValue > 0;
 
-    if (!validShares || !validPrice) {
+    if (
+      (historicalDate ||
+        shares !== holding.shares ||
+        price !== holding.price) &&
+      (!validShares || !validPrice)
+    ) {
       return dispatch(addMessage('Please enter a valid price and shares'));
     }
 
     const data: EditHoldingData = {};
+    const originalTypeIds = holding.types.map((t) => t.id);
+    if (
+      !historicalDate &&
+      (typeIds.length !== originalTypeIds.length ||
+        typeIds.some((id) => !originalTypeIds.includes(id)))
+    ) {
+      data.typeIds = typeIds;
+    }
 
     if (!historicalDate && name != holding?.name) {
       data.name = name;
@@ -77,7 +97,9 @@ function EditHoldingDialog({
     if (historicalDate) {
       const parsedDate = new Date(historicalDate);
       if (Number.isNaN(parsedDate.getTime())) {
-        return dispatch(addMessage('Please enter a valid historical date and time.'));
+        return dispatch(
+          addMessage('Please enter a valid historical date and time.'),
+        );
       }
       data.historicalDate = parsedDate.toISOString();
     }
@@ -91,7 +113,11 @@ function EditHoldingDialog({
       const response = await editHolding(id, data);
       await onUpdate(response);
     } catch (error) {
-      console.error('Error adding to holding', error);
+      dispatch(
+        addMessage(
+          error instanceof Error ? error.message : 'Unable to update holding.',
+        ),
+      );
     } finally {
       setLoading(false);
     }
@@ -108,7 +134,7 @@ function EditHoldingDialog({
       }}
       onReset={resetDialog}
       focusInput={nameInputRef?.current}
-      containerStyle={{ minWidth: '600px' }}
+      containerStyle={{ minWidth: 'min(440px, calc(100vw - 60px))' }}
     >
       <TextListItem
         value={name}
@@ -147,6 +173,12 @@ function EditHoldingDialog({
         type="number"
         containerStyle={{ marginBottom: '12px' }}
       />
+      <HoldingTypePicker
+        types={types}
+        selectedIds={typeIds}
+        onChange={setTypeIds}
+        disabled={loading || Boolean(historicalDate)}
+      />
       <TextListItem
         value={historicalDate}
         label="Historical date and time"
@@ -163,9 +195,9 @@ function EditHoldingDialog({
           margin: '0 0 12px',
         }}
       >
-        Optional: Enter a date and time in your local timezone to record historical
-        shares and price without updating the current holding. Leave blank for a
-        normal update.
+        Optional: Enter a date and time in your local timezone to record
+        historical shares and price without updating the current holding. Leave
+        blank for a normal update.
       </p>
     </Dialog>
   );

@@ -11,11 +11,12 @@ public record HoldingTypeDto(long Id, string Name, string Description, bool Acti
         new(type.Id, type.Name, type.Description, type.Active);
 }
 
+public record HoldingTypeListDto(long Id, string Name, string Description, bool HasHoldings);
+
 public class HoldingTypeDataDto
 {
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
-    public bool Active { get; set; } = true;
 }
 
 [Authorize]
@@ -24,12 +25,12 @@ public class HoldingTypeDataDto
 public class HoldingTypesController(ApplicationDbContext context) : ControllerBase
 {
     [HttpGet]
-    public async Task<List<HoldingTypeDto>> List() => await context.HoldingTypes
+    public async Task<List<HoldingTypeListDto>> List() => await context.HoldingTypes
         .Where(t =>
             t.AppUserId == Util.getCurrentUserId(HttpContext))
         .OrderBy(t => t.Name)
         .Select(t =>
-            new HoldingTypeDto(t.Id, t.Name, t.Description, t.Active))
+            new HoldingTypeListDto(t.Id, t.Name, t.Description, t.Holdings.Any()))
         .ToListAsync();
 
     [HttpPost]
@@ -55,7 +56,6 @@ public class HoldingTypesController(ApplicationDbContext context) : ControllerBa
         {
             Name = name,
             Description = dto.Description.Trim(),
-            Active = dto.Active,
             AppUserId = userId
         };
 
@@ -99,7 +99,6 @@ public class HoldingTypesController(ApplicationDbContext context) : ControllerBa
         }
         type.Name = name;
         type.Description = dto.Description.Trim();
-        type.Active = dto.Active;
 
         try
         {
@@ -111,4 +110,26 @@ public class HoldingTypesController(ApplicationDbContext context) : ControllerBa
         }
         return HoldingTypeDto.From(type);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(long id)
+    {
+        var userId = Util.getCurrentUserId(HttpContext);
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        await using var transaction = await context.Database.BeginTransactionAsync();
+        // Lock the type so a holding cannot be attached between the check and deletion.
+        var type = await context.HoldingTypes.FromSqlInterpolated(
+            $"""SELECT * FROM "HoldingTypes" WHERE "Id" = {id} AND "AppUserId" = {userId} FOR UPDATE""")
+            .FirstOrDefaultAsync();
+        if (type == null) return NotFound();
+        if (await context.HoldingHoldingTypes.AnyAsync(link => link.HoldingTypeId == id))
+            return Conflict("This type cannot be deleted while holdings are attached to it.");
+
+        context.HoldingTypes.Remove(type);
+        await context.SaveChangesAsync();
+        await transaction.CommitAsync();
+        return NoContent();
+    }
+
 }

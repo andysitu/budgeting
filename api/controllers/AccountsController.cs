@@ -157,7 +157,7 @@ public class AccountsController : Controller
         var types = await _context.HoldingTypes
             .Where(hType =>
                 hType.AppUserId == userId &&
-                hType.Active && requestedTypeIds.Contains(hType.Id)
+                requestedTypeIds.Contains(hType.Id)
             ).ToListAsync();
         if (types.Count != requestedTypeIds.Count)
             return BadRequest("One or more holding types are unavailable.");

@@ -1,3 +1,7 @@
+import { useDispatch } from 'react-redux';
+import { addMessage } from '@/lib/features/snackbar/snackbarSlice';
+import { HoldingType } from '@/network/holdingType';
+import HoldingTypePicker from '../inputs/HoldingTypePicker';
 import { useRef, useState } from 'react';
 import Dialog from './Dialog';
 import TextListItem from '../inputs/TextLisItem';
@@ -7,6 +11,7 @@ import CheckboxListItem from '../inputs/CheckboxListItem';
 interface AddHoldingDialogProps {
   account: Account | undefined | null;
   open: boolean;
+  types: HoldingType[];
   onClose: () => void;
   onCreate: () => void;
 }
@@ -14,10 +19,13 @@ interface AddHoldingDialogProps {
 function AddHoldingDialog({
   account,
   open,
+  types,
   onClose,
   onCreate,
 }: AddHoldingDialogProps) {
+  const dispatch = useDispatch();
   const [name, setName] = useState('');
+  const [typeIds, setTypeIds] = useState<number[]>([]);
   const [shares, setShares] = useState(1);
   const [price, setPrice] = useState(1);
   const [monetary, setMonetary] = useState(false);
@@ -28,6 +36,8 @@ function AddHoldingDialog({
 
   const resetDialog = () => {
     setName('');
+    setTypeIds([]);
+    setMonetary(false);
     setShares(1);
     setPrice(1);
   };
@@ -38,6 +48,7 @@ function AddHoldingDialog({
       shares,
       price: monetary ? 1 : price,
       isMonetary: monetary,
+      typeIds,
     };
 
     try {
@@ -49,7 +60,11 @@ function AddHoldingDialog({
       resetDialog();
       onCreate();
     } catch (error) {
-      console.error('Error creating account', error);
+      dispatch(
+        addMessage(
+          error instanceof Error ? error.message : 'Unable to create holding.',
+        ),
+      );
     } finally {
       setLoading(false);
     }
@@ -66,6 +81,7 @@ function AddHoldingDialog({
       }}
       onReset={resetDialog}
       focusInput={nameInputRef?.current}
+      containerStyle={{ minWidth: 'min(440px, calc(100vw - 60px))' }}
     >
       <TextListItem
         value={name}
@@ -91,6 +107,12 @@ function AddHoldingDialog({
           containerStyle={{ marginBottom: '12px' }}
         />
       )}
+      <HoldingTypePicker
+        types={types}
+        selectedIds={typeIds}
+        onChange={setTypeIds}
+        disabled={loading}
+      />
       <CheckboxListItem
         value={monetary}
         label="Monetary"
