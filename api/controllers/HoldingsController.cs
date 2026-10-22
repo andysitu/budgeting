@@ -68,13 +68,15 @@ public class HoldingsController : Controller
             return Unauthorized();
         }
 
-        Holding? fromHolding = await _context.Holdings.Where(h => h.Id == holdingTransferDto.from_holding_id).SingleAsync();
+        Holding? fromHolding = await _context.Holdings.SingleOrDefaultAsync(h =>
+            h.Id == holdingTransferDto.from_holding_id && h.AppUserId == userId);
         if (fromHolding == null)
         {
             return NotFound();
         }
 
-        Holding? toHolding = await _context.Holdings.Where(h => h.Id == holdingTransferDto.to_holding_id).SingleAsync();
+        Holding? toHolding = await _context.Holdings.SingleOrDefaultAsync(h =>
+            h.Id == holdingTransferDto.to_holding_id && h.AppUserId == userId);
         if (toHolding == null)
         {
             return NotFound();
@@ -145,7 +147,8 @@ public class HoldingsController : Controller
             return Unauthorized();
         }
 
-        Holding? toHolding = await _context.Holdings.Where(h => h.Id == holdingId).SingleAsync();
+        Holding? toHolding = await _context.Holdings.SingleOrDefaultAsync(h =>
+            h.Id == holdingId && h.AppUserId == userId);
 
         if (toHolding == null) return NotFound();
 
