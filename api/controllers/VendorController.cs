@@ -43,7 +43,8 @@ public class VendorController : ControllerBase
     {
         var userId = Util.getCurrentUserId(HttpContext);
 
-        Vendor? vendor = await _context.Vendors.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
+        Vendor? vendor = await _context.Vendors.FirstOrDefaultAsync(
+            e => e.Id == id && e.AppUserId == userId);
 
         if (vendor == null)
         {
@@ -82,7 +83,6 @@ public class VendorController : ControllerBase
         }, vendor);
     }
 
-    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteVendor(long? id)
     {
@@ -94,14 +94,16 @@ public class VendorController : ControllerBase
 
         string? userId = Util.getCurrentUserId(HttpContext);
 
-        Vendor? vendor = await _context.Vendors.Where(e => e.Id == id && e.AppUserId == userId).FirstAsync();
+        Vendor? vendor = await _context.Vendors.FirstOrDefaultAsync(
+            e => e.Id == id && e.AppUserId == userId);
 
-        if (vendor != null)
+        if (vendor == null)
         {
-            _context.Vendors.Remove(vendor);
+            return NotFound();
         }
 
+        _context.Vendors.Remove(vendor);
         await _context.SaveChangesAsync();
-        return Ok(vendor?.Id);
+        return Ok(vendor.Id);
     }
 }
