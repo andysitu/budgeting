@@ -17,6 +17,7 @@ public class VendorDto
 
 [Route("vendors")]
 [ApiController]
+[Authorize]
 public class VendorController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -29,7 +30,10 @@ public class VendorController : ControllerBase
     [HttpGet("")]
     public Task<List<Vendor>> ListVendors()
     {
-        Task<List<Vendor>> vendors = _context.Vendors.ToListAsync();
+        var userId = Util.getCurrentUserId(HttpContext);
+        Task<List<Vendor>> vendors = _context.Vendors
+            .Where(v => v.AppUserId == userId)
+            .ToListAsync();
 
         return vendors;
     }
