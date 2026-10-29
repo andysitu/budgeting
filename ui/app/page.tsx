@@ -7,10 +7,13 @@ import HoldingTypes from './components/pages/HoldingTypes';
 import Snackbar from './components/dialog/Snackbar';
 import { HoldingTypeListItem, fetchHoldingTypes } from '@/network/holdingType';
 import { addMessage } from '@/lib/features/snackbar/snackbarSlice';
+import { useAppSelector } from '@/lib/hooks';
 
 export default function Home() {
   const [types, setTypes] = useState<HoldingTypeListItem[]>([]);
   const dispatch = useDispatch();
+
+  const { loggedIn } = useAppSelector((state) => state.userAccount);
 
   const refreshTypes = async () => {
     setTypes(await fetchHoldingTypes());
@@ -18,6 +21,8 @@ export default function Home() {
 
   useEffect(() => {
     let active = true;
+    if (!loggedIn) return;
+
     fetchHoldingTypes()
       .then((result) => {
         if (active) setTypes(result);
@@ -28,7 +33,7 @@ export default function Home() {
     return () => {
       active = false;
     };
-  }, [dispatch]);
+  }, [dispatch, loggedIn]);
 
   return (
     <main>
