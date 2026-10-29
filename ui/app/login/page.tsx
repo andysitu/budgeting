@@ -1,20 +1,28 @@
 import {
   checkLoginStatus,
   handleLogin,
-} from "@/lib/features/userAccount/userAccountSlice";
-import { useAppDispatch } from "@/lib/hooks";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useState } from "react";
-import UrlLibrary from "../library/UrlLibrary";
+} from '@/lib/features/userAccount/userAccountSlice';
+import { useAppDispatch } from '@/lib/hooks';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import UrlLibrary from '../library/UrlLibrary';
 
 function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const loginInputRef = useRef<HTMLInputElement>(null);
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [hasErrorLogin, setHaserrorLogin] = useState(false);
+
+  useEffect(() => {
+    if (loginInputRef.current) {
+      loginInputRef.current.focus();
+    }
+  }, [loginInputRef]);
 
   return (
     <div>
@@ -31,7 +39,7 @@ function Login() {
 
             if (success) {
               dispatch(checkLoginStatus());
-              navigate(searchParams.get("ref") ?? UrlLibrary.HOME);
+              navigate(searchParams.get('ref') ?? UrlLibrary.HOME);
             } else {
               setHaserrorLogin(true);
             }
@@ -40,7 +48,7 @@ function Login() {
           }
         }}
       >
-        <div style={{ marginBottom: "10px" }}>
+        <div style={{ marginBottom: '10px' }}>
           <label htmlFor="username-input">Username</label>
           <input
             type="text"
@@ -50,6 +58,7 @@ function Login() {
             onChange={(e) => {
               setUsername(e.target.value);
             }}
+            ref={loginInputRef}
           />
         </div>
         <div>
@@ -70,7 +79,7 @@ function Login() {
         </div>
       </form>
       {hasErrorLogin && (
-        <div style={{ marginTop: "10px", color: "red" }}>
+        <div style={{ marginTop: '10px', color: 'red' }}>
           There was an error logging in. Please make sure the username and
           password are correct.
         </div>
