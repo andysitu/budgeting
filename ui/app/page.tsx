@@ -37,26 +37,28 @@ export default function Home() {
 
   return (
     <main>
-      <div>
-        <Tabs
-          elements={{
-            Accounts: (
-              <Accounts
-                types={types}
-                onUpdate={() => {
-                  void refreshTypes().catch(() =>
-                    dispatch(addMessage('Unable to refresh holding types.')),
-                  );
-                }}
-              />
-            ),
-            Vendors: <Vendors />,
-            'Holding types': (
-              <HoldingTypes types={types} onUpdate={refreshTypes} />
-            ),
-          }}
-        />
-      </div>
+      {loggedIn && (
+        <div>
+          <Tabs
+            elements={{
+              Accounts: (
+                <Accounts
+                  types={types}
+                  onUpdate={() => {
+                    void refreshTypes().catch(() =>
+                      dispatch(addMessage('Unable to refresh holding types.')),
+                    );
+                  }}
+                />
+              ),
+              Vendors: <Vendors />,
+              'Holding types': (
+                <HoldingTypes types={types} onUpdate={refreshTypes} />
+              ),
+            }}
+          />
+        </div>
+      )}
       <Snackbar />
     </main>
   );
