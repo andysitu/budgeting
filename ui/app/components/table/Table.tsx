@@ -1,5 +1,5 @@
-import { generateUUID } from "@/lib/common/util";
-import { ReactElement, useRef } from "react";
+import { generateUUID } from '@/lib/common/util';
+import { ReactElement, useRef } from 'react';
 
 export type Columns<T extends Record<string, any>> = {
   field: string;
@@ -15,7 +15,7 @@ type TableProps<T extends Record<string, any>> = {
 };
 
 const defaultCellStyle: Record<string, any> = {
-  textAlign: "start",
+  textAlign: 'start',
 };
 
 function Table<T extends Record<string, any>>({
@@ -31,7 +31,7 @@ function Table<T extends Record<string, any>>({
 
     for (let i = 0; i < columns.length; i++) {
       const column = columns[i];
-      const header = column?.header ?? "";
+      const header = column?.header ?? '';
       const cellStyle = column?.cellStyle ?? {};
       headerList.push(
         <th
@@ -40,7 +40,7 @@ function Table<T extends Record<string, any>>({
           style={{ ...defaultCellStyle, ...cellStyle }}
         >
           {header}
-        </th>
+        </th>,
       );
     }
 
@@ -71,13 +71,13 @@ function Table<T extends Record<string, any>>({
           cells.push(
             <td key={key} style={{ ...defaultCellStyle, ...cellStyle }}>
               {render(data)}
-            </td>
+            </td>,
           );
         } else {
           cells.push(
             <td key={key} style={{ ...defaultCellStyle, ...cellStyle }}>
-              {data?.[field] ?? ""}
-            </td>
+              {data?.[field] ?? ''}
+            </td>,
           );
         }
       }
@@ -88,7 +88,7 @@ function Table<T extends Record<string, any>>({
         rows.push(
           <tr key={`${idRef.current}_inner_table${i}`}>
             <td colSpan={columns.length}>{renderInnerTable(data)}</td>
-          </tr>
+          </tr>,
         );
       }
     }
@@ -97,6 +97,7 @@ function Table<T extends Record<string, any>>({
   };
 
   return (
+    // <table style={{ tableLayout: 'fixed', width: '100%' }}>
     <table>
       {renderHeader()}
       {renderBody()}

@@ -178,7 +178,7 @@ const AccountsTable = forwardRef(function AccountsTable(
       {
         field: 'name',
         header: 'Name',
-        cellStyle: { width: 100 },
+        cellStyle: { width: '160px' },
       },
       {
         field: '',
@@ -200,13 +200,13 @@ const AccountsTable = forwardRef(function AccountsTable(
                 ))}
             </div>
           ) : (
-            'Unclassified'
+            ''
           ),
       },
       {
         field: 'price',
         header: 'Price',
-        cellStyle: { width: '70px' },
+        cellStyle: { width: '80px' },
         render: (holding: Holding) => {
           if (holding.isMonetary) {
             return '-';
@@ -215,16 +215,17 @@ const AccountsTable = forwardRef(function AccountsTable(
           }
         },
       },
-      { field: 'shares', header: 'Shares', cellStyle: { width: '70px' } },
+      { field: 'shares', header: 'Shares', cellStyle: { width: '80px' } },
       {
         field: '',
         header: 'Total',
         render: (holding: Holding) => String(holding.price * holding.shares),
-        cellStyle: { width: '70px' },
+        cellStyle: { width: '80px' },
       },
       {
         field: '',
         header: '',
+        cellStyle: { width: '130px' },
         render: (holding: Holding) => {
           if (toggledTransfer) return '';
           const id = holding.id;

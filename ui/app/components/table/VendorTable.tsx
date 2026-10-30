@@ -1,10 +1,10 @@
-import { useMount } from "@/lib/common/util";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { forwardRef, useImperativeHandle, useState } from "react";
-import Table from "./Table";
-import { deleteVendor, fetchVendors } from "@/network/vendor";
-import ConfirmOrCancel from "../icons/ConfirmOrCancel";
+import { useMount } from '@/lib/common/util';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { forwardRef, useImperativeHandle, useState } from 'react';
+import Table from './Table';
+import { deleteVendor, fetchVendors } from '@/network/vendor';
+import ConfirmOrCancel from '../icons/ConfirmOrCancel';
 
 export type VendorTableHandle = {
   refreshData: () => void;
@@ -12,7 +12,7 @@ export type VendorTableHandle = {
 
 const VendorTable = forwardRef(function VendorTable(props, ref) {
   const [vendors, setVendors] = useState([]);
-  const [selectedIdForDelete, setSelectedIdForDelete] = useState("");
+  const [selectedIdForDelete, setSelectedIdForDelete] = useState('');
 
   const getVendors = async () => {
     const result = await fetchVendors();
@@ -41,11 +41,16 @@ const VendorTable = forwardRef(function VendorTable(props, ref) {
   return (
     <Table
       columns={[
-        { field: "name", header: "Name" },
-        { field: "description", header: "Description" },
+        { field: 'name', header: 'Name', cellStyle: { width: '160px' } },
         {
-          field: "",
-          header: "Action",
+          field: 'description',
+          header: 'Description',
+          cellStyle: { width: '300px' },
+        },
+        {
+          field: '',
+          header: 'Action',
+          cellStyle: { width: '100px' },
           render: ({ id }) => {
             return selectedIdForDelete === id ? (
               <ConfirmOrCancel
@@ -53,12 +58,12 @@ const VendorTable = forwardRef(function VendorTable(props, ref) {
                   if (id != null) handleDeleteVendor(id);
                 }}
                 onCancel={() => {
-                  setSelectedIdForDelete("");
+                  setSelectedIdForDelete('');
                 }}
               />
             ) : (
               <button
-                className={"icon"}
+                className={'icon'}
                 onClick={() => {
                   setSelectedIdForDelete(id);
                 }}

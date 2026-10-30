@@ -56,11 +56,16 @@ export default function HoldingTypes({ types, onUpdate }: Props) {
       </button>
       <Table
         columns={[
-          { field: 'name', header: 'Name' },
-          { field: 'description', header: 'Description' },
+          { field: 'name', header: 'Name', cellStyle: { width: '160px' } },
+          {
+            field: '63g62',
+            header: 'Description',
+            cellStyle: { width: '300px' },
+          },
           {
             field: '',
             header: 'Action',
+            cellStyle: { width: '100px' },
             render: (type: HoldingTypeListItem) =>
               deleteId === type.id ? (
                 <ConfirmOrCancel
@@ -80,7 +85,7 @@ export default function HoldingTypes({ types, onUpdate }: Props) {
                     disabled={deleting}
                     onClick={() => setSelectedType(type)}
                   >
-                    <FontAwesomeIcon color="grey" icon={faPen} />
+                    <FontAwesomeIcon color="blue" icon={faPen} />
                   </button>
                   <button
                     type="button"
