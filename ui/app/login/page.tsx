@@ -1,3 +1,5 @@
+import styles from './login.module.css';
+
 import {
   checkLoginStatus,
   handleLogin,
@@ -49,7 +51,9 @@ function Login() {
         }}
       >
         <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="username-input">Username</label>
+          <label htmlFor="username-input" className={styles.label}>
+            Username
+          </label>
           <input
             type="text"
             id="username-input"
@@ -62,7 +66,9 @@ function Login() {
           />
         </div>
         <div>
-          <label htmlFor="password-input">Password</label>
+          <label htmlFor="password-input" className={styles.label}>
+            Password
+          </label>
           <input
             type="password"
             id="password-input"
