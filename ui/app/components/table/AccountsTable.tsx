@@ -178,7 +178,7 @@ const AccountsTable = forwardRef(function AccountsTable(
       {
         field: 'name',
         header: 'Name',
-        cellStyle: { width: '160px' },
+        cellStyle: { width: '200px' },
       },
       {
         field: '',
@@ -202,6 +202,9 @@ const AccountsTable = forwardRef(function AccountsTable(
           ) : (
             ''
           ),
+        cellStyle: {
+          width: '140px',
+        },
       },
       {
         field: 'price',
