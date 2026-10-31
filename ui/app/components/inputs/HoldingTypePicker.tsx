@@ -16,7 +16,8 @@ export default function HoldingTypePicker({
   onChange,
   disabled,
 }: Props) {
-  const selectId = useId();
+  const triggerId = useId();
+  const optionsId = `${triggerId}-options`;
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -48,18 +49,18 @@ export default function HoldingTypePicker({
         }
       }}
     >
-      <label htmlFor={selectId} className={styles.label}>
+      <label htmlFor={triggerId} className={styles.label}>
         Types <span className={styles.optional}>Optional</span>
       </label>
       <div className={styles.control}>
         <div className={styles.dropdown}>
           <button
             ref={triggerRef}
-            id={selectId}
+            id={triggerId}
             type="button"
             disabled={disabled || availableTypes.length === 0}
             aria-expanded={isOpen}
-            aria-controls={`${selectId}-options`}
+            aria-controls={optionsId}
             onClick={() => setOpen(!open)}
             className={styles.select}
           >
@@ -68,7 +69,7 @@ export default function HoldingTypePicker({
           </button>
           {isOpen && (
             <div
-              id={`${selectId}-options`}
+              id={optionsId}
               role="group"
               aria-label="Holding types"
               className={styles.options}
