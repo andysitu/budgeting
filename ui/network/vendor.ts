@@ -1,17 +1,24 @@
-import { VendorData } from "@/app/components/dialog/AddVendorDialog";
 import { sendRequest } from "./util";
 
-const fetchVendors = async () => {
+export interface Vendor {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export type VendorData = Omit<Vendor, "id">;
+
+const fetchVendors = async (): Promise<Vendor[]> => {
   const result = await sendRequest("/api/vendors", "GET");
   return result;
 };
 
-const deleteVendor = async (id: string) => {
+const deleteVendor = async (id: number) => {
   const result = await sendRequest(`/api/vendors/${id}`, "DELETE");
   return result;
 };
 
-const createVendor = async (vendorData: VendorData) => {
+const createVendor = async (vendorData: VendorData): Promise<Vendor> => {
   const result = await sendRequest("/api/vendors", "POST", {
     body: JSON.stringify(vendorData),
   });

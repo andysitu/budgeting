@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import Table from './Table';
-import { deleteVendor, fetchVendors } from '@/network/vendor';
+import { deleteVendor, fetchVendors, Vendor } from '@/network/vendor';
 import ConfirmOrCancel from '../icons/ConfirmOrCancel';
 
 export type VendorTableHandle = {
@@ -11,8 +11,8 @@ export type VendorTableHandle = {
 };
 
 const VendorTable = forwardRef(function VendorTable(props, ref) {
-  const [vendors, setVendors] = useState([]);
-  const [selectedIdForDelete, setSelectedIdForDelete] = useState('');
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [selectedIdForDelete, setSelectedIdForDelete] = useState<number | null>(null);
 
   const getVendors = async () => {
     const result = await fetchVendors();
@@ -32,7 +32,7 @@ const VendorTable = forwardRef(function VendorTable(props, ref) {
     getVendors();
   });
 
-  const handleDeleteVendor = async (id: string) => {
+  const handleDeleteVendor = async (id: number) => {
     await deleteVendor(id);
 
     getVendors();
@@ -58,7 +58,7 @@ const VendorTable = forwardRef(function VendorTable(props, ref) {
                   if (id != null) handleDeleteVendor(id);
                 }}
                 onCancel={() => {
-                  setSelectedIdForDelete('');
+                  setSelectedIdForDelete(null);
                 }}
               />
             ) : (

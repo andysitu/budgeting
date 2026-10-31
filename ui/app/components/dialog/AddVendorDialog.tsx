@@ -1,12 +1,7 @@
 import { useRef, useState } from "react";
 import TextListItem from "../inputs/TextLisItem";
 import Dialog from "./Dialog";
-import { createVendor } from "@/network/vendor";
-
-export type VendorData = {
-  name: string;
-  description: string;
-};
+import { createVendor, VendorData } from "@/network/vendor";
 
 interface AddVendorDialogProps {
   open: boolean;
