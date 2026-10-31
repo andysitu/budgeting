@@ -21,7 +21,7 @@ export default function HoldingTypePicker({
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const availableTypes = types;
+  const holdingTypes = types;
   const selectedTypes = types.filter((type) => selectedIds.includes(type.id));
   const isOpen = open && !disabled;
 
@@ -58,7 +58,7 @@ export default function HoldingTypePicker({
             ref={triggerRef}
             id={triggerId}
             type="button"
-            disabled={disabled || availableTypes.length === 0}
+            disabled={disabled || holdingTypes.length === 0}
             aria-expanded={isOpen}
             aria-controls={optionsId}
             onClick={() => setOpen(!open)}
@@ -74,7 +74,7 @@ export default function HoldingTypePicker({
               aria-label="Holding types"
               className={styles.options}
             >
-              {availableTypes.map((type) => (
+              {holdingTypes.map((type) => (
                 <label
                   key={type.id}
                   title={type.description}
@@ -118,7 +118,7 @@ export default function HoldingTypePicker({
             ))}
           </div>
         )}
-        {availableTypes.length === 0 && (
+        {holdingTypes.length === 0 && (
           <small className={styles.empty}>
             Create types in the Holding types tab.
           </small>
