@@ -453,7 +453,7 @@ const AccountsTable = forwardRef(function AccountsTable(
                 />
               </div>
               <div style={{ padding: '0px 4px' }}>
-                <FontAwesomeIcon color="green" icon={faArrowRight} />
+                <FontAwesomeIcon icon={faArrowRight} />
               </div>
               <div>
                 <input
